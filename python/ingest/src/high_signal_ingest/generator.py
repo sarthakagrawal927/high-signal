@@ -42,6 +42,14 @@ Rules:
   - high: official filing/press release + corroborating coverage
 - "spillover_entity_ids" must be a subset of the provided spillover candidates
 - Window: capex 30-60d, lead-time 15-30d, design-win 60-90d, restriction 5-20d, earnings 5-15d
+- DIRECTION calibration — DO NOT default to "up". Apply this checklist:
+  - Misses, guidance cuts, layoffs, export restrictions, supply-chain hits,
+    short reports, IP losses, design losses, regulator probes → "down"
+  - Beats, raises, design wins, capex bumps, partnership ups → "up"
+  - Conflicting / data not yet directional → "neutral"
+- Treat the supplied event timestamps as the *as-of* moment. Reason ONLY from
+  facts in the provided sources or knowledge that predates the latest source.
+  Do NOT use any knowledge of events that occurred after the last source date.
 """
 
 

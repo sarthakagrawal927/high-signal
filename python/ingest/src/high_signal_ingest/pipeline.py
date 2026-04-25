@@ -11,13 +11,22 @@ from . import audit
 from .extract.entities import primary_entity
 from .graph import spillover_ids
 from .seed import load_entities
-from .sources import edgar, github, gov, ir, news, reddit, youtube
+from .sources import edgar, gdelt, github, gov, hkex, ir, news, reddit, youtube
 from .types import Event
 from .generator import generate
 from .writer import emit
 
 Source = Literal[
-    "edgar", "news", "reddit", "ir", "github", "youtube", "gov", "all"
+    "edgar",
+    "news",
+    "reddit",
+    "ir",
+    "github",
+    "youtube",
+    "gov",
+    "gdelt",
+    "hkex",
+    "all",
 ]
 
 
@@ -40,6 +49,11 @@ def fetch(source: Source, days: int) -> list[Event]:
         out.extend(gov.fetch_all(days=max(days, 3)))
     if source in {"youtube", "all"}:
         out.extend(youtube.fetch_all(days=max(days, 7)))
+    if source in {"gdelt", "all"}:
+        # Smaller default for daily; backfill driver pulls bigger windows
+        out.extend(gdelt.fetch_all(days=max(days, 1), max_records_per_query=100))
+    if source in {"hkex", "all"}:
+        out.extend(hkex.fetch_all(days=max(days, 3)))
     return out
 
 
@@ -164,7 +178,18 @@ def main() -> None:
     p = argparse.ArgumentParser()
     p.add_argument(
         "--source",
-        choices=["edgar", "news", "reddit", "ir", "github", "youtube", "gov", "all"],
+        choices=[
+            "edgar",
+            "news",
+            "reddit",
+            "ir",
+            "github",
+            "youtube",
+            "gov",
+            "gdelt",
+            "hkex",
+            "all",
+        ],
         default="all",
     )
     p.add_argument("--days", type=int, default=1)
