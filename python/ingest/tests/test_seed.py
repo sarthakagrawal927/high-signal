@@ -32,7 +32,13 @@ def test_signal_types_load() -> None:
     ts = load_signal_types()
     assert len(ts) >= 20
     ids = {t.get("id") for t in ts}
-    for must in {"capex_change", "gpu_lead_time_shift", "design_win", "export_restriction"}:
+    for must in {
+        "capex_change_hyperscaler",
+        "capex_change_neocloud",
+        "gpu_lead_time_shift",
+        "design_win",
+        "export_restriction",
+    }:
         assert must in ids
 
 
@@ -57,6 +63,8 @@ def test_gazetteer_match() -> None:
 
 
 def test_primary_entity() -> None:
-    text = "AMD signs multi-year supply deal with TSMC. Industry watchers note AMD's MI400 timeline."
+    text = (
+        "AMD signs multi-year supply deal with TSMC. Industry watchers note AMD's MI400 timeline."
+    )
     p = primary_entity(text)
     assert p in {"AMD", "TSM"}

@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import asyncio
 import hashlib
+import logging
 from datetime import datetime, timedelta, timezone
 from typing import Iterator
 
@@ -11,11 +13,9 @@ import httpx
 from ..types import Event
 
 
-_HTTP = httpx.Client(
-    headers={"User-Agent": "high-signal/0.1 reddit-ingest"},
-    follow_redirects=True,
-    timeout=30.0,
-)
+USER_AGENT = "high-signal/0.1 reddit-ingest"
+LOGGER = logging.getLogger(__name__)
+DEFAULT_CONCURRENCY = 8
 
 DEFAULT_SUBS = [
     "hardware",
@@ -32,15 +32,27 @@ def _hash(*parts: str) -> str:
     return hashlib.sha256("␟".join(parts).encode("utf-8")).hexdigest()
 
 
-def fetch_subreddit(sub: str, since: datetime, limit: int = 100) -> Iterator[Event]:
+async def fetch_subreddit_async(
+    sub: str,
+    since: datetime,
+    client: httpx.AsyncClient,
+    limit: int = 100,
+) -> list[Event]:
     url = f"https://www.reddit.com/r/{sub}/new.json?limit={limit}"
     try:
-        r = _HTTP.get(url)
-    except Exception:
-        return
+        r = await client.get(url)
+    except httpx.HTTPError as exc:
+        LOGGER.debug("reddit fetch failed sub=%s error=%s", sub, exc)
+        return []
     if r.status_code != 200:
-        return
-    data = r.json().get("data", {}).get("children", [])
+        LOGGER.debug("reddit fetch failed sub=%s status=%s", sub, r.status_code)
+        return []
+    try:
+        data = r.json().get("data", {}).get("children", [])
+    except ValueError as exc:
+        LOGGER.debug("reddit json parse failed sub=%s error=%s", sub, exc)
+        return []
+    out: list[Event] = []
     for c in data:
         d = c.get("data", {})
         created = d.get("created_utc")
@@ -56,21 +68,51 @@ def fetch_subreddit(sub: str, since: datetime, limit: int = 100) -> Iterator[Eve
             # Skip low-signal posts
             continue
         raw_hash = _hash("reddit", sub, permalink)
-        yield Event(
-            id=raw_hash[:16],
-            source=f"reddit:{sub}",
-            source_url=permalink,
-            published_at=pub,
-            title=title or None,
-            content=body or None,
-            primary_entity_id=None,
-            raw_hash=raw_hash,
+        out.append(
+            Event(
+                id=raw_hash[:16],
+                source=f"reddit:{sub}",
+                source_url=permalink,
+                published_at=pub,
+                title=title or None,
+                content=body or None,
+                primary_entity_id=None,
+                raw_hash=raw_hash,
+            )
         )
+    return out
+
+
+def fetch_subreddit(sub: str, since: datetime, limit: int = 100) -> Iterator[Event]:
+    timeout = httpx.Timeout(20.0, connect=10.0)
+    limits = httpx.Limits(max_connections=DEFAULT_CONCURRENCY, max_keepalive_connections=4)
+    headers = {"User-Agent": USER_AGENT}
+
+    async def _run() -> list[Event]:
+        async with httpx.AsyncClient(
+            headers=headers, follow_redirects=True, timeout=timeout, limits=limits
+        ) as client:
+            return await fetch_subreddit_async(sub, since, client, limit=limit)
+
+    yield from asyncio.run(_run())
+
+
+async def fetch_all_async(days: int = 1, subs: list[str] | None = None) -> list[Event]:
+    since = datetime.now(timezone.utc) - timedelta(days=days)
+    timeout = httpx.Timeout(20.0, connect=10.0)
+    limits = httpx.Limits(max_connections=DEFAULT_CONCURRENCY, max_keepalive_connections=4)
+    headers = {"User-Agent": USER_AGENT}
+    async with httpx.AsyncClient(
+        headers=headers,
+        follow_redirects=True,
+        timeout=timeout,
+        limits=limits,
+    ) as client:
+        batches = await asyncio.gather(
+            *(fetch_subreddit_async(sub, since, client) for sub in subs or DEFAULT_SUBS)
+        )
+    return [event for batch in batches for event in batch]
 
 
 def fetch_all(days: int = 1, subs: list[str] | None = None) -> list[Event]:
-    since = datetime.now(timezone.utc) - timedelta(days=days)
-    out: list[Event] = []
-    for sub in subs or DEFAULT_SUBS:
-        out.extend(fetch_subreddit(sub, since))
-    return out
+    return asyncio.run(fetch_all_async(days=days, subs=subs))

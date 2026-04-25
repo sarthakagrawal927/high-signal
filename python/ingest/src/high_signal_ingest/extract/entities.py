@@ -33,10 +33,6 @@ def gliner_extract(text: str, threshold: float = 0.55) -> list[dict]:
 
     Returns list of {text, label, score, start, end}. Lazy-imports GLiNER.
     """
-    try:
-        from gliner import GLiNER  # type: ignore
-    except ImportError:
-        return []
     model = _load_gliner()
     if model is None:
         return []

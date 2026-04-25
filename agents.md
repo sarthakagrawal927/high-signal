@@ -111,3 +111,12 @@ Reuse user's `@saas-maker/*` packages instead of rebuilding:
 6. `pnpm dev` — runs web + worker
 7. `cd python/ingest && uv run python -m high_signal_ingest.pipeline --source news --days 1` to draft first signals into `signals/draft/`
 8. Manual review: open drafts → flip frontmatter `review_status: published` → commit → `pnpm signals:sync:local`
+
+
+<claude-mem-context>
+# Memory Context
+
+# [high-signal] recent context, 2026-04-25 8:52pm GMT+5:30
+
+No previous sessions found.
+</claude-mem-context>

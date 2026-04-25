@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import csv
-from importlib import resources
 from pathlib import Path
 from typing import Iterable
 
@@ -67,6 +66,11 @@ def load_signal_types() -> list[dict]:
     with path.open() as f:
         data = yaml.safe_load(f) or []
     return list(data)
+
+
+def signal_type_ids() -> list[str]:
+    """Return the configured signal taxonomy ids in prompt-stable order."""
+    return [str(t["id"]) for t in load_signal_types() if t.get("id")]
 
 
 def load_sources() -> list[dict]:

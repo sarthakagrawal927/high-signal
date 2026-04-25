@@ -32,4 +32,5 @@ jobs:
         with: { python-version: "3.11" }
       - run: uv sync --dev
       - run: uv run ruff check src
-      - run: uv run pytest -q || true
+      - run: uv run python -m high_signal_ingest.preflight
+      - run: uv run pytest -q

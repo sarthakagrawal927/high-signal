@@ -26,6 +26,7 @@
     "signals:sync:local": "tsx scripts/sync-signals.ts --local",
     "signals:sync:remote": "tsx scripts/sync-signals.ts --remote",
     "ingest:local": "cd python/ingest && uv run python -m high_signal_ingest.pipeline --source all --days 1",
+    "ingest:preflight": "cd python/ingest && uv run python -m high_signal_ingest.preflight",
     "prepare": "husky"
   },
   "prettier": "@saas-maker/prettier-config"

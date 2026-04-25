@@ -7,13 +7,14 @@ from collections import defaultdict
 from typing import Literal
 
 from .extract.entities import primary_entity
-from .seed import load_entities, load_relationships
-from .sources import edgar, news, reddit, ir
+from .graph import spillover_ids
+from .seed import load_entities
+from .sources import edgar, github, news, reddit, ir
 from .types import Event
 from .generator import generate
 from .writer import write_signal
 
-Source = Literal["edgar", "news", "reddit", "ir", "all"]
+Source = Literal["edgar", "news", "reddit", "ir", "github", "all"]
 
 
 def fetch(source: Source, days: int) -> list[Event]:
@@ -27,18 +28,14 @@ def fetch(source: Source, days: int) -> list[Event]:
         out.extend(reddit.fetch_all(days=days))
     if source in {"ir", "all"}:
         out.extend(ir.fetch_all())
+    if source in {"github", "all"}:
+        out.extend(github.fetch_all(days=max(days, 7)))
     return out
 
 
 def _spillover_candidates(primary: str) -> list[str]:
-    rels = load_relationships()
-    out: set[str] = set()
-    for r in rels:
-        if r.from_entity_id == primary:
-            out.add(r.to_entity_id)
-        elif r.to_entity_id == primary:
-            out.add(r.from_entity_id)
-    return sorted(out)
+    """Hop-decayed BFS over the relationship graph — top peers/suppliers/customers."""
+    return spillover_ids(primary, hops=2, limit=12)
 
 
 def cluster_and_generate(events: list[Event]) -> list[str]:
@@ -54,7 +51,8 @@ def cluster_and_generate(events: list[Event]) -> list[str]:
 
     written: list[str] = []
     for entity_id, evs in by_entity.items():
-        if len(evs) < 1:
+        distinct_urls = {e.source_url for e in evs if e.source_url}
+        if len(distinct_urls) < 2:
             continue
         cand = generate(entity_id, evs, _spillover_candidates(entity_id))
         if cand:
@@ -71,7 +69,11 @@ def run(source: Source, days: int) -> dict:
 
 def main() -> None:
     p = argparse.ArgumentParser()
-    p.add_argument("--source", choices=["edgar", "news", "reddit", "ir", "all"], default="all")
+    p.add_argument(
+        "--source",
+        choices=["edgar", "news", "reddit", "ir", "github", "all"],
+        default="all",
+    )
     p.add_argument("--days", type=int, default=1)
     args = p.parse_args()
     out = run(args.source, args.days)
