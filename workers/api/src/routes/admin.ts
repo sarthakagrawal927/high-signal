@@ -126,6 +126,41 @@ adminRoute.post("/sync", async (c) => {
   return c.json({ upserts });
 });
 
+adminRoute.patch("/signals/:slug", async (c) => {
+  const slug = c.req.param("slug");
+  const body = (await c.req.json()) as {
+    reviewStatus?: "draft" | "published" | "corrected";
+    supersedesSignalId?: string | null;
+  };
+  const updates: Record<string, unknown> = {};
+  if (body.reviewStatus) updates.reviewStatus = body.reviewStatus;
+  if ("supersedesSignalId" in body) updates.supersedesSignalId = body.supersedesSignalId;
+  if (Object.keys(updates).length === 0) {
+    return c.json({ error: "no_updates" }, 400);
+  }
+  const result = await db(c.env.DB)
+    .update(schema.signals)
+    .set(updates as Partial<typeof schema.signals.$inferInsert>)
+    .where(eq(schema.signals.slug, slug))
+    .returning({ id: schema.signals.id, slug: schema.signals.slug, reviewStatus: schema.signals.reviewStatus });
+  if (result.length === 0) return c.json({ error: "not_found" }, 404);
+  return c.json({ updated: result[0] });
+});
+
+adminRoute.delete("/signals/:slug", async (c) => {
+  const slug = c.req.param("slug");
+  const [row] = await db(c.env.DB)
+    .select({ id: schema.signals.id })
+    .from(schema.signals)
+    .where(eq(schema.signals.slug, slug))
+    .limit(1);
+  if (!row) return c.json({ error: "not_found" }, 404);
+  await db(c.env.DB).delete(schema.evidence).where(eq(schema.evidence.signalId, row.id));
+  await db(c.env.DB).delete(schema.scoreRuns).where(eq(schema.scoreRuns.signalId, row.id));
+  await db(c.env.DB).delete(schema.signals).where(eq(schema.signals.id, row.id));
+  return c.json({ deleted: row.id });
+});
+
 adminRoute.get("/pending-scores", async (c) => {
   // Signals whose predicted window has elapsed and no score_run exists yet for that window.
   const rows = (await c.env.DB.prepare(
