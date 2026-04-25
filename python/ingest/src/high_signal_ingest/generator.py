@@ -56,10 +56,15 @@ def _slugify(s: str) -> str:
 
 
 def _ai_complete(prompt: str, content: str) -> dict | None:
-    """Call OpenAI-compatible endpoint configured via env."""
-    base = os.environ.get("AI_BASE_URL")
-    key = os.environ.get("AI_API_KEY")
-    model = os.environ.get("AI_MODEL", "gpt-4o-mini")
+    """Call OpenAI-compatible endpoint configured via env.
+
+    Defaults to Hugging Face Inference Router when only HF_TOKEN is set.
+    """
+    key = os.environ.get("AI_API_KEY") or os.environ.get("HF_TOKEN")
+    base = os.environ.get("AI_BASE_URL") or (
+        "https://router.huggingface.co/v1" if os.environ.get("HF_TOKEN") else None
+    )
+    model = os.environ.get("AI_MODEL", "meta-llama/Llama-3.3-70B-Instruct")
     if not base or not key:
         return None
     try:

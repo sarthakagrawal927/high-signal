@@ -12,7 +12,12 @@ image = (
 )
 
 app = modal.App("high-signal-ingest")
-secrets = [modal.Secret.from_name("high-signal")]
+# `huggingface` secret provides HF_TOKEN — generator routes to HF Inference Router
+# when AI_API_KEY/AI_BASE_URL are not explicitly set in `high-signal`.
+secrets = [
+    modal.Secret.from_name("high-signal"),
+    modal.Secret.from_name("huggingface"),
+]
 
 
 @app.function(image=image, schedule=modal.Cron("0 6 * * *"), timeout=1200, secrets=secrets)

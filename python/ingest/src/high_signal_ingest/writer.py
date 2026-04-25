@@ -1,20 +1,39 @@
-"""Write signals as git-versioned markdown into ../../signals/YYYY-MM-DD/."""
+"""Write signals as git-versioned markdown OR push to /admin/sync.
+
+Local dev: writes `signals/YYYY-MM-DD/<slug>.md` (git-versioned source of truth).
+Modal / CI:  POSTs to {API_BASE}/admin/sync with bearer ADMIN_TOKEN — D1 is the
+target since the container filesystem is ephemeral.
+"""
 
 from __future__ import annotations
 
+import logging
+import os
 from datetime import datetime
 from pathlib import Path
 
+import httpx
 import yaml
 
 from .types import SignalCandidate
 
 
-SIGNALS_ROOT = Path(__file__).resolve().parents[3] / "signals"
+LOGGER = logging.getLogger(__name__)
+
+
+def _default_signals_root() -> Path:
+    """Walk up looking for the repo's `signals/` directory."""
+    here = Path(__file__).resolve()
+    for ancestor in here.parents:
+        candidate = ancestor / "signals"
+        if candidate.is_dir():
+            return candidate
+    # Fallback: container temp dir — never git-committed, fine for Modal
+    return Path("/tmp/signals")
 
 
 def write_signal(candidate: SignalCandidate, root: Path | None = None) -> Path:
-    root = root or SIGNALS_ROOT
+    root = root or _default_signals_root()
     day = candidate.published_at.strftime("%Y-%m-%d")
     dir_ = root / day
     dir_.mkdir(parents=True, exist_ok=True)
@@ -42,7 +61,7 @@ def write_signal(candidate: SignalCandidate, root: Path | None = None) -> Path:
 
 
 def write_signal_dict(d: dict, root: Path | None = None) -> Path:
-    root = root or SIGNALS_ROOT
+    root = root or _default_signals_root()
     day = datetime.fromisoformat(d["published_at"]).strftime("%Y-%m-%d")
     dir_ = root / day
     dir_.mkdir(parents=True, exist_ok=True)
@@ -53,3 +72,49 @@ def write_signal_dict(d: dict, root: Path | None = None) -> Path:
         encoding="utf-8",
     )
     return fp
+
+
+def push_signal(candidate: SignalCandidate) -> dict:
+    """POST a signal candidate to {API_BASE}/admin/sync as a draft upsert."""
+    api = os.environ.get("API_BASE")
+    token = os.environ.get("ADMIN_TOKEN")
+    if not api or not token:
+        raise RuntimeError("API_BASE + ADMIN_TOKEN required for push_signal")
+    payload = {
+        "signals": [
+            {
+                "slug": candidate.slug,
+                "signalType": candidate.signal_type,
+                "primaryEntityId": candidate.primary_entity_id,
+                "direction": candidate.direction,
+                "confidence": candidate.confidence,
+                "predictedWindowDays": candidate.predicted_window_days,
+                "publishedAt": candidate.published_at.isoformat(),
+                "evidenceUrls": [e.url for e in candidate.evidence],
+                "spilloverEntityIds": candidate.spillover_entity_ids,
+                "reviewStatus": "draft",
+                "supersedesSignalId": candidate.supersedes_signal_id,
+                "bodyMd": candidate.body_md,
+            }
+        ]
+    }
+    r = httpx.post(
+        f"{api.rstrip('/')}/admin/sync",
+        headers={"Authorization": f"Bearer {token}", "Content-Type": "application/json"},
+        json=payload,
+        timeout=30.0,
+    )
+    r.raise_for_status()
+    return dict(r.json())
+
+
+def emit(candidate: SignalCandidate) -> str:
+    """Choose write path: API push if API_BASE+ADMIN_TOKEN set, else local file."""
+    if os.environ.get("API_BASE") and os.environ.get("ADMIN_TOKEN"):
+        try:
+            push_signal(candidate)
+            return f"pushed:{candidate.slug}"
+        except Exception as exc:
+            LOGGER.warning("push_signal failed, falling back to file: %s", exc)
+    fp = write_signal(candidate)
+    return str(fp)

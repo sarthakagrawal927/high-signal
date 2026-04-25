@@ -12,7 +12,7 @@ from .seed import load_entities
 from .sources import edgar, github, news, reddit, ir
 from .types import Event
 from .generator import generate
-from .writer import write_signal
+from .writer import emit
 
 Source = Literal["edgar", "news", "reddit", "ir", "github", "all"]
 
@@ -56,8 +56,7 @@ def cluster_and_generate(events: list[Event]) -> list[str]:
             continue
         cand = generate(entity_id, evs, _spillover_candidates(entity_id))
         if cand:
-            path = write_signal(cand)
-            written.append(str(path))
+            written.append(emit(cand))
     return written
 
 
