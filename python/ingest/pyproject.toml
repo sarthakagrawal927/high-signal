@@ -16,6 +16,8 @@ dependencies = [
   "modal>=0.64.0",
   "rich>=13.7",
   "python-dotenv>=1.0",
+  "fastapi[standard]>=0.115.0",
+  "yfinance>=0.2.40",
 ]
 
 [build-system]
