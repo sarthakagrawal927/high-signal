@@ -55,18 +55,36 @@ def _slugify(s: str) -> str:
     return s[:80] or "signal"
 
 
-def _ai_complete(prompt: str, content: str) -> dict | None:
-    """Call OpenAI-compatible endpoint configured via env.
+PROMPT_VERSION = "v1"
 
-    Defaults to Hugging Face Inference Router when only HF_TOKEN is set.
+
+def _ai_complete(prompt: str, content: str) -> tuple[dict | None, dict]:
+    """Call OpenAI-compatible endpoint. Returns (parsed_json, audit_meta).
+
+    `audit_meta` is always populated (model + reason + latency + raw response
+    if any) so callers can persist a llm_run row even on failure.
     """
+    import time
+
     key = os.environ.get("AI_API_KEY") or os.environ.get("HF_TOKEN")
     base = os.environ.get("AI_BASE_URL") or (
         "https://router.huggingface.co/v1" if os.environ.get("HF_TOKEN") else None
     )
     model = os.environ.get("AI_MODEL", "meta-llama/Llama-3.3-70B-Instruct")
+    meta: dict = {
+        "model": model,
+        "prompt_version": PROMPT_VERSION,
+        "reason": None,
+        "raw_response": None,
+        "latency_ms": None,
+        "tokens_in": None,
+        "tokens_out": None,
+        "request_user": content[:8000],
+    }
     if not base or not key:
-        return None
+        meta["reason"] = "no_credentials"
+        return None, meta
+    started = time.monotonic()
     try:
         r = httpx.post(
             f"{base.rstrip('/')}/chat/completions",
@@ -82,12 +100,22 @@ def _ai_complete(prompt: str, content: str) -> dict | None:
             },
             timeout=60.0,
         )
+        meta["latency_ms"] = int((time.monotonic() - started) * 1000)
         if r.status_code != 200:
-            return None
-        msg = r.json()["choices"][0]["message"]["content"]
-        return json.loads(msg)
-    except Exception:
-        return None
+            meta["reason"] = f"http_{r.status_code}"
+            meta["raw_response"] = r.text[:2000]
+            return None, meta
+        body = r.json()
+        meta["raw_response"] = body
+        usage = body.get("usage") or {}
+        meta["tokens_in"] = usage.get("prompt_tokens")
+        meta["tokens_out"] = usage.get("completion_tokens")
+        msg = body["choices"][0]["message"]["content"]
+        return json.loads(msg), meta
+    except Exception as exc:
+        meta["latency_ms"] = int((time.monotonic() - started) * 1000)
+        meta["reason"] = f"exception:{exc}"[:200]
+        return None, meta
 
 
 def generate(
@@ -107,15 +135,40 @@ def generate(
         f"SPILLOVER CANDIDATES: {', '.join(spillover_candidates)}\n\n"
         f"EVENTS:\n{blob}"
     )
-    out = _ai_complete(_prompt(), user)
-    if not out or not out.get("publish"):
+    out, meta = _ai_complete(_prompt(), user)
+    request_blob = {"primary": primary_entity_id, "user": meta.pop("request_user", "")}
+
+    def _record(accepted: bool, slug: str | None, reason: str | None) -> None:
+        from . import audit
+
+        audit.push_llm_run(
+            signal_slug=slug,
+            model=meta["model"],
+            prompt_version=meta["prompt_version"],
+            accepted=accepted,
+            reason=reason or meta.get("reason"),
+            request_json=request_blob,
+            response_json=meta.get("raw_response"),
+            tokens_in=meta.get("tokens_in"),
+            tokens_out=meta.get("tokens_out"),
+            latency_ms=meta.get("latency_ms"),
+        )
+
+    if not out:
+        _record(False, None, "no_response")
+        return None
+    if not out.get("publish"):
+        _record(False, None, "publish_false")
         return None
     allowed_signal_types = set(signal_type_ids())
     if out.get("signal_type") not in allowed_signal_types:
+        _record(False, None, f"bad_signal_type:{out.get('signal_type')}")
         return None
+
     headline = out.get("headline", "signal")
-    return SignalCandidate(
-        slug=f"{primary_entity_id.lower()}-{_slugify(headline)}",
+    slug = f"{primary_entity_id.lower()}-{_slugify(headline)}"
+    cand = SignalCandidate(
+        slug=slug,
         signal_type=out["signal_type"],
         primary_entity_id=primary_entity_id,
         direction=out["direction"],
@@ -136,3 +189,5 @@ def generate(
         ],
         body_md=out.get("body_md", ""),
     )
+    _record(True, slug, "ok")
+    return cand

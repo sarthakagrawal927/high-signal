@@ -4,8 +4,10 @@ from __future__ import annotations
 
 import argparse
 from collections import defaultdict
+from datetime import datetime, timezone
 from typing import Literal
 
+from . import audit
 from .extract.entities import primary_entity
 from .graph import spillover_ids
 from .seed import load_entities
@@ -69,9 +71,93 @@ def cluster_and_generate(events: list[Event]) -> list[str]:
 
 
 def run(source: Source, days: int) -> dict:
-    events = fetch(source, days)
-    paths = cluster_and_generate(events)
-    return {"events": len(events), "signals_drafted": len(paths), "paths": paths}
+    started_at = datetime.now(timezone.utc)
+    fetch_run_id = audit.new_run_id()
+    errors = 0
+    error_sample: str | None = None
+
+    try:
+        events = fetch(source, days)
+    except Exception as exc:
+        events = []
+        errors += 1
+        error_sample = f"fetch: {exc}"[:300]
+
+    # Persist raw events for replay/debug regardless of downstream outcome
+    audit.push_events(events, fetch_run_id)
+
+    by_entity: dict[str, list[Event]] = defaultdict(list)
+    no_entity = 0
+    for ev in events:
+        eid = ev.primary_entity_id
+        if not eid:
+            text = f"{ev.title or ''}\n{(ev.content or '')[:4000]}"
+            eid = primary_entity(text)
+        if eid:
+            by_entity[eid].append(ev)
+        else:
+            no_entity += 1
+
+    written: list[str] = []
+    low_cluster = 0
+    for entity_id, evs in by_entity.items():
+        distinct_urls = {e.source_url for e in evs if e.source_url}
+        if len(distinct_urls) < 2:
+            low_cluster += 1
+            continue
+        try:
+            cand = generate(entity_id, evs, _spillover_candidates(entity_id))
+        except Exception as exc:
+            errors += 1
+            if error_sample is None:
+                error_sample = f"generate {entity_id}: {exc}"[:300]
+            continue
+        if cand:
+            written.append(emit(cand))
+
+    audit.push_ingest_run(
+        source=source,
+        started_at=started_at,
+        days=days,
+        events_fetched=len(events),
+        events_dropped_no_entity=no_entity,
+        events_dropped_low_cluster=low_cluster,
+        signals_drafted=len(written),
+        errors=errors,
+        error_sample=error_sample,
+        notes=f"fetch_run_id={fetch_run_id}",
+    )
+
+    return {
+        "fetch_run_id": fetch_run_id,
+        "events": len(events),
+        "events_no_entity": no_entity,
+        "events_low_cluster": low_cluster,
+        "signals_drafted": len(written),
+        "errors": errors,
+        "paths": written,
+    }
+
+
+# Kept for backwards-compat; new run() inlines the same loop with audit hooks.
+def cluster_and_generate(events: list[Event]) -> list[str]:
+    by_entity: dict[str, list[Event]] = defaultdict(list)
+    for ev in events:
+        eid = ev.primary_entity_id
+        if not eid:
+            text = f"{ev.title or ''}\n{(ev.content or '')[:4000]}"
+            eid = primary_entity(text)
+        if eid:
+            by_entity[eid].append(ev)
+    written: list[str] = []
+    for entity_id, evs in by_entity.items():
+        distinct_urls = {e.source_url for e in evs if e.source_url}
+        if len(distinct_urls) < 2:
+            continue
+        cand = generate(entity_id, evs, _spillover_candidates(entity_id))
+        if cand:
+            written.append(emit(cand))
+    return written
 
 
 def main() -> None:
