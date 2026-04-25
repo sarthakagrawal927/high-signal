@@ -9,19 +9,23 @@ from typing import Literal
 from .extract.entities import primary_entity
 from .graph import spillover_ids
 from .seed import load_entities
-from .sources import edgar, github, news, reddit, ir
+from .sources import edgar, github, gov, ir, news, reddit, youtube
 from .types import Event
 from .generator import generate
 from .writer import emit
 
-Source = Literal["edgar", "news", "reddit", "ir", "github", "all"]
+Source = Literal[
+    "edgar", "news", "reddit", "ir", "github", "youtube", "gov", "all"
+]
 
 
 def fetch(source: Source, days: int) -> list[Event]:
     out: list[Event] = []
     if source in {"edgar", "all"}:
         tickers = [e.ticker for e in load_entities() if e.ticker and e.type == "public"]
-        out.extend(edgar.fetch_recent(tickers[:80], days=days))
+        # 8-K is event-driven; 10-Q/K only checked weekly to keep volume bounded
+        forms = ("8-K", "10-Q", "10-K") if days >= 7 else ("8-K",)
+        out.extend(edgar.fetch_recent(tickers[:80], days=days, forms=forms))
     if source in {"news", "all"}:
         out.extend(news.fetch_all(days=days, tier_max=2, fetch_body=True))
     if source in {"reddit", "all"}:
@@ -30,6 +34,10 @@ def fetch(source: Source, days: int) -> list[Event]:
         out.extend(ir.fetch_all())
     if source in {"github", "all"}:
         out.extend(github.fetch_all(days=max(days, 7)))
+    if source in {"gov", "all"}:
+        out.extend(gov.fetch_all(days=max(days, 3)))
+    if source in {"youtube", "all"}:
+        out.extend(youtube.fetch_all(days=max(days, 7)))
     return out
 
 
@@ -70,7 +78,7 @@ def main() -> None:
     p = argparse.ArgumentParser()
     p.add_argument(
         "--source",
-        choices=["edgar", "news", "reddit", "ir", "github", "all"],
+        choices=["edgar", "news", "reddit", "ir", "github", "youtube", "gov", "all"],
         default="all",
     )
     p.add_argument("--days", type=int, default=1)
