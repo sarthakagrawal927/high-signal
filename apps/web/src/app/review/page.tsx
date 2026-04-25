@@ -5,33 +5,25 @@ import type { SignalRow } from "@/lib/api";
 import { DirectionPill } from "@/components/atoms/DirectionPill";
 import { ConfidenceBadge } from "@/components/atoms/ConfidenceBadge";
 
-const TOKEN_KEY = "hs.adminToken";
-const API_BASE = process.env["NEXT_PUBLIC_API_BASE"] ?? "https://high-signal-api.sarthakagrawal927.workers.dev";
+const API_BASE =
+  process.env.NEXT_PUBLIC_API_BASE ?? "https://high-signal-api.sarthakagrawal927.workers.dev";
 
 type Status = "draft" | "published" | "corrected";
 
 export default function ReviewPage() {
-  const [token, setToken] = useState<string>("");
   const [signals, setSignals] = useState<SignalRow[]>([]);
   const [status, setStatus] = useState<Status>("draft");
   const [busy, setBusy] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
-  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    const t = window.localStorage.getItem(TOKEN_KEY) ?? "";
-    setToken(t);
-    setLoaded(true);
-  }, []);
-
-  useEffect(() => {
-    if (!loaded) return;
     void refresh();
-  }, [status, loaded]);
+  }, [status]);
 
   async function refresh() {
     setErr(null);
     try {
+      // Public read; bearer not required for status query
       const r = await fetch(`${API_BASE}/signals?status=${status}&limit=200`);
       const j = (await r.json()) as { signals: SignalRow[] };
       setSignals(j.signals);
@@ -40,68 +32,49 @@ export default function ReviewPage() {
     }
   }
 
-  async function patch(slug: string, body: Record<string, unknown>) {
-    if (!token) {
-      setErr("no admin token set");
-      return;
-    }
-    setBusy(slug);
+  async function adminFetch(url: string, init: RequestInit): Promise<boolean> {
     setErr(null);
+    const r = await fetch(url, { ...init, credentials: "include" });
+    if (r.status === 401 || r.status === 403) {
+      setErr("not authorized — visit /review while signed in via Cloudflare Access");
+      return false;
+    }
+    if (!r.ok) {
+      setErr(`${init.method ?? "GET"} ${r.status}`);
+      return false;
+    }
+    return true;
+  }
+
+  async function patch(slug: string, body: Record<string, unknown>) {
+    setBusy(slug);
     try {
-      const r = await fetch(`${API_BASE}/admin/signals/${slug}`, {
+      const ok = await adminFetch(`/api/admin/signals/${slug}`, {
         method: "PATCH",
-        headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
-      if (!r.ok) {
-        setErr(`patch ${r.status}`);
-        return;
-      }
-      await refresh();
+      if (ok) await refresh();
     } finally {
       setBusy(null);
     }
   }
 
   async function destroy(slug: string) {
-    if (!token) {
-      setErr("no admin token set");
-      return;
-    }
     if (!window.confirm(`delete ${slug}? this is permanent`)) return;
     setBusy(slug);
-    setErr(null);
     try {
-      const r = await fetch(`${API_BASE}/admin/signals/${slug}`, {
-        method: "DELETE",
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      if (!r.ok) {
-        setErr(`delete ${r.status}`);
-        return;
-      }
-      await refresh();
+      const ok = await adminFetch(`/api/admin/signals/${slug}`, { method: "DELETE" });
+      if (ok) await refresh();
     } finally {
       setBusy(null);
     }
-  }
-
-  function saveToken(t: string) {
-    window.localStorage.setItem(TOKEN_KEY, t);
-    setToken(t);
-  }
-
-  function clearToken() {
-    window.localStorage.removeItem(TOKEN_KEY);
-    setToken("");
   }
 
   const counts = useMemo(() => {
     const c: Record<Status, number> = { draft: 0, published: 0, corrected: 0 };
     return { ...c, [status]: signals.length };
   }, [signals.length, status]);
-
-  if (!loaded) return null;
 
   return (
     <main className="mx-auto max-w-5xl px-6 py-16">
@@ -115,12 +88,10 @@ export default function ReviewPage() {
       <header className="mt-3 border-b border-zinc-800 pb-6">
         <h1 className="text-3xl font-medium tracking-tight">Review queue</h1>
         <p className="mt-2 max-w-2xl text-sm text-zinc-400">
-          Bearer-token gated. Token stays in browser localStorage. Server enforces auth on every
-          mutation.
+          Behind Cloudflare Access. Browser carries the JWT cookie automatically once you've signed
+          in via the IdP. No tokens stored client-side.
         </p>
       </header>
-
-      <TokenStrip token={token} onSave={saveToken} onClear={clearToken} />
 
       <div className="mt-6 flex gap-2 font-mono text-[10px] uppercase tracking-[0.18em]">
         {(["draft", "published", "corrected"] as Status[]).map((s) => (
@@ -169,51 +140,6 @@ export default function ReviewPage() {
         ))}
       </div>
     </main>
-  );
-}
-
-function TokenStrip({
-  token,
-  onSave,
-  onClear,
-}: {
-  token: string;
-  onSave: (t: string) => void;
-  onClear: () => void;
-}) {
-  const [draft, setDraft] = useState("");
-  const masked = token ? `${token.slice(0, 4)}…${token.slice(-4)}` : "";
-  return (
-    <div className="mt-6 flex flex-wrap items-center gap-3 border border-zinc-800 bg-zinc-950 p-4 font-mono text-[11px] uppercase tracking-[0.18em]">
-      <span className="text-zinc-500">admin token</span>
-      {token ? (
-        <>
-          <span className="text-[var(--color-accent)]">{masked}</span>
-          <button onClick={onClear} className="ml-auto text-zinc-400 hover:text-rose-400">
-            clear
-          </button>
-        </>
-      ) : (
-        <>
-          <input
-            value={draft}
-            onChange={(e) => setDraft(e.target.value)}
-            placeholder="paste ADMIN_TOKEN"
-            className="flex-1 border border-zinc-800 bg-transparent px-2 py-1 text-zinc-200 placeholder:text-zinc-600 focus:border-[var(--color-accent)] focus:outline-none"
-            type="password"
-          />
-          <button
-            onClick={() => {
-              if (draft.trim()) onSave(draft.trim());
-              setDraft("");
-            }}
-            className="border border-[var(--color-accent)] px-3 py-1 text-[var(--color-accent)] hover:bg-white/[0.04]"
-          >
-            save
-          </button>
-        </>
-      )}
-    </div>
   );
 }
 
