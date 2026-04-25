@@ -12,11 +12,11 @@
   },
   "dependencies": {
     "@high-signal/shared": "workspace:*",
-    "drizzle-orm": "^0.36.4"
+    "drizzle-orm": "0.45.2"
   },
   "devDependencies": {
-    "drizzle-kit": "^0.30.1",
-    "typescript": "^6.0.3",
-    "wrangler": "^4.85.0"
+    "drizzle-kit": "0.31.10",
+    "typescript": "6.0.3",
+    "wrangler": "4.85.0"
   }
 }

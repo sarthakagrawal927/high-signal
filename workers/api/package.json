@@ -12,17 +12,17 @@
   "dependencies": {
     "@high-signal/db": "workspace:*",
     "@high-signal/shared": "workspace:*",
-    "@saas-maker/ai": "^0.1.0",
-    "@saas-maker/foundry-db": "^0.1.0",
-    "@saas-maker/foundry-email": "^0.1.0",
-    "@saas-maker/ops": "^0.1.1",
-    "drizzle-orm": "^0.36.4",
-    "hono": "^4.12.15"
+    "@saas-maker/ai": "0.1.0",
+    "@saas-maker/foundry-db": "0.1.0",
+    "@saas-maker/foundry-email": "0.1.0",
+    "@saas-maker/ops": "1.0.0",
+    "drizzle-orm": "0.45.2",
+    "hono": "4.12.15"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20260424.1",
-    "typescript": "^6.0.3",
-    "vitest": "^4.1.5",
-    "wrangler": "^4.85.0"
+    "@cloudflare/workers-types": "4.20260424.1",
+    "typescript": "6.0.3",
+    "vitest": "4.1.5",
+    "wrangler": "4.85.0"
   }
 }

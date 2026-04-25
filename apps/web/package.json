@@ -15,27 +15,27 @@
   },
   "dependencies": {
     "@high-signal/shared": "workspace:*",
-    "@saas-maker/ai": "^0.1.0",
-    "@saas-maker/analytics-sdk": "^0.2.1",
-    "clsx": "^2.1.1",
-    "geist": "^1.5.0",
-    "lucide-react": "^1.11.0",
-    "next": "^16.2.4",
-    "react": "^19.2.5",
-    "react-dom": "^19.2.5",
-    "tailwind-merge": "^3.5.0"
+    "@saas-maker/ai": "0.1.0",
+    "@saas-maker/analytics-sdk": "0.2.1",
+    "clsx": "2.1.1",
+    "geist": "1.5.0",
+    "lucide-react": "1.11.0",
+    "next": "16.2.4",
+    "react": "19.2.5",
+    "react-dom": "19.2.5",
+    "tailwind-merge": "3.5.0"
   },
   "devDependencies": {
-    "@opennextjs/cloudflare": "^1.19.4",
-    "@playwright/test": "^1.59.1",
-    "@tailwindcss/postcss": "^4.2.4",
-    "@tailwindcss/typography": "^0.5.19",
-    "@types/node": "^25.6.0",
-    "@types/react": "^19.2.14",
-    "@types/react-dom": "^19.2.3",
-    "postcss": "^8.5.10",
-    "tailwindcss": "^4.2.4",
-    "typescript": "^6.0.3",
-    "wrangler": "^4.85.0"
+    "@opennextjs/cloudflare": "1.19.4",
+    "@playwright/test": "1.59.1",
+    "@tailwindcss/postcss": "4",
+    "@tailwindcss/typography": "0.5.19",
+    "@types/node": "25.6.0",
+    "@types/react": "19",
+    "@types/react-dom": "19",
+    "postcss": "8.5.10",
+    "tailwindcss": "4",
+    "typescript": "6.0.3",
+    "wrangler": "4.85.0"
   }
 }

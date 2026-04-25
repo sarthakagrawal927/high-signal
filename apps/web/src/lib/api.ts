@@ -1,12 +1,36 @@
-const API_BASE = process.env["NEXT_PUBLIC_API_BASE"] ?? "http://127.0.0.1:8787";
+// Default to deployed prod API. Override at build time with NEXT_PUBLIC_API_BASE for local dev.
+const API_BASE =
+  process.env.NEXT_PUBLIC_API_BASE ?? "https://high-signal-api.sarthakagrawal927.workers.dev";
+
+// Service binding when running inside the high-signal-web Worker (avoids CF
+// "fetch loop" guard that blocks workers.dev → workers.dev fetches in the same
+// account). Resolved lazily so it works in both Worker SSR and `next dev`.
+async function getBinding(): Promise<{ fetch: typeof fetch } | null> {
+  if (typeof process === "undefined") return null;
+  try {
+    const mod = await import("@opennextjs/cloudflare");
+    const ctx = (mod as { getCloudflareContext?: () => { env?: Record<string, unknown> } })
+      .getCloudflareContext?.();
+    const api = ctx?.env?.["API"];
+    if (api && typeof (api as { fetch?: unknown }).fetch === "function") {
+      return api as { fetch: typeof fetch };
+    }
+  } catch {
+    /* not in Worker context */
+  }
+  return null;
+}
 
 async function fetchJson<T>(path: string, init?: RequestInit): Promise<T> {
-  const r = await fetch(`${API_BASE}${path}`, {
-    ...init,
-    next: { revalidate: 60 },
-  });
+  const binding = await getBinding();
+  let r: Response;
+  if (binding) {
+    r = await binding.fetch(`https://api${path}`, init);
+  } else {
+    r = await fetch(`${API_BASE}${path}`, { ...init, cache: "no-store" });
+  }
   if (!r.ok) throw new Error(`api ${path} ${r.status}`);
-  return r.json();
+  return r.json() as Promise<T>;
 }
 
 export type Direction = "up" | "down" | "neutral";
