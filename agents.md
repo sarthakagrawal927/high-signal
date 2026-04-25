@@ -86,4 +86,28 @@ Reuse user's `@saas-maker/*` packages instead of rebuilding:
 - Mobile app, Discord/Slack alerts (RSS + email + Twitter is enough)
 
 ## Active context
-Plan written. Next: pnpm init workspace, scaffold `apps/web` + `workers/api` + `python/ingest`, write Drizzle schema, seed AI-infra entity list (~150 names), ship first SEC EDGAR 8-K adapter.
+
+### Built (2026-04-25)
+- **Monorepo scaffolded** — pnpm workspace, web + api + db + shared, plus `python/ingest`
+- **Drizzle schema + 0000 migration** — entities, relationships, events, signals, evidence, score_runs
+- **Seed data** in `python/ingest/src/high_signal_ingest/seed/`:
+  - `ai_infra_entities.csv` — 274 entities across the full AI-infra stack
+  - `relationships.csv` — 175 curated supplier/customer/peer/partner edges with citations
+  - `signal_types.yaml` — 31 signal types with extraction patterns + windows + spillover hints
+  - `sources.yaml` — 168 sources (74 tier-1) across IR, news, blogs, SEC, Reddit, X, GitHub, conferences, gov
+- **Python ingest pipeline** — `sources/{edgar,news,reddit,ir}.py`, `extract/entities.py` (gazetteer + GLiNER), `score/{sentiment,backtest}.py`, `generator.py` (LLM signal drafter), `writer.py` (markdown to `signals/`), `pipeline.py` (orchestrator)
+- **Modal deploy** — `modal_app.py` with daily cron @ 06:00 UTC
+- **Worker API (Hono on CF Workers)** — routes: `/signals`, `/signals/:slug`, `/signals/by-entity/:id`, `/entities`, `/entities/:id`, `/track-record`, `/track-record/series`, `/digest/weekly`, `/digest/rss`; cron handler triggers Modal
+- **Web app (Next.js 16, Tailwind v4, futurist UI)** — pages: `/`, `/signals`, `/signals/[slug]`, `/entities`, `/entities/[id]`, `/track-record`, `/digest`, OG image route, 404
+- **Components** — `DirectionPill`, `ConfidenceBadge`, `SignalCard` atoms+molecules
+- **Scripts** — `scripts/seed-d1.ts` (CSV → D1), `scripts/sync-signals.ts` (markdown → D1)
+
+### Next concrete actions for user
+1. `pnpm install` at repo root
+2. `cd python/ingest && uv sync`
+3. `wrangler d1 create high-signal-db` → paste id into `workers/api/wrangler.toml`
+4. `pnpm db:migrate:local && pnpm db:seed:local`
+5. Set env: `AI_BASE_URL`, `AI_API_KEY`, `AI_MODEL`, `SEC_USER_AGENT` (Modal Secret named `high-signal`)
+6. `pnpm dev` — runs web + worker
+7. `cd python/ingest && uv run python -m high_signal_ingest.pipeline --source news --days 1` to draft first signals into `signals/draft/`
+8. Manual review: open drafts → flip frontmatter `review_status: published` → commit → `pnpm signals:sync:local`

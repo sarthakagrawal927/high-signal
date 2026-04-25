@@ -8,7 +8,8 @@
     "@saas-maker/prettier-config": "^1.0.0",
     "@saas-maker/tsconfig": "^1.0.0",
     "husky": "^9.1.7",
-    "next": "^16.2.4"
+    "next": "^16.2.4",
+    "tsx": "^4.20.0"
   },
   "scripts": {
     "dev": "pnpm -r --parallel dev",
@@ -18,6 +19,13 @@
     "typecheck": "pnpm -r typecheck",
     "test": "pnpm -r test",
     "lint": "pnpm -r lint",
+    "db:migrate:local": "pnpm --filter @high-signal/db migrate:local",
+    "db:migrate:remote": "pnpm --filter @high-signal/db migrate:remote",
+    "db:seed:local": "tsx scripts/seed-d1.ts --local",
+    "db:seed:remote": "tsx scripts/seed-d1.ts --remote",
+    "signals:sync:local": "tsx scripts/sync-signals.ts --local",
+    "signals:sync:remote": "tsx scripts/sync-signals.ts --remote",
+    "ingest:local": "cd python/ingest && uv run python -m high_signal_ingest.pipeline --source all --days 1",
     "prepare": "husky"
   },
   "prettier": "@saas-maker/prettier-config"

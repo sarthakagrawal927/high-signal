@@ -1,0 +1,176 @@
+from_entity_id,to_entity_id,type,weight,evidence_url,note
+TSM,NVDA,supplier,1.0,https://www.tsmc.com/english/dedicatedFoundry/services/cowos,Sole foundry for NVDA Hopper/Blackwell GPUs via CoWoS
+TSM,AMD,supplier,1.0,https://ir.amd.com/news-events/press-releases,Sole foundry for AMD MI300/MI350 and EPYC CPUs
+TSM,AVGO,supplier,0.9,https://investors.broadcom.com,Foundry for AVGO custom ASICs (Google TPU, Meta MTIA)
+TSM,AAPL,supplier,1.0,https://www.apple.com/newsroom,Exclusive foundry for A/M-series silicon
+TSM,QCOM,supplier,0.7,https://www.qualcomm.com/news,Leading-edge foundry partner for Snapdragon
+TSM,MRVL,supplier,0.9,https://investor.marvell.com,Foundry for Marvell custom AI silicon and DSPs
+TSM,ALAB,supplier,0.8,https://investors.asteralabs.com,Foundry for Astera Labs Aries/Taurus connectivity ICs
+TSM,CRDO,supplier,0.7,https://investors.credosemi.com,Foundry for Credo SerDes/AEC silicon
+TSM,INTC,competitor,0.6,https://www.reuters.com/technology/intel-foundry-tsmc,Intel Foundry competes with TSMC at leading edge
+ASML,TSM,supplier,1.0,https://www.asml.com/en/investors,Sole supplier of EUV lithography to TSMC
+ASML,SAMSUNG,supplier,1.0,https://www.asml.com/en/investors,Sole EUV supplier to Samsung Foundry/memory
+ASML,INTC,supplier,1.0,https://www.asml.com/en/news/press-releases,Sole High-NA EUV supplier to Intel 18A
+ASML,SK_HYNIX,supplier,0.9,https://www.asml.com/en/investors,EUV supplier to SK Hynix DRAM
+ASML,MU,supplier,0.8,https://investors.micron.com,EUV adoption at Micron 1-gamma DRAM
+AMAT,TSM,supplier,0.8,https://ir.appliedmaterials.com,Major WFE supplier for deposition/etch at TSMC
+AMAT,SAMSUNG,supplier,0.8,https://ir.appliedmaterials.com,Major WFE supplier to Samsung fabs
+AMAT,INTC,supplier,0.8,https://ir.appliedmaterials.com,Major WFE supplier to Intel
+AMAT,MU,supplier,0.7,https://ir.appliedmaterials.com,WFE supplier for Micron HBM/DRAM
+AMAT,SK_HYNIX,supplier,0.7,https://ir.appliedmaterials.com,WFE supplier to SK Hynix
+LRCX,TSM,supplier,0.8,https://investor.lamresearch.com,Etch/deposition supplier to TSMC
+LRCX,SAMSUNG,supplier,0.8,https://investor.lamresearch.com,Etch/deposition supplier to Samsung
+LRCX,SK_HYNIX,supplier,0.9,https://investor.lamresearch.com,Dominant etch supplier in HBM/3D NAND
+LRCX,MU,supplier,0.9,https://investor.lamresearch.com,Critical etch supplier for Micron NAND/DRAM
+LRCX,INTC,supplier,0.7,https://investor.lamresearch.com,WFE supplier to Intel
+KLAC,TSM,supplier,0.9,https://ir.kla.com,Dominant process control/metrology supplier to TSMC
+KLAC,SAMSUNG,supplier,0.8,https://ir.kla.com,Process control supplier to Samsung
+KLAC,INTC,supplier,0.8,https://ir.kla.com,Process control supplier to Intel
+KLAC,SK_HYNIX,supplier,0.7,https://ir.kla.com,Process control supplier to SK Hynix
+KLAC,MU,supplier,0.7,https://ir.kla.com,Process control supplier to Micron
+AMAT,LRCX,competitor,0.6,https://www.semiconductors.org,WFE peers across deposition/etch overlap
+SK_HYNIX,NVDA,supplier,1.0,https://www.skhynix.com/eng/pr,Lead HBM3E supplier to NVIDIA Hopper/Blackwell
+SAMSUNG,NVDA,supplier,0.5,https://news.samsung.com,HBM3E qualification ramping for NVDA
+MU,NVDA,supplier,0.6,https://investors.micron.com,HBM3E shipping into NVIDIA H200/B200
+SK_HYNIX,AMD,supplier,0.7,https://www.skhynix.com/eng/pr,HBM supplier for AMD MI300/MI350
+SAMSUNG,AMD,supplier,0.4,https://news.samsung.com,Secondary HBM source for AMD
+MU,AMD,supplier,0.4,https://investors.micron.com,Secondary HBM source for AMD
+SAMSUNG,GOOGL,supplier,0.7,https://news.samsung.com,HBM into Google TPU; foundry for some TPU gens
+MU,SAMSUNG,competitor,0.7,https://www.dramexchange.com,Top-3 DRAM/HBM competitor
+MU,SK_HYNIX,competitor,0.8,https://www.dramexchange.com,Top-3 DRAM/HBM competitor
+SAMSUNG,SK_HYNIX,competitor,0.8,https://www.dramexchange.com,Korean DRAM/HBM duopoly competitors
+AMD,NVDA,competitor,0.9,https://www.amd.com/en/investor,Direct GPU/AI accelerator competitor
+INTC,NVDA,competitor,0.4,https://www.intc.com,Gaudi vs NVDA in AI accelerators (small share)
+INTC,AMD,competitor,1.0,https://www.intc.com,x86 server CPU duopoly
+AVGO,MRVL,competitor,0.8,https://investors.broadcom.com,Custom AI ASIC and merchant networking peers
+CDNS,SNPS,competitor,0.9,https://www.cadence.com/en_US/home/company/newsroom.html,EDA duopoly; near-identical TAM
+ARM,QCOM,partner,0.9,https://www.arm.com/company/news,Architectural licensee; Snapdragon based on ARM
+ARM,AAPL,partner,0.9,https://www.arm.com/company/news,Architectural license; A/M-series ARM ISA
+ARM,NVDA,partner,0.6,https://www.arm.com/company/news,Grace CPU built on Neoverse cores
+ARM,AMZN,partner,0.7,https://www.arm.com/company/news,AWS Graviton uses Neoverse cores
+ARM,MRVL,partner,0.7,https://www.arm.com/company/news,Marvell custom CPUs use ARM cores
+ARM,GOOGL,partner,0.5,https://www.arm.com/company/news,Google Axion CPU on Neoverse
+NVDA,MSFT,customer,0.9,https://www.microsoft.com/en-us/Investor,Largest hyperscaler GPU buyer (Azure)
+NVDA,META,customer,0.9,https://investor.fb.com,Massive Hopper/Blackwell deployments
+NVDA,GOOGL,customer,0.6,https://abc.xyz/investor,GPU buyer alongside in-house TPU
+NVDA,AMZN,customer,0.7,https://ir.aboutamazon.com,AWS GPU buyer alongside Trainium
+NVDA,ORCL,customer,0.8,https://investor.oracle.com,OCI is heavy NVDA GPU buyer
+NVDA,CRWV,customer,1.0,https://www.coreweave.com,Neocloud almost wholly on NVDA GPUs; equity ties
+NVDA,NBIS,customer,0.9,https://group.nebius.com/investors,Neocloud built on NVDA GPUs
+AMD,MSFT,customer,0.6,https://www.microsoft.com/en-us/Investor,Azure deploys MI300X
+AMD,META,customer,0.6,https://investor.fb.com,Meta deploys MI300X for inference
+AMD,ORCL,customer,0.4,https://investor.oracle.com,OCI offers MI300X clusters
+AVGO,GOOGL,customer,1.0,https://investors.broadcom.com,Co-designs and supplies Google TPU silicon
+AVGO,META,customer,0.8,https://investors.broadcom.com,Co-designs Meta MTIA inference ASIC
+AVGO,BYTEDANCE,customer,0.6,https://www.reuters.com/technology/broadcom-bytedance-ai-chip,Reported ASIC partner for ByteDance
+MRVL,AMZN,customer,0.9,https://investor.marvell.com,Co-designs AWS Trainium2; Inferentia silicon
+MRVL,MSFT,customer,0.6,https://investor.marvell.com,Custom ASIC partnership for Azure Maia gen
+ANET,MSFT,customer,0.9,https://investors.arista.com,Major Azure backbone networking customer
+ANET,META,customer,0.9,https://investors.arista.com,Largest single customer; AI fabric build-out
+ANET,AVGO,supplier,0.9,https://investors.broadcom.com,Tomahawk/Jericho silicon powers Arista switches
+COHR,MSFT,customer,0.6,https://www.coherent.com/news,800G transceiver customer (Azure AI)
+COHR,GOOGL,customer,0.6,https://www.coherent.com/news,800G optics into Google AI fabric
+COHR,META,customer,0.6,https://www.coherent.com/news,800G optics into Meta AI clusters
+LITE,GOOGL,customer,0.7,https://www.lumentum.com/en/about/investors,Datacom optics; AI build-out
+LITE,MSFT,customer,0.6,https://www.lumentum.com/en/about/investors,800G transceiver supplier
+LITE,AMZN,customer,0.5,https://www.lumentum.com/en/about/investors,Datacom optics for AWS
+FN,MSFT,customer,0.7,https://investor.fabrinet.com,Optical module manufacturing for AI optics
+FN,COHR,customer,0.9,https://investor.fabrinet.com,Contract manufacturer for Coherent transceivers
+FN,LITE,customer,0.5,https://investor.fabrinet.com,Manufactures Lumentum modules
+COHR,LITE,competitor,0.9,https://www.coherent.com/news,Direct datacom transceiver competitors
+ALAB,NVDA,partner,0.6,https://investors.asteralabs.com,PCIe/CXL retimers in NVDA AI systems
+ALAB,AMD,partner,0.5,https://investors.asteralabs.com,Connectivity silicon for MI300 platforms
+CRDO,MSFT,customer,0.8,https://investors.credosemi.com,Active Electrical Cable ramp for Azure
+CRDO,AMZN,customer,0.7,https://investors.credosemi.com,AEC and SerDes for AWS networking
+CRDO,META,customer,0.5,https://investors.credosemi.com,AEC adoption in Meta AI fabric
+SMCI,NVDA,customer,0.9,https://www.supermicro.com/en/pressreleases,One of largest NVDA HGX/DGX system builders
+DELL,NVDA,customer,0.9,https://investors.delltechnologies.com,Major AI server OEM (XE9680 on Hopper/Blackwell)
+HPE,NVDA,customer,0.7,https://investors.hpe.com,AI server line built on NVDA GPUs (Cray)
+DELL,SMCI,competitor,0.8,https://investors.delltechnologies.com,Direct AI server OEM competitors
+HPE,SMCI,competitor,0.7,https://investors.hpe.com,AI server OEM competitors
+DELL,HPE,competitor,0.9,https://investors.delltechnologies.com,Enterprise server duopoly
+SMCI,AMD,customer,0.5,https://www.supermicro.com/en/pressreleases,MI300X system builder
+DELL,AMD,customer,0.5,https://investors.delltechnologies.com,EPYC and MI300 server platforms
+CEG,MSFT,customer,1.0,https://investors.constellationenergy.com,20-yr Three Mile Island PPA for AI datacenters
+TLN,AMZN,customer,0.9,https://www.talenenergy.com/news,Susquehanna nuclear PPA with AWS datacenter
+VST,MSFT,customer,0.5,https://investor.vistracorp.com,Power supply discussions for AI datacenters
+CEG,VST,competitor,0.7,https://www.utilitydive.com,Nuclear/IPP peers with AI-power exposure
+CEG,TLN,competitor,0.7,https://www.utilitydive.com,Nuclear-heavy IPP peers
+VST,TLN,competitor,0.6,https://www.utilitydive.com,Independent power producer peers
+NRG,VST,competitor,0.6,https://www.utilitydive.com,Texas IPP/retail power peers
+GEV,CEG,supplier,0.7,https://www.gevernova.com/news,Nuclear services and grid equipment supplier
+GEV,VST,supplier,0.6,https://www.gevernova.com/news,Gas turbines and grid gear for IPPs
+GEV,TLN,supplier,0.5,https://www.gevernova.com/news,Grid/turbine equipment supplier
+GEV,MSFT,supplier,0.6,https://www.gevernova.com/news,Grid transformers and turbines for datacenters
+GEV,GOOGL,supplier,0.5,https://www.gevernova.com/news,Power equipment for hyperscaler buildouts
+GEV,AMZN,supplier,0.5,https://www.gevernova.com/news,Power equipment for AWS datacenters
+ETN,MSFT,supplier,0.7,https://www.eaton.com/us/en-us/company/news-insights.html,Datacenter electrical/PDU supplier
+ETN,GOOGL,supplier,0.6,https://www.eaton.com/us/en-us/company/news-insights.html,Datacenter power management gear
+ETN,AMZN,supplier,0.6,https://www.eaton.com/us/en-us/company/news-insights.html,Datacenter electrical infrastructure
+ETN,META,supplier,0.6,https://www.eaton.com/us/en-us/company/news-insights.html,Datacenter switchgear and UPS
+ETN,VRT,competitor,0.6,https://www.vertiv.com/en-us/about,Overlap in datacenter power management
+PWR,GEV,partner,0.7,https://investors.quantaservices.com,Installs GE Vernova grid/transmission equipment
+PWR,MSFT,supplier,0.5,https://investors.quantaservices.com,Datacenter electrical infrastructure construction
+PWR,GOOGL,supplier,0.5,https://investors.quantaservices.com,Datacenter buildout services
+PWR,AMZN,supplier,0.5,https://investors.quantaservices.com,Datacenter and grid construction
+VRT,MSFT,supplier,0.8,https://investors.vertiv.com,Liquid cooling and power for Azure AI sites
+VRT,GOOGL,supplier,0.7,https://investors.vertiv.com,Cooling/thermal supplier
+VRT,META,supplier,0.7,https://investors.vertiv.com,Liquid cooling for AI clusters
+VRT,AMZN,supplier,0.6,https://investors.vertiv.com,AWS thermal management supplier
+VRT,NVDA,partner,0.7,https://investors.vertiv.com,Reference designs for GB200 NVL72 cooling
+CRWV,MSFT,customer,0.7,https://www.coreweave.com,Largest customer; reported >50% revenue
+CRWV,NVDA,partner,0.9,https://www.coreweave.com,Equity stake; preferential GPU allocation
+NBIS,MSFT,customer,0.7,https://group.nebius.com/investors,Multi-billion AI infra capacity deal
+NBIS,NVDA,partner,0.8,https://group.nebius.com/investors,Strategic NVDA equity investment; GPU allocation
+GOOGL,AVGO,partner,1.0,https://investors.broadcom.com,TPU co-design partnership across generations
+META,AVGO,partner,0.8,https://investors.broadcom.com,MTIA ASIC co-design
+AMZN,MRVL,partner,0.9,https://investor.marvell.com,Trainium2 co-design partnership
+MSFT,GOOGL,competitor,0.9,https://www.microsoft.com/en-us/Investor,Hyperscaler cloud and AI services rivals
+AMZN,GOOGL,competitor,0.9,https://ir.aboutamazon.com,AWS vs GCP cloud rivalry
+AMZN,MSFT,competitor,1.0,https://ir.aboutamazon.com,AWS vs Azure cloud duopoly
+GOOGL,META,peer,0.5,https://abc.xyz/investor,Top-tier AI capex spenders
+ORCL,MSFT,peer,0.5,https://investor.oracle.com,Cloud capex ramp; OCI partners with Azure
+CRWV,NBIS,competitor,0.8,https://www.coreweave.com,Pure-play GPU neocloud peers
+INTC,TSM,customer,0.5,https://www.intc.com,Intel uses TSMC for some tile production (Lunar Lake)
+SAMSUNG,TSM,competitor,0.8,https://www.tsmc.com/english,Foundry leading-edge competitor (Samsung Foundry)
+INTC,SAMSUNG,competitor,0.5,https://www.intc.com,Foundry and memory adjacency competitors
+QCOM,AVGO,competitor,0.5,https://www.qualcomm.com/news,Wireless/connectivity competitors
+QCOM,ARM,partner,0.9,https://www.qualcomm.com/news,Architectural licensee; Oryon CPU
+ALAB,CRDO,competitor,0.7,https://investors.asteralabs.com,Connectivity silicon (retimers/AECs) overlap
+SMCI,DELL,competitor,0.8,https://www.supermicro.com/en/pressreleases,AI server OEM rivalry
+ANET,COHR,partner,0.5,https://investors.arista.com,Switches paired with Coherent optics in AI fabrics
+TSM,ALAB,partner,0.5,https://www.tsmc.com/english/dedicatedFoundry/services/cowos,CoWoS substrate ecosystem partnership
+NVDA,ANET,partner,0.5,https://investors.arista.com,Spectrum-X plus Arista AI Ethernet alternative
+NVDA,DELL,partner,0.8,https://investors.delltechnologies.com,Reference architectures and AI Factory program
+NVDA,HPE,partner,0.6,https://investors.hpe.com,AI factory partnership; co-engineered systems
+NVDA,SMCI,partner,0.9,https://www.supermicro.com/en/pressreleases,Tightest OEM partner; first-to-market on platforms
+NVDA,VRT,partner,0.7,https://investors.vertiv.com,Liquid cooling reference designs for Blackwell
+NVDA,ORCL,partner,0.7,https://investor.oracle.com,Joint AI cloud and supercomputer deals
+INTC,ARM,competitor,0.6,https://www.intc.com,x86 vs ARM datacenter ISA rivalry
+TSM,SMIC,competitor,0.5,https://www.tsmc.com/english,Foundry competitor (China; export-restricted)
+ASML,SMIC,supplier,0.3,https://www.asml.com/en/investors,DUV-only supplier post EUV export ban
+ASE,TSM,partner,0.7,https://ir.aseglobal.com,OSAT advanced packaging partner (CoWoS overflow)
+AMKR,TSM,partner,0.6,https://ir.amkor.com,Arizona advanced packaging partner
+ASE,AMKR,competitor,0.9,https://ir.aseglobal.com,Top-2 OSAT global competitors
+ASE,JCET,competitor,0.7,https://ir.aseglobal.com,Global OSAT peers
+CDNS,ARM,partner,0.6,https://www.cadence.com/en_US/home/company/newsroom.html,EDA tooling and IP integration with ARM
+SNPS,ARM,partner,0.6,https://news.synopsys.com,EDA tooling and IP integration with ARM
+CDNS,TSM,partner,0.7,https://www.cadence.com/en_US/home/company/newsroom.html,Reference flows for TSMC nodes (N3/N2)
+SNPS,TSM,partner,0.7,https://news.synopsys.com,Reference flows and IP for TSMC nodes
+ANET,CRDO,customer,0.4,https://investors.arista.com,AEC adoption in Arista AI fabrics
+META,CRWV,customer,0.5,https://www.coreweave.com,Reported $14B compute deal
+MSFT,CRWV,customer,0.7,https://www.coreweave.com,Largest neocloud capacity buyer
+GOOGL,TSM,customer,0.7,https://www.tsmc.com/english,TPU silicon fabbed at TSMC leading edge
+META,TSM,customer,0.5,https://www.tsmc.com/english,MTIA ASIC fabbed at TSMC
+AMZN,TSM,customer,0.6,https://www.tsmc.com/english,Trainium/Graviton fabbed at TSMC
+MSFT,TSM,customer,0.5,https://www.tsmc.com/english,Maia/Cobalt silicon fabbed at TSMC
+AAPL,TSM,customer,1.0,https://www.apple.com/newsroom,Sole foundry for Apple silicon
+QCOM,TSM,customer,0.7,https://www.qualcomm.com/news,Snapdragon leading-edge fabbed at TSMC
+NVDA,TSM,customer,1.0,https://www.tsmc.com/english,Sole foundry for NVDA leading-edge GPUs
+AMD,TSM,customer,1.0,https://ir.amd.com/news-events/press-releases,Sole foundry for AMD CPUs and GPUs
+AVGO,TSM,customer,0.9,https://investors.broadcom.com,Custom ASICs and networking silicon at TSMC
+MRVL,TSM,customer,0.9,https://investor.marvell.com,Custom AI silicon fabbed at TSMC
+TSM,GOOGL,supplier,0.7,https://www.tsmc.com/english,Foundry partner for TPU generations
+META,NVDA,customer,0.9,https://investor.fb.com,Multi-100k GPU AI cluster build-out
+GOOGL,NVDA,customer,0.6,https://abc.xyz/investor,GCP NVDA capacity alongside TPU
+ORCL,NVDA,customer,0.8,https://investor.oracle.com,OCI superclusters built on NVDA Hopper/Blackwell

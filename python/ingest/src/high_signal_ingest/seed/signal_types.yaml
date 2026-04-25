@@ -1,0 +1,508 @@
+# AI Infra Signal Type Taxonomy
+# Each entry defines a class of evidence-backed market signal with detection
+# anchors, default propagation pattern across the supply chain, and source
+# priority for triangulation. All signals must be public-source-verifiable.
+
+- id: capex_change_hyperscaler
+  name: Hyperscaler capex revision
+  description: Material change in announced or implied AI infra capex by a hyperscaler (MSFT, GOOGL, AMZN, META, ORCL).
+  primary_entity_types: [hyperscaler]
+  spillover_pattern: [gpu, asic, networking, optical, power, grid, cooling, memory, foundry]
+  default_window_days: 20
+  evidence_anchors:
+    - 'guidance language: "raised", "lowered", "now expects", "annual capex of", "increasing investment in AI infrastructure"'
+    - 'earnings call sections: "AI infrastructure", "data center capex", "capital expenditures"'
+    - 'filings: 10-Q MD&A capex line, 8-K item 2.02, investor letter'
+  trigger_examples:
+    - MSFT guides FY26 capex to $80B vs $75B prior
+    - META lowers full-year capex guide on slower buildout
+    - GOOGL raises capex run-rate to $90B citing AI demand
+  direction_hint: positive_for_suppliers
+  confidence_floor: medium
+  source_priority: [edgar_8k, ir_pdf, transcript, news_tier1]
+
+- id: capex_change_neocloud
+  name: Neocloud capex revision
+  description: Material change in build-out plans by a GPU-as-a-service / neocloud (CRWV, NBIS, Lambda, Crusoe).
+  primary_entity_types: [neocloud]
+  spillover_pattern: [gpu, networking, optical, power, real_estate, financing]
+  default_window_days: 25
+  evidence_anchors:
+    - 'guidance language: "contracted backlog", "RPO", "deployed capacity", "MW under contract"'
+    - 'filings: S-1, 10-Q, 8-K credit facility notice'
+    - 'press: announced new data center site, cluster size in MW or GPU count'
+  trigger_examples:
+    - CRWV announces $11B Microsoft contract expansion
+    - NBIS doubles 2026 GPU deployment target
+  direction_hint: positive_for_suppliers
+  confidence_floor: medium
+  source_priority: [edgar_8k, edgar_s1, ir_pdf, news_tier1]
+
+- id: gpu_lead_time_shift
+  name: GPU lead time shift
+  description: Change in stated or channel-checked lead times for flagship accelerators (H100, H200, B200, GB200, MI300/MI325, TPU).
+  primary_entity_types: [chip_designer, oem, neocloud]
+  spillover_pattern: [foundry, hbm, substrate, cooling, networking]
+  default_window_days: 30
+  evidence_anchors:
+    - 'language: "lead times of X weeks", "allocations tight", "shipments improving", "supply has caught up"'
+    - 'sources: earnings call Q&A, OEM channel commentary, analyst supply checks'
+  trigger_examples:
+    - NVDA states B200 lead times normalized from 52 to 20 weeks
+    - SMCI cites continued GPU allocation constraints
+  direction_hint: mixed
+  confidence_floor: medium
+  source_priority: [transcript, news_tier1, analyst_note, ir_pdf]
+
+- id: hbm_supply_shift
+  name: HBM supply / qualification shift
+  description: Change in HBM3e/HBM4 capacity, qualification status, or pricing from SK Hynix, Samsung, or Micron.
+  primary_entity_types: [memory]
+  spillover_pattern: [gpu, asic, foundry_advanced_packaging]
+  default_window_days: 30
+  evidence_anchors:
+    - 'language: "HBM sold out", "qualified at NVIDIA", "HBM4 ramp", "12-Hi stack", "bit growth"'
+    - 'filings: 10-Q segment commentary, capex disclosure'
+  trigger_examples:
+    - Samsung passes NVDA HBM3e qualification
+    - Micron raises HBM revenue guide for FY27
+    - SK Hynix says 2026 HBM capacity fully booked
+  direction_hint: positive_for_memory_negative_for_gpu_supply
+  confidence_floor: medium
+  source_priority: [transcript, ir_pdf, news_tier1, analyst_note]
+
+- id: foundry_capacity_announcement
+  name: Foundry / advanced packaging capacity announcement
+  description: TSMC, Samsung Foundry, or Intel Foundry announces or revises CoWoS, SoIC, or leading-edge wafer capacity.
+  primary_entity_types: [foundry]
+  spillover_pattern: [gpu, asic, hbm, semicap, substrate]
+  default_window_days: 45
+  evidence_anchors:
+    - 'language: "CoWoS capacity", "advanced packaging", "N2/N3/A16 ramp", "fab build"'
+    - 'sources: monthly revenue release, earnings call, government grant filing'
+  trigger_examples:
+    - TSMC doubles 2026 CoWoS capacity target
+    - Intel Foundry secures 18A external customer
+    - TSMC Arizona Fab 2 production start brought forward
+  direction_hint: positive_for_chip_designers_and_semicap
+  confidence_floor: high
+  source_priority: [ir_pdf, transcript, news_tier1, gov_filing]
+
+- id: design_win
+  name: Custom silicon / ASIC design win
+  description: A merchant silicon vendor wins a custom accelerator socket at a hyperscaler or large customer.
+  primary_entity_types: [chip_designer]
+  spillover_pattern: [foundry, hbm, networking, hyperscaler_internal]
+  default_window_days: 60
+  evidence_anchors:
+    - 'language: "next-generation custom AI accelerator", "named customer", "multi-generation engagement"'
+    - 'sources: earnings call, IR day, press release'
+  trigger_examples:
+    - AVGO wins next-gen Google TPU
+    - MRVL secures Amazon Trainium3 networking SoC
+    - ALAB wins Microsoft Maia retimer slot
+  direction_hint: positive_for_winner_negative_for_incumbent
+  confidence_floor: medium
+  source_priority: [transcript, ir_pdf, news_tier1, edgar_8k]
+
+- id: design_loss
+  name: Lost socket / displacement
+  description: Incumbent loses a previously-held silicon socket to a competitor or to in-house design.
+  primary_entity_types: [chip_designer]
+  spillover_pattern: [foundry, networking, hyperscaler_internal]
+  default_window_days: 60
+  evidence_anchors:
+    - 'language: "transitioning", "second source", "diversifying away", "in-house silicon"'
+    - 'sources: customer earnings calls, supply chain reporting'
+  trigger_examples:
+    - Marvell loses Trainium2 socket to Alchip
+    - Broadcom loses Meta MTIA gen-3 to MediaTek
+  direction_hint: negative_for_loser
+  confidence_floor: medium
+  source_priority: [news_tier1, transcript, analyst_note]
+
+- id: export_restriction
+  name: Export control / trade restriction
+  description: New or revised US BIS, EU, or counterparty rules restricting AI chip, EUV, or HBM exports.
+  primary_entity_types: [regulator, chip_designer, semicap, memory]
+  spillover_pattern: [foundry, china_ecosystem, sovereign_ai]
+  default_window_days: 90
+  evidence_anchors:
+    - 'sources: BIS Federal Register notice, Commerce press release, EU Official Journal, MOFCOM bulletin'
+    - 'language: "Entity List", "performance threshold", "FDPR", "license required"'
+  trigger_examples:
+    - BIS lowers AI chip performance threshold for China
+    - China imposes gallium export quota
+    - ASML denied license for High-NA EUV to specific customer
+  direction_hint: negative_for_china_revenue_mixed_for_domestic
+  confidence_floor: high
+  source_priority: [gov_filing, edgar_8k, news_tier1, ir_pdf]
+
+- id: guidance_change
+  name: Forward guidance change
+  description: Management revision of revenue, gross margin, or opex guidance materially affecting the AI infra thesis.
+  primary_entity_types: [public_company]
+  spillover_pattern: [supply_chain_peers, customers]
+  default_window_days: 15
+  evidence_anchors:
+    - 'filings: 8-K item 2.02, 10-Q, prepared remarks'
+    - 'language: "raising", "lowering", "now expect", "prior guidance"'
+  trigger_examples:
+    - SMCI cuts FY26 revenue guide on Blackwell delays
+    - ANET raises 2026 revenue growth target to 25%
+  direction_hint: directional
+  confidence_floor: high
+  source_priority: [edgar_8k, ir_pdf, transcript]
+
+- id: pricing_change
+  name: Pricing / ASP shift
+  description: Material change in unit pricing for GPUs, HBM, optical modules, or rack-scale systems.
+  primary_entity_types: [chip_designer, memory, optical, oem, neocloud]
+  spillover_pattern: [margins_supply_chain, hyperscaler_capex]
+  default_window_days: 45
+  evidence_anchors:
+    - 'language: "ASP", "blended pricing", "rental rates", "$/GPU-hour"'
+    - 'sources: pricing trackers, earnings commentary, neocloud rate cards'
+  trigger_examples:
+    - H100 hourly rental drops below $2 on CRWV
+    - HBM3e ASP up 15% QoQ at Hynix
+    - 800G optical module pricing falls 20% YoY
+  direction_hint: mixed
+  confidence_floor: medium
+  source_priority: [transcript, news_tier1, analyst_note, ir_pdf]
+
+- id: inventory_signal
+  name: Inventory build / channel signal
+  description: Days-of-inventory shift, channel stuffing, or write-down at a key node in the AI supply chain.
+  primary_entity_types: [chip_designer, oem, memory]
+  spillover_pattern: [demand_visibility, foundry_orders]
+  default_window_days: 30
+  evidence_anchors:
+    - 'filings: 10-Q balance sheet, MD&A inventory commentary'
+    - 'language: "days of inventory", "channel inventory", "inventory write-down", "purchase commitments"'
+  trigger_examples:
+    - NVDA inventory + purchase commitments jump $5B QoQ
+    - SMCI writes down $200M of obsolete server inventory
+  direction_hint: caution
+  confidence_floor: medium
+  source_priority: [edgar_10q, edgar_8k, transcript]
+
+- id: m_and_a
+  name: M&A announced or rumored
+  description: Announced merger, acquisition, JV, or credible deal rumor materially affecting AI infra positioning.
+  primary_entity_types: [any]
+  spillover_pattern: [competitors, suppliers, customers]
+  default_window_days: 60
+  evidence_anchors:
+    - 'filings: 8-K item 1.01, S-4, HSR notification'
+    - 'sources: company press release, tier-1 wires'
+  trigger_examples:
+    - AMD announces $4.9B acquisition of ZT Systems
+    - Reports MSFT in talks to acquire neocloud
+  direction_hint: directional
+  confidence_floor: high_for_announced_low_for_rumor
+  source_priority: [edgar_8k, ir_pdf, news_tier1]
+
+- id: partnership
+  name: Named multi-billion partnership
+  description: Disclosed multi-year, multi-billion-dollar commercial agreement between named counterparties.
+  primary_entity_types: [hyperscaler, neocloud, chip_designer, power]
+  spillover_pattern: [supply_chain, financing, real_estate]
+  default_window_days: 30
+  evidence_anchors:
+    - 'filings: 8-K item 1.01, exhibit 10.x'
+    - 'language: "multi-year agreement", "committed capacity", "RPO", "$X billion"'
+  trigger_examples:
+    - NVDA-CRWV $6.3B compute commitment
+    - ORCL-OpenAI Stargate agreement
+    - AMD-OpenAI 6GW GPU partnership
+  direction_hint: positive_for_named_parties
+  confidence_floor: high
+  source_priority: [edgar_8k, ir_pdf, news_tier1]
+
+- id: power_ppa
+  name: Data center power contract / PPA
+  description: Signed power purchase agreement or behind-the-meter deal supplying a named AI data center.
+  primary_entity_types: [power, hyperscaler, neocloud]
+  spillover_pattern: [grid, nuclear, gas, transmission]
+  default_window_days: 45
+  evidence_anchors:
+    - 'filings: 8-K, FERC filings, state PUC dockets'
+    - 'language: "PPA", "behind-the-meter", "MW", "20-year offtake"'
+  trigger_examples:
+    - CEG signs 20-year PPA with MSFT for Three Mile Island restart
+    - TLN sells Susquehanna campus to AMZN
+    - VST signs nuclear PPA with hyperscaler
+  direction_hint: positive_for_power_supplier
+  confidence_floor: high
+  source_priority: [edgar_8k, ferc_filing, news_tier1, ir_pdf]
+
+- id: grid_constraint
+  name: Grid / transmission constraint
+  description: Interconnection queue shift, transformer shortage, or transmission limit blocking data center power delivery.
+  primary_entity_types: [grid, utility, hyperscaler]
+  spillover_pattern: [data_center_siting, capex_timing, gen_mix]
+  default_window_days: 60
+  evidence_anchors:
+    - 'sources: ISO/RTO queue reports, FERC filings, utility IRPs, GEV/ETN earnings'
+    - 'language: "queue position", "transformer lead time", "interconnection delay"'
+  trigger_examples:
+    - PJM interconnection queue stalls 30GW of data center load
+    - Large-power-transformer lead time hits 130 weeks
+    - Dominion delays Loudoun substation energization
+  direction_hint: negative_for_buildout_timing_positive_for_grid_capex
+  confidence_floor: medium
+  source_priority: [iso_filing, ferc_filing, news_tier1, transcript]
+
+- id: ip_lawsuit
+  name: IP litigation / injunction
+  description: Filed IP suit, ITC complaint, or injunction with material exposure to AI infra revenue.
+  primary_entity_types: [any]
+  spillover_pattern: [licensing, supply_chain]
+  default_window_days: 60
+  evidence_anchors:
+    - 'filings: court docket, ITC 337 complaint, 8-K item 8.01'
+  trigger_examples:
+    - ARM sues Qualcomm over Nuvia license
+    - ITC investigates 800G optical IP claim
+  direction_hint: directional
+  confidence_floor: high
+  source_priority: [court_docket, edgar_8k, news_tier1]
+
+- id: antitrust_action
+  name: Antitrust / competition action
+  description: DOJ, FTC, EU, China SAMR, or other competition authority action materially affecting AI infra player.
+  primary_entity_types: [any]
+  spillover_pattern: [m_and_a_pipeline, customer_choice]
+  default_window_days: 90
+  evidence_anchors:
+    - 'sources: DOJ/FTC press, EU Commission notice, SAMR notice, 8-K disclosure'
+  trigger_examples:
+    - FTC opens NVDA bundling investigation
+    - SAMR delays AVGO-VMW merger approval
+  direction_hint: negative
+  confidence_floor: high
+  source_priority: [gov_filing, edgar_8k, news_tier1]
+
+- id: new_product_launch
+  name: New product launch
+  description: Launch or detailed disclosure of a new chip, server platform, networking SKU, or frontier model.
+  primary_entity_types: [chip_designer, oem, networking, hyperscaler]
+  spillover_pattern: [supply_chain_ramp, competitive_response]
+  default_window_days: 30
+  evidence_anchors:
+    - 'sources: GTC/Hot Chips/OCP keynote, press release, IR day'
+    - 'language: "now sampling", "general availability", "production shipments"'
+  trigger_examples:
+    - NVDA launches Rubin Ultra at GTC
+    - AMD discloses MI400 specs and roadmap
+    - ANET launches 102.4T Etherlink switch
+  direction_hint: positive_for_launcher
+  confidence_floor: high
+  source_priority: [ir_pdf, news_tier1, transcript]
+
+- id: benchmark_result
+  name: Benchmark / performance disclosure
+  description: New MLPerf result, customer performance disclosure, or independent benchmark altering competitive view.
+  primary_entity_types: [chip_designer, hyperscaler]
+  spillover_pattern: [competitive_share, design_pipeline]
+  default_window_days: 30
+  evidence_anchors:
+    - 'sources: MLPerf results, vendor whitepapers, hyperscaler engineering blogs'
+  trigger_examples:
+    - MLPerf Training v5.0 shows MI325X within 10% of H200
+    - GOOGL discloses TPU v6 perf-per-watt vs H100
+  direction_hint: directional
+  confidence_floor: medium
+  source_priority: [mlperf, ir_pdf, news_tier1, analyst_note]
+
+- id: hyperscaler_internal_chip
+  name: Hyperscaler internal silicon progress
+  description: Material progress, ramp, or stumble on hyperscaler-owned ASIC (TPU, Trainium, Maia, MTIA, Axion, Cobalt).
+  primary_entity_types: [hyperscaler]
+  spillover_pattern: [merchant_silicon_share, foundry_mix, networking_partner]
+  default_window_days: 60
+  evidence_anchors:
+    - 'sources: cloud blog post, earnings call, supply-chain reporting'
+    - 'language: "trillions of tokens trained on", "internal workloads", "TCO advantage"'
+  trigger_examples:
+    - GOOGL says TPU now serves majority of internal training
+    - MSFT delays Maia v2 to 2027
+    - AMZN announces Trainium3 specs
+  direction_hint: negative_for_merchant_gpu_positive_for_named_asic_partner
+  confidence_floor: medium
+  source_priority: [ir_pdf, transcript, news_tier1]
+
+- id: restructuring
+  name: Restructuring / capacity action
+  description: Layoffs, fab pause, business unit divestiture, or strategic restructuring at an AI infra player.
+  primary_entity_types: [any]
+  spillover_pattern: [supply, capex, talent]
+  default_window_days: 60
+  evidence_anchors:
+    - 'filings: 8-K item 2.05, WARN notices, press release'
+  trigger_examples:
+    - INTC pauses German fab construction
+    - SMCI announces 10% headcount reduction
+  direction_hint: directional
+  confidence_floor: high
+  source_priority: [edgar_8k, gov_filing, news_tier1]
+
+- id: regulatory_change
+  name: Industrial / AI regulatory change
+  description: New CHIPS Act tranche, AI safety bill, EU AI Act milestone, or sectoral subsidy/tax change.
+  primary_entity_types: [regulator, chip_designer, foundry, hyperscaler]
+  spillover_pattern: [capex, siting, compliance_cost]
+  default_window_days: 90
+  evidence_anchors:
+    - 'sources: Federal Register, Commerce press, EU OJ, congressional bill text'
+  trigger_examples:
+    - Commerce finalizes $6.6B CHIPS award to TSMC Arizona
+    - EU AI Act GPAI obligations enter into force
+    - California SB-1047 successor signed
+  direction_hint: directional
+  confidence_floor: high
+  source_priority: [gov_filing, news_tier1, ir_pdf]
+
+- id: earnings_surprise
+  name: Earnings surprise
+  description: Reported revenue, EPS, or segment result materially divergent from consensus, with AI-infra causal driver.
+  primary_entity_types: [public_company]
+  spillover_pattern: [supply_chain_read_across]
+  default_window_days: 10
+  evidence_anchors:
+    - 'filings: 8-K item 2.02 with press release exhibit'
+    - 'data: consensus vs reported'
+  trigger_examples:
+    - NVDA Data Center revenue beats by 8%
+    - SMCI misses revenue by 15% on supply constraints
+  direction_hint: directional
+  confidence_floor: high
+  source_priority: [edgar_8k, ir_pdf, transcript]
+
+- id: short_report_published
+  name: Short / activist report published
+  description: Public short or activist report alleging accounting, demand, or governance issues at a named AI infra company.
+  primary_entity_types: [public_company]
+  spillover_pattern: [comparable_companies]
+  default_window_days: 30
+  evidence_anchors:
+    - 'sources: Hindenburg / Muddy Waters / Spruce Point / Kerrisdale publication'
+    - 'filings: company response 8-K'
+  trigger_examples:
+    - Hindenburg publishes report alleging SMCI accounting issues
+    - Activist alleges round-tripping in neocloud-GPU partnership
+  direction_hint: negative_for_target
+  confidence_floor: medium
+  source_priority: [short_report, edgar_8k, news_tier1]
+
+- id: insider_transaction_cluster
+  name: Insider transaction cluster
+  description: Cluster of Form 4 transactions (3+ insiders within 30 days) outside 10b5-1 plans at a key player.
+  primary_entity_types: [public_company]
+  spillover_pattern: [sector_sentiment]
+  default_window_days: 60
+  evidence_anchors:
+    - 'filings: SEC Form 4, Form 144'
+  trigger_examples:
+    - Five NVDA executives sell within two weeks (non-10b5-1)
+    - CEO and CFO buy on open market after drawdown
+  direction_hint: directional
+  confidence_floor: low
+  source_priority: [edgar_form4]
+
+- id: analyst_revision
+  name: Analyst revision (triangulating)
+  description: Sell-side rating, target, or estimate change used only as triangulation around an underlying primary signal.
+  primary_entity_types: [public_company]
+  spillover_pattern: [none_independent]
+  default_window_days: 14
+  evidence_anchors:
+    - 'sources: dated analyst note tying revision to a specific primary catalyst'
+  trigger_examples:
+    - MS upgrades AVGO citing TPU v7 win
+    - GS cuts AMD numbers after MI400 delay reporting
+  direction_hint: directional
+  confidence_floor: low
+  source_priority: [analyst_note, news_tier1]
+
+- id: sovereign_ai_announcement
+  name: Sovereign AI announcement
+  description: Government or sovereign-backed compute or fab deal materially shifting demand or capacity.
+  primary_entity_types: [sovereign, hyperscaler, neocloud, chip_designer]
+  spillover_pattern: [gpu, power, foundry, networking]
+  default_window_days: 60
+  evidence_anchors:
+    - 'sources: head-of-state/MOU press release, gazette notice, sovereign wealth fund statement'
+  trigger_examples:
+    - UAE G42 announces multi-GW NVDA cluster
+    - Saudi PIF launches HUMAIN with named GPU allocation
+    - India approves $10B sovereign AI compute mission
+  direction_hint: positive_for_named_suppliers
+  confidence_floor: medium
+  source_priority: [gov_filing, news_tier1, ir_pdf]
+
+- id: data_center_announcement
+  name: Data center site announcement
+  description: New data center campus announcement with disclosed MW, location, and timeline.
+  primary_entity_types: [hyperscaler, neocloud, colo]
+  spillover_pattern: [power, grid, cooling, fiber, real_estate]
+  default_window_days: 45
+  evidence_anchors:
+    - 'sources: company press release, state/local economic development filing, building permits'
+    - 'language: "X MW campus", "Y phases", "groundbreaking", "RTB"'
+  trigger_examples:
+    - META announces 2GW Louisiana campus
+    - AMZN files for 1.2GW load in Mississippi
+  direction_hint: positive_for_local_supply_chain
+  confidence_floor: medium
+  source_priority: [news_tier1, gov_filing, ir_pdf]
+
+- id: water_constraint
+  name: Water / cooling constraint
+  description: Water availability, permit denial, or community pushback materially affecting data center cooling plans.
+  primary_entity_types: [hyperscaler, neocloud, colo]
+  spillover_pattern: [siting, liquid_cooling, capex]
+  default_window_days: 90
+  evidence_anchors:
+    - 'sources: state water board rulings, county permit dockets, ESG disclosures'
+    - 'language: "water-positive", "WUE", "permit denial", "moratorium"'
+  trigger_examples:
+    - Arizona county denies hyperscaler water permit
+    - Chile suspends new data center water licenses
+  direction_hint: negative_for_siting_positive_for_liquid_cooling
+  confidence_floor: medium
+  source_priority: [gov_filing, news_tier1, ir_pdf]
+
+- id: talent_movement
+  name: Key talent movement
+  description: CXO change, board change, or named senior IC moving between AI infra players.
+  primary_entity_types: [any]
+  spillover_pattern: [strategic_direction, design_velocity]
+  default_window_days: 30
+  evidence_anchors:
+    - 'filings: 8-K item 5.02, DEF 14A'
+    - 'sources: company press, LinkedIn, tier-1 wires'
+  trigger_examples:
+    - Intel names new CEO with foundry mandate
+    - Meta hires former OpenAI alignment lead
+    - AMD CTO departs for neocloud
+  direction_hint: directional
+  confidence_floor: medium
+  source_priority: [edgar_8k, news_tier1, ir_pdf]
+
+- id: supply_chain_disruption
+  name: Supply chain disruption
+  description: Earthquake, flood, fire, strike, or geopolitical event disrupting an AI infra production node.
+  primary_entity_types: [foundry, memory, optical, substrate]
+  spillover_pattern: [chip_designer, oem, lead_times, pricing]
+  default_window_days: 45
+  evidence_anchors:
+    - 'sources: USGS / national met agency alerts, company 8-K, port authority notices'
+  trigger_examples:
+    - Magnitude 7 earthquake near Hsinchu disrupts TSMC
+    - Typhoon halts Korean memory fabs for 48 hours
+    - Red Sea routing adds 14 days to substrate shipments
+  direction_hint: negative_for_supply_positive_for_pricing
+  confidence_floor: high
+  source_priority: [gov_filing, edgar_8k, news_tier1]

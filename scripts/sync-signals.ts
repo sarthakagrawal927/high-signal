@@ -1,0 +1,145 @@
+#!/usr/bin/env tsx
+/**
+ * Sync `signals/YYYY-MM-DD/*.md` (the git-versioned source of truth) into D1.
+ *
+ *   pnpm tsx scripts/sync-signals.ts --local
+ *   pnpm tsx scripts/sync-signals.ts --remote
+ */
+
+import { spawn } from "node:child_process";
+import { readdirSync, readFileSync, writeFileSync, mkdirSync, statSync } from "node:fs";
+import { resolve, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
+import { createHash } from "node:crypto";
+
+const __root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
+const SIGNALS_ROOT = resolve(__root, "signals");
+const TMP_DIR = resolve(__root, ".tmp");
+const TMP_SQL = resolve(TMP_DIR, "signals-sync.sql");
+const flag = process.argv.includes("--remote") ? "--remote" : "--local";
+
+interface Front {
+  slug: string;
+  signal_type: string;
+  primary_entity: string;
+  direction: string;
+  confidence: string;
+  predicted_window_days: number;
+  published_at: string;
+  evidence_urls: string[];
+  spillover_entity_ids?: string[];
+  supersedes?: string | null;
+  review_status: "draft" | "published" | "corrected";
+}
+
+function parseFrontmatter(md: string): { front: Front; body: string } {
+  const m = md.match(/^---\n([\s\S]*?)\n---\n?([\s\S]*)$/);
+  if (!m) throw new Error("missing frontmatter");
+  const front = parseTinyYaml(m[1]) as unknown as Front;
+  return { front, body: m[2].trim() };
+}
+
+function parseTinyYaml(yaml: string): Record<string, unknown> {
+  const out: Record<string, unknown> = {};
+  let listKey: string | null = null;
+  let listAcc: string[] = [];
+  for (const lineRaw of yaml.split(/\r?\n/)) {
+    const line = lineRaw.replace(/\s+$/, "");
+    if (!line.length) continue;
+    if (listKey && line.startsWith("  - ")) {
+      listAcc.push(line.slice(4).trim());
+      continue;
+    } else if (listKey) {
+      out[listKey] = listAcc;
+      listKey = null;
+      listAcc = [];
+    }
+    const idx = line.indexOf(":");
+    if (idx < 0) continue;
+    const k = line.slice(0, idx).trim();
+    const v = line.slice(idx + 1).trim();
+    if (v === "") {
+      listKey = k;
+      listAcc = [];
+    } else if (/^\d+$/.test(v)) {
+      out[k] = parseInt(v, 10);
+    } else if (v === "null") {
+      out[k] = null;
+    } else if (v.startsWith("[") && v.endsWith("]")) {
+      out[k] = v
+        .slice(1, -1)
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean);
+    } else {
+      out[k] = v.replace(/^['"]|['"]$/g, "");
+    }
+  }
+  if (listKey) out[listKey] = listAcc;
+  return out;
+}
+
+function esc(s: string | null | undefined): string {
+  if (s == null) return "NULL";
+  return `'${s.replace(/'/g, "''")}'`;
+}
+
+function walk(dir: string): string[] {
+  const out: string[] = [];
+  for (const f of readdirSync(dir)) {
+    const p = resolve(dir, f);
+    const st = statSync(p);
+    if (st.isDirectory()) out.push(...walk(p));
+    else if (f.endsWith(".md") && f !== "README.md") out.push(p);
+  }
+  return out;
+}
+
+function run() {
+  const files = walk(SIGNALS_ROOT);
+  console.log(`[sync] ${files.length} signal files`);
+
+  const sql: string[] = [];
+  for (const fp of files) {
+    const md = readFileSync(fp, "utf-8");
+    let parsed;
+    try {
+      parsed = parseFrontmatter(md);
+    } catch {
+      console.warn(`[sync] skip ${fp} (bad frontmatter)`);
+      continue;
+    }
+    const f = parsed.front;
+    const body = parsed.body;
+    const id = createHash("sha256").update(f.slug).digest("hex").slice(0, 16);
+    const publishedAt = Math.floor(new Date(f.published_at).getTime() / 1000);
+
+    sql.push(
+      `INSERT OR REPLACE INTO signals (id,slug,signal_type,primary_entity_id,direction,confidence,predicted_window_days,published_at,evidence_urls,spillover_entity_ids,review_status,supersedes_signal_id,body_md) VALUES (${esc(id)},${esc(f.slug)},${esc(f.signal_type)},${esc(f.primary_entity)},${esc(f.direction)},${esc(f.confidence)},${f.predicted_window_days},${publishedAt},${esc(JSON.stringify(f.evidence_urls))},${esc(JSON.stringify(f.spillover_entity_ids ?? []))},${esc(f.review_status)},${esc(f.supersedes ?? null)},${esc(body)});`,
+    );
+    sql.push(`DELETE FROM evidence WHERE signal_id = ${esc(id)};`);
+    for (const url of f.evidence_urls) {
+      const eid = createHash("sha256").update(`${id}:${url}`).digest("hex").slice(0, 16);
+      sql.push(
+        `INSERT INTO evidence (id,signal_id,url,source_type,excerpt,published_at) VALUES (${esc(eid)},${esc(id)},${esc(url)},'web',NULL,NULL);`,
+      );
+    }
+  }
+
+  mkdirSync(TMP_DIR, { recursive: true });
+  writeFileSync(TMP_SQL, sql.join("\n") + "\n");
+  console.log(`[sync] wrote ${TMP_SQL} (${sql.length} statements)`);
+
+  if (sql.length === 0) {
+    console.log("[sync] nothing to apply");
+    return;
+  }
+  const proc = spawn(
+    "wrangler",
+    ["d1", "execute", "high-signal-db", flag, `--file=${TMP_SQL}`, "--config=workers/api/wrangler.toml"],
+    { stdio: "inherit", cwd: __root },
+  );
+  proc.on("close", (code) => process.exit(code ?? 0));
+}
+
+run();

@@ -1,39 +1,275 @@
-id,ticker,name,type,country,sector
-NVDA,NVDA,NVIDIA Corporation,public,US,semis
-AMD,AMD,Advanced Micro Devices,public,US,semis
-AVGO,AVGO,Broadcom Inc.,public,US,semis
-TSM,TSM,Taiwan Semiconductor Manufacturing,public,TW,foundry
-ASML,ASML,ASML Holding,public,NL,semicap
-AMAT,AMAT,Applied Materials,public,US,semicap
-LRCX,LRCX,Lam Research,public,US,semicap
-KLAC,KLAC,KLA Corporation,public,US,semicap
-MU,MU,Micron Technology,public,US,memory
-SK_HYNIX,000660.KS,SK Hynix,public,KR,memory
-SAMSUNG,005930.KS,Samsung Electronics,public,KR,memory
-INTC,INTC,Intel Corporation,public,US,semis
-ARM,ARM,Arm Holdings,public,UK,semis-ip
-SMCI,SMCI,Super Micro Computer,public,US,server
-DELL,DELL,Dell Technologies,public,US,server
-HPE,HPE,Hewlett Packard Enterprise,public,US,server
-ANET,ANET,Arista Networks,public,US,networking
-CRDO,CRDO,Credo Technology,public,US,networking
-MRVL,MRVL,Marvell Technology,public,US,semis
-QCOM,QCOM,Qualcomm,public,US,semis
-MSFT,MSFT,Microsoft,public,US,hyperscaler
-GOOGL,GOOGL,Alphabet,public,US,hyperscaler
-AMZN,AMZN,Amazon,public,US,hyperscaler
-META,META,Meta Platforms,public,US,hyperscaler
-ORCL,ORCL,Oracle,public,US,hyperscaler
-CRWV,CRWV,CoreWeave,public,US,neocloud
-NBIS,NBIS,Nebius Group,public,NL,neocloud
-VST,VST,Vistra,public,US,power
-CEG,CEG,Constellation Energy,public,US,power
-TLN,TLN,Talen Energy,public,US,power
-NRG,NRG,NRG Energy,public,US,power
-GEV,GEV,GE Vernova,public,US,grid
-ETN,ETN,Eaton,public,US,grid
-PWR,PWR,Quanta Services,public,US,grid
-CRDO,CRDO,Credo Technology,public,US,networking
-COHR,COHR,Coherent Corp,public,US,optical
-LITE,LITE,Lumentum,public,US,optical
-ALAB,ALAB,Astera Labs,public,US,interconnect
+id,ticker,name,type,country,sector,subsector,aliases,wiki_url,ir_url
+NVDA,NVDA,NVIDIA Corporation,public,US,gpu,ai-accelerator,NVIDIA|Nvidia Corp,https://en.wikipedia.org/wiki/Nvidia,https://investor.nvidia.com
+AMD,AMD,Advanced Micro Devices Inc,public,US,gpu,ai-accelerator,AMD|Advanced Micro Devices,https://en.wikipedia.org/wiki/AMD,https://ir.amd.com
+INTC,INTC,Intel Corporation,public,US,gpu,cpu-gpu,Intel|Intel Corp,https://en.wikipedia.org/wiki/Intel,https://www.intc.com
+AAPL,AAPL,Apple Inc.,public,US,asic,apple-silicon,Apple|Apple Computer,https://en.wikipedia.org/wiki/Apple_Inc.,https://investor.apple.com
+TSLA,TSLA,Tesla Inc.,public,US,asic,dojo-ai-training,Tesla|Tesla Motors|Dojo,https://en.wikipedia.org/wiki/Tesla_Inc,https://ir.tesla.com
+GOOGL,GOOGL,Alphabet Inc.,public,US,hyperscaler,tpu,Google|Alphabet|TPU,https://en.wikipedia.org/wiki/Alphabet_Inc.,https://abc.xyz/investor
+AMZN,AMZN,Amazon.com Inc.,public,US,hyperscaler,trainium-inferentia,Amazon|AWS|Trainium|Inferentia,https://en.wikipedia.org/wiki/Amazon_(company),https://ir.aboutamazon.com
+MSFT,MSFT,Microsoft Corporation,public,US,hyperscaler,maia-cobalt,Microsoft|Maia|Cobalt,https://en.wikipedia.org/wiki/Microsoft,https://www.microsoft.com/en-us/investor
+META,META,Meta Platforms Inc.,public,US,hyperscaler,mtia-accelerator,Meta|Facebook|MTIA,https://en.wikipedia.org/wiki/Meta_Platforms,https://investor.atmeta.com
+ORCL,ORCL,Oracle Corporation,public,US,hyperscaler,oci,Oracle|OCI,https://en.wikipedia.org/wiki/Oracle_Corporation,https://investor.oracle.com
+IBM,IBM,International Business Machines,public,US,hyperscaler,enterprise-cloud,IBM|Big Blue,https://en.wikipedia.org/wiki/IBM,https://www.ibm.com/investor
+BABA,BABA,Alibaba Group,public,CN,hyperscaler,aliyun-cloud,Alibaba|Aliyun|Alibaba Cloud,https://en.wikipedia.org/wiki/Alibaba_Group,https://www.alibabagroup.com/en/ir/home
+BIDU,BIDU,Baidu Inc.,public,CN,hyperscaler,kunlun-ai,Baidu|Kunlun,https://en.wikipedia.org/wiki/Baidu,https://ir.baidu.com
+TCEHY,TCEHY,Tencent Holdings,public,CN,hyperscaler,tencent-cloud,Tencent,https://en.wikipedia.org/wiki/Tencent,https://www.tencent.com/en-us/investors.html
+CERE,,Cerebras Systems,private,US,gpu,wafer-scale-ai,Cerebras|WSE,https://en.wikipedia.org/wiki/Cerebras,https://www.cerebras.net
+GROQ,,Groq Inc.,private,US,asic,lpu-inference,Groq|LPU,https://en.wikipedia.org/wiki/Groq,https://groq.com
+SAMBANOVA,,SambaNova Systems,private,US,asic,rdu-ai,SambaNova,https://en.wikipedia.org/wiki/SambaNova_Systems,https://sambanova.ai
+TENSTORRENT,,Tenstorrent Inc.,private,US,asic,risc-v-ai,Tenstorrent,https://en.wikipedia.org/wiki/Tenstorrent,https://tenstorrent.com
+GRAPHCORE,,Graphcore Ltd.,private,UK,asic,ipu-ai,Graphcore|IPU,https://en.wikipedia.org/wiki/Graphcore,https://www.graphcore.ai
+UNTETHER,,Untether AI,private,US,asic,inference-accelerator,Untether AI,https://untether.ai,https://untether.ai
+RAIN,,Rain AI,private,US,asic,neuromorphic,Rain AI|Rain Neuromorphics,https://rain.ai,https://rain.ai
+ETCHED,,Etched AI,private,US,asic,transformer-asic,Etched|Sohu,https://www.etched.com,https://www.etched.com
+MATX,,MatX,private,US,asic,llm-asic,MatX,https://matx.com,https://matx.com
+LIGHTMATTER,,Lightmatter Inc.,private,US,optical,photonic-compute,Lightmatter,https://en.wikipedia.org/wiki/Lightmatter,https://lightmatter.co
+DMATRIX,,d-Matrix,private,US,asic,inference-compute,d-Matrix|dMatrix,https://www.d-matrix.ai,https://www.d-matrix.ai
+REBELLIONS,,Rebellions Inc.,private,KR,asic,inference-npu,Rebellions,https://rebellions.ai,https://rebellions.ai
+FURIOSA,,FuriosaAI,private,KR,asic,rngd-npu,Furiosa|FuriosaAI,https://www.furiosa.ai,https://www.furiosa.ai
+HAILO,,Hailo Technologies,private,IL,asic,edge-ai-accelerator,Hailo,https://en.wikipedia.org/wiki/Hailo_Technologies,https://hailo.ai
+MYTHIC,,Mythic AI,private,US,asic,analog-ai,Mythic,https://www.mythic.ai,https://www.mythic.ai
+TSM,TSM,Taiwan Semiconductor Manufacturing Co,public,TW,foundry,leading-edge,TSMC|Taiwan Semi,https://en.wikipedia.org/wiki/TSMC,https://investor.tsmc.com
+GFS,GFS,GlobalFoundries Inc.,public,US,foundry,specialty-nodes,GlobalFoundries|GF,https://en.wikipedia.org/wiki/GlobalFoundries,https://investors.gf.com
+UMC,UMC,United Microelectronics Corp,public,TW,foundry,mature-nodes,UMC|United Micro,https://en.wikipedia.org/wiki/United_Microelectronics_Corporation,https://www.umc.com/en/Investors
+SMIC,0981.HK,Semiconductor Manufacturing Intl Corp,public,CN,foundry,china-foundry,SMIC,https://en.wikipedia.org/wiki/Semiconductor_Manufacturing_International_Corporation,https://www.smics.com/en/site/investor_information
+RAPIDUS,,Rapidus Corporation,private,JP,foundry,2nm-foundry,Rapidus,https://en.wikipedia.org/wiki/Rapidus,https://www.rapidus.inc/en/
+TSEM,TSEM,Tower Semiconductor,public,IL,foundry,specialty-analog,Tower Semi|TowerJazz,https://en.wikipedia.org/wiki/Tower_Semiconductor,https://towersemi.com/investor-relations/
+VSI,5347.TW,Vanguard International Semiconductor,public,TW,foundry,mature-nodes,Vanguard|VIS,https://en.wikipedia.org/wiki/Vanguard_International_Semiconductor,https://www.vis.com.tw/en/index.aspx
+POWERCHIP,6770.TW,Powerchip Semiconductor Manufacturing,public,TW,foundry,mature-dram,PSMC|Powerchip,https://en.wikipedia.org/wiki/Powerchip,https://www.psmc.com/psmc/en/
+HHGRACE,1347.HK,Hua Hong Semiconductor,public,CN,foundry,china-mature-foundry,Hua Hong|HHGrace,https://en.wikipedia.org/wiki/Hua_Hong_Semiconductor,https://www.huahonggrace.com/en/index
+ASML,ASML,ASML Holding NV,public,NL,semicap,lithography-euv,ASML,https://en.wikipedia.org/wiki/ASML_Holding,https://www.asml.com/en/investors
+AMAT,AMAT,Applied Materials Inc.,public,US,semicap,deposition-etch,Applied Materials|AMAT,https://en.wikipedia.org/wiki/Applied_Materials,https://ir.appliedmaterials.com
+LRCX,LRCX,Lam Research Corporation,public,US,semicap,etch-deposition,Lam Research|Lam,https://en.wikipedia.org/wiki/Lam_Research,https://investor.lamresearch.com
+KLAC,KLAC,KLA Corporation,public,US,semicap,process-control,KLA|KLA-Tencor,https://en.wikipedia.org/wiki/KLA_Corporation,https://ir.kla.com
+TEL,8035.T,Tokyo Electron Ltd,public,JP,semicap,coater-etch,Tokyo Electron|TEL,https://en.wikipedia.org/wiki/Tokyo_Electron,https://www.tel.com/ir/
+SCREEN,7735.T,SCREEN Holdings,public,JP,semicap,wafer-cleaning,SCREEN|Dainippon Screen,https://en.wikipedia.org/wiki/SCREEN_Holdings,https://www.screen.co.jp/eng/ir
+NIKON,7731.T,Nikon Corporation,public,JP,semicap,lithography,Nikon,https://en.wikipedia.org/wiki/Nikon,https://www.nikon.com/company/ir/
+CANON,7751.T,Canon Inc.,public,JP,semicap,lithography-nil,Canon,https://en.wikipedia.org/wiki/Canon_Inc.,https://global.canon/en/ir/
+ONTO,ONTO,Onto Innovation Inc.,public,US,semicap,inspection-metrology,Onto Innovation,https://en.wikipedia.org/wiki/Onto_Innovation,https://investors.ontoinnovation.com
+ACMR,ACMR,ACM Research,public,US,semicap,wet-process-china,ACM Research,https://en.wikipedia.org/wiki/ACM_Research,https://ir.acmrcsh.com
+AEHR,AEHR,Aehr Test Systems,public,US,semicap,wafer-burn-in,Aehr,https://en.wikipedia.org/wiki/Aehr_Test_Systems,https://www.aehr.com/investor-relations/
+ACLS,ACLS,Axcelis Technologies,public,US,semicap,ion-implant,Axcelis,https://en.wikipedia.org/wiki/Axcelis_Technologies,https://investor.axcelis.com
+PHOTON,,Photon Dynamics,private,US,semicap,display-inspection,Photon Dynamics,https://www.orbotech.com,https://www.orbotech.com
+FORM,FORM,FormFactor Inc.,public,US,semicap,probe-cards,FormFactor,https://en.wikipedia.org/wiki/FormFactor,https://investors.formfactor.com
+COHU,COHU,Cohu Inc.,public,US,semicap,test-handlers,Cohu,https://en.wikipedia.org/wiki/Cohu,https://www.cohu.com/investor-relations
+TER,TER,Teradyne Inc.,public,US,semicap,ate-test,Teradyne,https://en.wikipedia.org/wiki/Teradyne,https://investors.teradyne.com
+ASMI,ASM.AS,ASM International,public,NL,semicap,ald-epitaxy,ASMI|ASM International,https://en.wikipedia.org/wiki/ASM_International_(company),https://www.asm.com/investor-relations
+ENTG,ENTG,Entegris Inc.,public,US,semicap,specialty-materials,Entegris,https://en.wikipedia.org/wiki/Entegris,https://investor.entegris.com
+MKSI,MKSI,MKS Instruments,public,US,semicap,subsystems,MKS,https://en.wikipedia.org/wiki/MKS_Instruments,https://ir.mks.com
+ICHR,ICHR,Ichor Holdings,public,US,semicap,fluid-delivery,Ichor,https://www.ichorsystems.com,https://ir.ichorsystems.com
+UCTT,UCTT,Ultra Clean Holdings,public,US,semicap,gas-delivery,Ultra Clean|UCT,https://en.wikipedia.org/wiki/Ultra_Clean_Holdings,https://investors.uct.com
+MU,MU,Micron Technology Inc.,public,US,memory,dram-nand-hbm,Micron,https://en.wikipedia.org/wiki/Micron_Technology,https://investors.micron.com
+SAMSUNG,005930.KS,Samsung Electronics Co Ltd,public,KR,memory,dram-nand-hbm-foundry,Samsung,https://en.wikipedia.org/wiki/Samsung_Electronics,https://www.samsung.com/global/ir/
+SK_HYNIX,000660.KS,SK Hynix Inc.,public,KR,memory,dram-hbm,SK Hynix|Hynix,https://en.wikipedia.org/wiki/SK_Hynix,https://www.skhynix.com/eng/ir/main.do
+KIOXIA,285A.T,Kioxia Holdings,public,JP,memory,nand-flash,Kioxia|Toshiba Memory,https://en.wikipedia.org/wiki/Kioxia,https://www.kioxia.com/en-jp/ir.html
+WDC,WDC,Western Digital Corporation,public,US,memory,hdd-storage,Western Digital|WDC,https://en.wikipedia.org/wiki/Western_Digital,https://investor.wdc.com
+SNDK,SNDK,Sandisk Corporation,public,US,memory,nand-flash,Sandisk,https://en.wikipedia.org/wiki/SanDisk,https://investor.sandisk.com
+NANYA,2408.TW,Nanya Technology,public,TW,memory,dram,Nanya,https://en.wikipedia.org/wiki/Nanya_Technology,https://www.nanya.com/en/Investors
+WINBOND,2344.TW,Winbond Electronics,public,TW,memory,specialty-memory,Winbond,https://en.wikipedia.org/wiki/Winbond,https://www.winbond.com/hq/investor-relations/
+ASEH,ASX,ASE Technology Holding,public,TW,packaging,ospat-assembly-test,ASE|ASE Group,https://en.wikipedia.org/wiki/ASE_Group,https://www.aseglobal.com/investor-relations/
+AMKR,AMKR,Amkor Technology,public,US,packaging,ospat-advanced,Amkor,https://en.wikipedia.org/wiki/Amkor_Technology,https://ir.amkor.com
+JCET,600584.SS,JCET Group,public,CN,packaging,china-ospat,JCET,https://en.wikipedia.org/wiki/JCET,https://www.jcetglobal.com/en/investors/
+KYEC,2449.TW,King Yuan Electronics,public,TW,packaging,test-services,KYEC|King Yuan,https://en.wikipedia.org/wiki/King_Yuan_Electronics,https://www.kyec.com.tw/en/ir
+COWOS,,TSMC CoWoS,product,TW,packaging,advanced-packaging-2.5d,CoWoS|Chip-on-Wafer-on-Substrate,https://en.wikipedia.org/wiki/Chip_on_wafer_on_substrate,https://www.tsmc.com
+SPIL,,Siliconware Precision Industries,private,TW,packaging,ospat,SPIL,https://en.wikipedia.org/wiki/Siliconware_Precision_Industries,https://www.spil.com.tw
+POWERTECH,6239.TW,Powertech Technology,public,TW,packaging,memory-test-package,PTI|Powertech,https://en.wikipedia.org/wiki/Powertech_Technology,https://www.pti.com.tw/PTI/en/Investor
+ANET,ANET,Arista Networks,public,US,networking,data-center-switching,Arista,https://en.wikipedia.org/wiki/Arista_Networks,https://investors.arista.com
+AVGO,AVGO,Broadcom Inc.,public,US,networking,asic-switch-silicon,Broadcom,https://en.wikipedia.org/wiki/Broadcom_Inc.,https://investors.broadcom.com
+MRVL,MRVL,Marvell Technology Inc.,public,US,networking,custom-asic-dpu,Marvell,https://en.wikipedia.org/wiki/Marvell_Technology,https://investor.marvell.com
+CRDO,CRDO,Credo Technology Group,public,US,networking,serdes-aec,Credo,https://en.wikipedia.org/wiki/Credo_Technology,https://investors.credosemi.com
+ALAB,ALAB,Astera Labs,public,US,networking,interconnect-fabric,Astera Labs,https://en.wikipedia.org/wiki/Astera_Labs,https://ir.asteralabs.com
+CSCO,CSCO,Cisco Systems Inc.,public,US,networking,enterprise-switching,Cisco,https://en.wikipedia.org/wiki/Cisco,https://investor.cisco.com
+JNPR,JNPR,Juniper Networks,public,US,networking,routing-switching,Juniper,https://en.wikipedia.org/wiki/Juniper_Networks,https://investor.juniper.net
+EXTR,EXTR,Extreme Networks,public,US,networking,enterprise-networking,Extreme,https://en.wikipedia.org/wiki/Extreme_Networks,https://investor.extremenetworks.com
+HPEAR,,NVIDIA Spectrum,product,US,networking,ethernet-fabric-ai,Spectrum-X|NVIDIA Spectrum,https://www.nvidia.com/en-us/networking/spectrumx/,https://www.nvidia.com
+INFINIBAND,,NVIDIA Quantum InfiniBand,product,US,networking,infiniband-fabric,Quantum InfiniBand|Mellanox,https://en.wikipedia.org/wiki/InfiniBand,https://www.nvidia.com
+COHR,COHR,Coherent Corp,public,US,optical,laser-optical-comms,Coherent|II-VI|II-VI Incorporated,https://en.wikipedia.org/wiki/Coherent_Corp,https://investors.coherent.com
+LITE,LITE,Lumentum Holdings,public,US,optical,optical-transceivers,Lumentum,https://en.wikipedia.org/wiki/Lumentum,https://investor.lumentum.com
+FN,FN,Fabrinet,public,US,optical,optical-manufacturing,Fabrinet,https://en.wikipedia.org/wiki/Fabrinet,https://investor.fabrinet.com
+AAOI,AAOI,Applied Optoelectronics,public,US,optical,datacom-transceivers,AAOI|Applied Opto,https://en.wikipedia.org/wiki/Applied_Optoelectronics,https://investors.ao-inc.com
+CIEN,CIEN,Ciena Corporation,public,US,optical,optical-networking,Ciena,https://en.wikipedia.org/wiki/Ciena,https://investor.ciena.com
+INFN,INFN,Infinera Corporation,public,US,optical,coherent-optical,Infinera,https://en.wikipedia.org/wiki/Infinera,https://investors.infinera.com
+NPTN,NPTN,NeoPhotonics,public,US,optical,coherent-optical,NeoPhotonics,https://en.wikipedia.org/wiki/NeoPhotonics,https://ir.neophotonics.com
+ACIA,,Acacia Communications,product,US,optical,coherent-modules-cisco,Acacia Communications|Cisco Acacia,https://en.wikipedia.org/wiki/Acacia_Communications,https://www.cisco.com
+DELL,DELL,Dell Technologies,public,US,server,enterprise-server,Dell|Dell EMC,https://en.wikipedia.org/wiki/Dell_Technologies,https://investors.delltechnologies.com
+HPE,HPE,Hewlett Packard Enterprise,public,US,server,enterprise-server-cray,HPE|Cray,https://en.wikipedia.org/wiki/Hewlett_Packard_Enterprise,https://investors.hpe.com
+SMCI,SMCI,Super Micro Computer Inc.,public,US,server,ai-server-builder,Super Micro|Supermicro,https://en.wikipedia.org/wiki/Supermicro,https://ir.supermicro.com
+LENOVO,0992.HK,Lenovo Group,public,CN,server,server-pc,Lenovo,https://en.wikipedia.org/wiki/Lenovo,https://investor.lenovo.com
+INSPUR,000977.SZ,Inspur Electronic Information,public,CN,server,china-ai-server,Inspur,https://en.wikipedia.org/wiki/Inspur,https://www.inspur.com/lcjtww/2315499/index.html
+QUANTA,2382.TW,Quanta Computer,public,TW,server,odm-ai-server,Quanta,https://en.wikipedia.org/wiki/Quanta_Computer,https://www.quantatw.com/Quanta/english/investor/financialinfo.aspx
+WISTRON,3231.TW,Wistron Corporation,public,TW,server,odm-server,Wistron,https://en.wikipedia.org/wiki/Wistron,https://www.wistron.com/en/investors
+FOXCONN,2317.TW,Hon Hai Precision Industry,public,TW,server,emc-odm,Foxconn|Hon Hai,https://en.wikipedia.org/wiki/Foxconn,https://www.honhai.com/en-us/investor-relations
+COMPAL,2324.TW,Compal Electronics,public,TW,server,odm-server,Compal,https://en.wikipedia.org/wiki/Compal_Electronics,https://www.compal.com/?lang=en
+ASUSTEK,2357.TW,ASUSTeK Computer,public,TW,server,server-board,ASUS|ASUSTeK,https://en.wikipedia.org/wiki/Asus,https://www.asus.com/event/InvestorRelations/
+GIGABYTE,2376.TW,GIGA-BYTE Technology,public,TW,server,server-board,Gigabyte,https://en.wikipedia.org/wiki/Gigabyte_Technology,https://www.gigabyte.com/Investor-Relations
+CRWV,CRWV,CoreWeave Inc.,public,US,neocloud,gpu-cloud,CoreWeave,https://en.wikipedia.org/wiki/CoreWeave,https://investors.coreweave.com
+NBIS,NBIS,Nebius Group NV,public,NL,neocloud,gpu-cloud,Nebius|Yandex NV,https://en.wikipedia.org/wiki/Nebius_Group,https://group.nebius.com/investors
+LAMBDA,,Lambda Labs,private,US,neocloud,gpu-cloud,Lambda|Lambda Labs,https://lambdalabs.com,https://lambdalabs.com
+VAST,,Vast Data,private,US,neocloud,ai-storage,VAST Data,https://en.wikipedia.org/wiki/VAST_Data,https://vastdata.com
+VOLTAGEPARK,,Voltage Park,private,US,neocloud,gpu-cloud,Voltage Park,https://www.voltagepark.com,https://www.voltagepark.com
+CRUSOE,,Crusoe Energy Systems,private,US,neocloud,gpu-cloud-flare-gas,Crusoe,https://en.wikipedia.org/wiki/Crusoe_Energy_Systems,https://crusoe.ai
+TOGETHER,,Together AI,private,US,neocloud,inference-cloud,Together|Together.ai,https://www.together.ai,https://www.together.ai
+FIREWORKS,,Fireworks AI,private,US,neocloud,inference-cloud,Fireworks|Fireworks.ai,https://fireworks.ai,https://fireworks.ai
+ANYSCALE,,Anyscale Inc.,private,US,neocloud,ray-compute,Anyscale,https://www.anyscale.com,https://www.anyscale.com
+RUNPOD,,RunPod Inc.,private,US,neocloud,gpu-cloud,RunPod,https://www.runpod.io,https://www.runpod.io
+PAPERSPACE,,Paperspace,private,US,neocloud,gpu-cloud-digitalocean,Paperspace,https://en.wikipedia.org/wiki/Paperspace,https://www.paperspace.com
+VULTR,,Vultr Holdings,private,US,neocloud,cloud-gpu,Vultr,https://www.vultr.com,https://www.vultr.com
+GCORE,,Gcore Labs,private,LU,neocloud,edge-ai-cloud,Gcore,https://gcore.com,https://gcore.com
+APPLIEDDIGITAL,APLD,Applied Digital Corporation,public,US,neocloud,hpc-data-center,Applied Digital|APLD,https://en.wikipedia.org/wiki/Applied_Digital,https://ir.applieddigital.com
+IREN,IREN,IREN Limited,public,AU,neocloud,bitcoin-ai-hpc,Iris Energy|IREN,https://en.wikipedia.org/wiki/Iris_Energy,https://investors.iren.com
+CIFR,CIFR,Cipher Mining,public,US,neocloud,bitcoin-mining-hpc,Cipher Mining,https://www.ciphermining.com,https://investors.ciphermining.com
+CORZ,CORZ,Core Scientific,public,US,neocloud,bitcoin-hosting-hpc,Core Scientific,https://en.wikipedia.org/wiki/Core_Scientific,https://investors.corescientific.com
+WULF,WULF,TeraWulf Inc.,public,US,neocloud,bitcoin-hpc,TeraWulf,https://en.wikipedia.org/wiki/TeraWulf,https://www.terawulf.com/investors
+HUT,HUT,Hut 8 Corp,public,CA,neocloud,crypto-hpc,Hut 8,https://en.wikipedia.org/wiki/Hut_8,https://hut8.com/investors/
+VST,VST,Vistra Corp,public,US,power,independent-power,Vistra,https://en.wikipedia.org/wiki/Vistra_Corp,https://investor.vistracorp.com
+CEG,CEG,Constellation Energy,public,US,power,nuclear-power,Constellation Energy,https://en.wikipedia.org/wiki/Constellation_Energy,https://investors.constellationenergy.com
+TLN,TLN,Talen Energy,public,US,power,nuclear-power,Talen,https://en.wikipedia.org/wiki/Talen_Energy,https://investor.talenenergy.com
+NRG,NRG,NRG Energy,public,US,power,independent-power,NRG,https://en.wikipedia.org/wiki/NRG_Energy,https://investor.nrg.com
+NEE,NEE,NextEra Energy,public,US,power,renewable-utility,NextEra,https://en.wikipedia.org/wiki/NextEra_Energy,https://www.investor.nexteraenergy.com
+DUK,DUK,Duke Energy,public,US,power,utility,Duke Energy,https://en.wikipedia.org/wiki/Duke_Energy,https://investors.duke-energy.com
+AEP,AEP,American Electric Power,public,US,power,utility,AEP,https://en.wikipedia.org/wiki/American_Electric_Power,https://www.aep.com/investors
+PCG,PCG,PG&E Corporation,public,US,power,california-utility,PG&E|PGE,https://en.wikipedia.org/wiki/PG%26E_Corporation,https://investor.pgecorp.com
+EXC,EXC,Exelon Corporation,public,US,power,utility,Exelon,https://en.wikipedia.org/wiki/Exelon,https://investors.exeloncorp.com
+SO,SO,Southern Company,public,US,power,southeast-utility,Southern Co,https://en.wikipedia.org/wiki/Southern_Company,https://investor.southerncompany.com
+D,D,Dominion Energy,public,US,power,utility,Dominion,https://en.wikipedia.org/wiki/Dominion_Energy,https://investors.dominionenergy.com
+ETR,ETR,Entergy Corporation,public,US,power,nuclear-utility,Entergy,https://en.wikipedia.org/wiki/Entergy,https://www.entergy.com/investor_relations/
+PPL,PPL,PPL Corporation,public,US,power,utility,PPL,https://en.wikipedia.org/wiki/PPL_Corporation,https://www.pplweb.com/investors
+SMR,SMR,NuScale Power,public,US,power,small-modular-reactor,NuScale|SMR,https://en.wikipedia.org/wiki/NuScale_Power,https://ir.nuscalepower.com
+OKLO,OKLO,Oklo Inc.,public,US,power,advanced-fission,Oklo,https://en.wikipedia.org/wiki/Oklo,https://investors.oklo.com
+NNE,NNE,Nano Nuclear Energy,public,US,power,microreactor,Nano Nuclear,https://www.nanonuclearenergy.com,https://investors.nanonuclearenergy.com
+LEU,LEU,Centrus Energy,public,US,power,uranium-enrichment,Centrus,https://en.wikipedia.org/wiki/Centrus_Energy,https://investors.centrusenergy.com
+GEV,GEV,GE Vernova Inc.,public,US,grid,turbines-grid,GE Vernova,https://en.wikipedia.org/wiki/GE_Vernova,https://www.gevernova.com/investors
+ETN,ETN,Eaton Corporation,public,IE,grid,electrical-management,Eaton,https://en.wikipedia.org/wiki/Eaton_Corporation,https://www.eaton.com/us/en-us/company/investor-relations.html
+PWR,PWR,Quanta Services,public,US,grid,grid-construction,Quanta Services,https://en.wikipedia.org/wiki/Quanta_Services,https://investors.quantaservices.com
+EMR,EMR,Emerson Electric,public,US,grid,automation-electrical,Emerson,https://en.wikipedia.org/wiki/Emerson_Electric,https://www.emerson.com/en-us/investors
+ROK,ROK,Rockwell Automation,public,US,grid,industrial-automation,Rockwell,https://en.wikipedia.org/wiki/Rockwell_Automation,https://ir.rockwellautomation.com
+ABBNY,ABBNY,ABB Ltd,public,CH,grid,electrification-automation,ABB,https://en.wikipedia.org/wiki/ABB,https://global.abb/group/en/investors
+SIE,SIE.DE,Siemens AG,public,DE,grid,industrial-electrical,Siemens,https://en.wikipedia.org/wiki/Siemens,https://www.siemens.com/global/en/company/investor-relations.html
+SU,SU.PA,Schneider Electric,public,FR,grid,energy-management,Schneider Electric,https://en.wikipedia.org/wiki/Schneider_Electric,https://www.se.com/ww/en/about-us/investors/
+HUBB,HUBB,Hubbell Incorporated,public,US,grid,electrical-products,Hubbell,https://en.wikipedia.org/wiki/Hubbell_Incorporated,https://investor.hubbell.com
+VRT,VRT,Vertiv Holdings,public,US,cooling,data-center-thermal,Vertiv,https://en.wikipedia.org/wiki/Vertiv,https://investors.vertiv.com
+MOD,MOD,Modine Manufacturing,public,US,cooling,thermal-management,Modine,https://en.wikipedia.org/wiki/Modine_Manufacturing_Company,https://investors.modine.com
+ASTI,,Asetek A/S,private,DK,cooling,liquid-cooling,Asetek,https://en.wikipedia.org/wiki/Asetek,https://www.asetek.com
+COOLIT,,CoolIT Systems,private,CA,cooling,direct-liquid-cooling,CoolIT,https://www.coolitsystems.com,https://www.coolitsystems.com
+JCI,JCI,Johnson Controls,public,IE,cooling,hvac-buildings,Johnson Controls,https://en.wikipedia.org/wiki/Johnson_Controls,https://investors.johnsoncontrols.com
+TT,TT,Trane Technologies,public,IE,cooling,hvac-thermal,Trane,https://en.wikipedia.org/wiki/Trane_Technologies,https://investors.tranetechnologies.com
+LII,LII,Lennox International,public,US,cooling,hvac,Lennox,https://en.wikipedia.org/wiki/Lennox_International,https://investor.lennox.com
+SUBMER,,Submer Technologies,private,ES,cooling,immersion-cooling,Submer,https://submer.com,https://submer.com
+GRC,,Green Revolution Cooling,private,US,cooling,immersion-cooling,GRC|Green Revolution Cooling,https://www.grcooling.com,https://www.grcooling.com
+CDNS,CDNS,Cadence Design Systems,public,US,eda,eda-tools,Cadence,https://en.wikipedia.org/wiki/Cadence_Design_Systems,https://investor.cadence.com
+SNPS,SNPS,Synopsys Inc.,public,US,eda,eda-tools,Synopsys,https://en.wikipedia.org/wiki/Synopsys,https://investor.synopsys.com
+MENTOR,,Siemens EDA,product,DE,eda,eda-tools,Mentor Graphics|Siemens EDA,https://en.wikipedia.org/wiki/Mentor_Graphics,https://eda.sw.siemens.com
+ANSYS,ANSS,Ansys Inc.,public,US,eda,multiphysics-simulation,Ansys,https://en.wikipedia.org/wiki/Ansys,https://investors.ansys.com
+KEYS,KEYS,Keysight Technologies,public,US,eda,electronic-test,Keysight,https://en.wikipedia.org/wiki/Keysight,https://investor.keysight.com
+ARM,ARM,Arm Holdings plc,public,UK,ip,cpu-ip,ARM|Arm Ltd,https://en.wikipedia.org/wiki/Arm_Holdings,https://investors.arm.com
+IMG,IMG.L,Imagination Technologies,private,UK,ip,gpu-ip,Imagination Technologies,https://en.wikipedia.org/wiki/Imagination_Technologies,https://www.imaginationtech.com
+ANDES,6533.TWO,Andes Technology,public,TW,ip,risc-v-cpu-ip,Andes,https://en.wikipedia.org/wiki/Andes_Technology,https://www.andestech.com/en/investor/
+SIFIVE,,SiFive Inc.,private,US,ip,risc-v-ip,SiFive,https://en.wikipedia.org/wiki/SiFive,https://www.sifive.com
+RISCV,,RISC-V International,sector,CH,ip,open-isa,RISC-V|RISC-V Foundation,https://en.wikipedia.org/wiki/RISC-V,https://riscv.org
+CEVA,CEVA,Ceva Inc.,public,US,ip,dsp-ip,Ceva,https://en.wikipedia.org/wiki/CEVA_Inc.,https://investors.ceva-ip.com
+RMBS,RMBS,Rambus Inc.,public,US,ip,memory-ip,Rambus,https://en.wikipedia.org/wiki/Rambus,https://investor.rambus.com
+LSCC,LSCC,Lattice Semiconductor,public,US,ip,fpga,Lattice,https://en.wikipedia.org/wiki/Lattice_Semiconductor,https://ir.latticesemi.com
+SNOW,SNOW,Snowflake Inc.,public,US,software,data-cloud,Snowflake,https://en.wikipedia.org/wiki/Snowflake_Inc.,https://investors.snowflake.com
+NET,NET,Cloudflare Inc.,public,US,software,edge-cloud,Cloudflare,https://en.wikipedia.org/wiki/Cloudflare,https://cloudflare.net
+DDOG,DDOG,Datadog Inc.,public,US,software,observability,Datadog,https://en.wikipedia.org/wiki/Datadog,https://investors.datadoghq.com
+MDB,MDB,MongoDB Inc.,public,US,software,database,MongoDB,https://en.wikipedia.org/wiki/MongoDB_Inc.,https://investors.mongodb.com
+PLTR,PLTR,Palantir Technologies,public,US,software,data-platform,Palantir,https://en.wikipedia.org/wiki/Palantir_Technologies,https://investors.palantir.com
+CRM,CRM,Salesforce Inc.,public,US,software,saas-ai,Salesforce,https://en.wikipedia.org/wiki/Salesforce,https://investor.salesforce.com
+DATABRICKS,,Databricks Inc.,private,US,software,data-lakehouse,Databricks,https://en.wikipedia.org/wiki/Databricks,https://www.databricks.com
+HUGGINGFACE,,Hugging Face Inc.,private,US,software,ml-models-hub,Hugging Face,https://en.wikipedia.org/wiki/Hugging_Face,https://huggingface.co
+ANTHROPIC,,Anthropic PBC,private,US,software,foundation-model,Anthropic|Claude,https://en.wikipedia.org/wiki/Anthropic,https://www.anthropic.com
+OPENAI,,OpenAI Inc.,private,US,software,foundation-model,OpenAI|ChatGPT,https://en.wikipedia.org/wiki/OpenAI,https://openai.com
+XAI,,xAI Corp,private,US,software,foundation-model,xAI|Grok,https://en.wikipedia.org/wiki/XAI_(company),https://x.ai
+MISTRAL,,Mistral AI,private,FR,software,foundation-model,Mistral|Mistral AI,https://en.wikipedia.org/wiki/Mistral_AI,https://mistral.ai
+COHERE,,Cohere Inc.,private,CA,software,foundation-model,Cohere,https://en.wikipedia.org/wiki/Cohere,https://cohere.com
+INFLECTION,,Inflection AI,private,US,software,foundation-model,Inflection AI,https://en.wikipedia.org/wiki/Inflection_AI,https://inflection.ai
+PERPLEXITY,,Perplexity AI,private,US,software,ai-search,Perplexity,https://en.wikipedia.org/wiki/Perplexity_AI,https://www.perplexity.ai
+STABILITYAI,,Stability AI,private,UK,software,foundation-model-image,Stability AI|Stable Diffusion,https://en.wikipedia.org/wiki/Stability_AI,https://stability.ai
+AI21,,AI21 Labs,private,IL,software,foundation-model,AI21,https://en.wikipedia.org/wiki/AI21_Labs,https://www.ai21.com
+DEEPSEEK,,DeepSeek,private,CN,software,foundation-model,DeepSeek,https://en.wikipedia.org/wiki/DeepSeek,https://www.deepseek.com
+MOONSHOT,,Moonshot AI,private,CN,software,foundation-model-kimi,Moonshot|Kimi,https://www.moonshot.cn,https://www.moonshot.cn
+ZHIPU,,Zhipu AI,private,CN,software,foundation-model,Zhipu|GLM,https://www.zhipuai.cn,https://www.zhipuai.cn
+SCALEAI,,Scale AI,private,US,software,data-labeling,Scale AI|Scale,https://en.wikipedia.org/wiki/Scale_AI,https://scale.com
+WRITER,,Writer Inc.,private,US,software,enterprise-llm,Writer,https://writer.com,https://writer.com
+GLEAN,,Glean Technologies,private,US,software,enterprise-search,Glean,https://www.glean.com,https://www.glean.com
+CHARACTER,,Character.AI,private,US,software,consumer-ai,Character AI,https://en.wikipedia.org/wiki/Character.ai,https://character.ai
+RUNWAY,,Runway AI,private,US,software,gen-video-ai,Runway|Runway ML,https://en.wikipedia.org/wiki/Runway_(company),https://runwayml.com
+ELEVENLABS,,ElevenLabs Inc.,private,US,software,gen-audio-ai,ElevenLabs,https://elevenlabs.io,https://elevenlabs.io
+SUNO,,Suno Inc.,private,US,software,gen-music-ai,Suno,https://suno.com,https://suno.com
+MIDJOURNEY,,Midjourney Inc.,private,US,software,gen-image-ai,Midjourney,https://en.wikipedia.org/wiki/Midjourney,https://www.midjourney.com
+CUDA,,NVIDIA CUDA,product,US,software,gpu-compute-platform,CUDA|CUDA Toolkit,https://en.wikipedia.org/wiki/CUDA,https://developer.nvidia.com/cuda-toolkit
+ROCM,,AMD ROCm,product,US,software,gpu-compute-platform,ROCm|AMD ROCm,https://en.wikipedia.org/wiki/ROCm,https://www.amd.com/en/products/software/rocm.html
+TPU,,Google TPU,product,US,asic,tensor-processing-unit,TPU|Tensor Processing Unit,https://en.wikipedia.org/wiki/Tensor_Processing_Unit,https://cloud.google.com/tpu
+TRAINIUM,,AWS Trainium,product,US,asic,training-accelerator,Trainium|AWS Trainium,https://aws.amazon.com/ai/machine-learning/trainium/,https://aws.amazon.com
+INFERENTIA,,AWS Inferentia,product,US,asic,inference-accelerator,Inferentia,https://aws.amazon.com/ai/machine-learning/inferentia/,https://aws.amazon.com
+MAIA,,Microsoft Azure Maia,product,US,asic,azure-ai-accelerator,Maia 100|Azure Maia,https://en.wikipedia.org/wiki/Microsoft_Azure#Maia,https://azure.microsoft.com
+COBALT,,Microsoft Azure Cobalt,product,US,asic,arm-server-cpu,Cobalt 100,https://azure.microsoft.com,https://azure.microsoft.com
+MTIA,,Meta Training Inference Accelerator,product,US,asic,meta-ai-asic,MTIA,https://en.wikipedia.org/wiki/Meta_Training_and_Inference_Accelerator,https://about.fb.com
+DOJO,,Tesla Dojo,product,US,asic,training-supercomputer,Dojo,https://en.wikipedia.org/wiki/Tesla_Dojo,https://www.tesla.com
+QCOM,QCOM,Qualcomm Inc.,public,US,asic,mobile-ai-soc,Qualcomm|Snapdragon,https://en.wikipedia.org/wiki/Qualcomm,https://investor.qualcomm.com
+MTK,2454.TW,MediaTek Inc.,public,TW,asic,mobile-soc,MediaTek,https://en.wikipedia.org/wiki/MediaTek,https://www.mediatek.com/about/investor-relations
+NXPI,NXPI,NXP Semiconductors,public,NL,asic,auto-edge-ai,NXP,https://en.wikipedia.org/wiki/NXP_Semiconductors,https://investors.nxp.com
+ADI,ADI,Analog Devices,public,US,asic,signal-chain,ADI|Analog Devices,https://en.wikipedia.org/wiki/Analog_Devices,https://investor.analog.com
+TXN,TXN,Texas Instruments,public,US,asic,analog-mcu,TI|Texas Instruments,https://en.wikipedia.org/wiki/Texas_Instruments,https://investor.ti.com
+ON,ON,onsemi,public,US,asic,power-image-sensor,Onsemi|ON Semiconductor,https://en.wikipedia.org/wiki/Onsemi,https://investor.onsemi.com
+MCHP,MCHP,Microchip Technology,public,US,asic,mcu-fpga,Microchip,https://en.wikipedia.org/wiki/Microchip_Technology,https://www.microchip.com/en-us/about/investors
+STM,STM,STMicroelectronics,public,CH,asic,mcu-mems,ST|STMicro,https://en.wikipedia.org/wiki/STMicroelectronics,https://investors.st.com
+IFX,IFX.DE,Infineon Technologies,public,DE,asic,power-auto,Infineon,https://en.wikipedia.org/wiki/Infineon_Technologies,https://www.infineon.com/cms/en/about-infineon/investor/
+RNECY,6963.T,Renesas Electronics,public,JP,asic,auto-mcu,Renesas,https://en.wikipedia.org/wiki/Renesas_Electronics,https://www.renesas.com/eng/ir/
+SONY,SONY,Sony Group Corporation,public,JP,sensors,cmos-image-sensor,Sony|Sony Semi,https://en.wikipedia.org/wiki/Sony,https://www.sony.com/en/SonyInfo/IR/
+HIMX,HIMX,Himax Technologies,public,TW,sensors,display-driver,Himax,https://en.wikipedia.org/wiki/Himax_Technologies,https://www.himax.com.tw/investor-relations/
+OUST,OUST,Ouster Inc.,public,US,sensors,lidar,Ouster,https://en.wikipedia.org/wiki/Ouster_(company),https://investors.ouster.com
+LAZR,LAZR,Luminar Technologies,public,US,sensors,auto-lidar,Luminar,https://en.wikipedia.org/wiki/Luminar_Technologies,https://investors.luminartech.com
+INVZ,INVZ,Innoviz Technologies,public,IL,sensors,auto-lidar,Innoviz,https://en.wikipedia.org/wiki/Innoviz_Technologies,https://investors.innoviz.tech
+BSDA,,Boston Dynamics,private,US,robotics,humanoid-quadruped,Boston Dynamics|Atlas|Spot,https://en.wikipedia.org/wiki/Boston_Dynamics,https://bostondynamics.com
+FIGURE,,Figure AI,private,US,robotics,humanoid,Figure|Figure AI,https://en.wikipedia.org/wiki/Figure_AI,https://www.figure.ai
+ONEX,,1X Technologies,private,NO,robotics,humanoid,1X|Halodi,https://www.1x.tech,https://www.1x.tech
+AGILITY,,Agility Robotics,private,US,robotics,humanoid-digit,Agility|Digit,https://en.wikipedia.org/wiki/Agility_Robotics,https://agilityrobotics.com
+APPTRONIK,,Apptronik Inc.,private,US,robotics,humanoid-apollo,Apptronik|Apollo,https://en.wikipedia.org/wiki/Apptronik,https://apptronik.com
+SANCTUARY,,Sanctuary AI,private,CA,robotics,humanoid-phoenix,Sanctuary AI|Phoenix,https://www.sanctuary.ai,https://www.sanctuary.ai
+UNITREE,,Unitree Robotics,private,CN,robotics,humanoid-quadruped,Unitree,https://en.wikipedia.org/wiki/Unitree_Robotics,https://www.unitree.com
+SYMBOTIC,SYM,Symbotic Inc.,public,US,robotics,warehouse-automation,Symbotic,https://en.wikipedia.org/wiki/Symbotic,https://ir.symbotic.com
+ABB,ABBNY,ABB Robotics,public,CH,robotics,industrial-robotics,ABB Robotics,https://en.wikipedia.org/wiki/ABB,https://global.abb/group/en/investors
+FANUY,6954.T,FANUC Corporation,public,JP,robotics,industrial-robotics,FANUC,https://en.wikipedia.org/wiki/Fanuc,https://www.fanuc.co.jp/en/ir/
+TATAELXSI,TATAELXSI.NS,Tata Elxsi Limited,public,IN,software,ai-engineering-services,Tata Elxsi,https://en.wikipedia.org/wiki/Tata_Elxsi,https://www.tataelxsi.com/investors
+KPITTECH,KPITTECH.NS,KPIT Technologies,public,IN,software,auto-software-ai,KPIT,https://en.wikipedia.org/wiki/KPIT_Technologies,https://www.kpit.com/investors/
+PERSISTENT,PERSISTENT.NS,Persistent Systems,public,IN,software,ai-services,Persistent,https://en.wikipedia.org/wiki/Persistent_Systems,https://www.persistent.com/investors/
+LTIM,LTIM.NS,LTIMindtree Limited,public,IN,software,ai-services,LTIMindtree|LTI Mindtree,https://en.wikipedia.org/wiki/LTIMindtree,https://www.ltimindtree.com/investors/
+TATACOMM,TATACOMM.NS,Tata Communications,public,IN,software,connectivity-cloud,Tata Communications,https://en.wikipedia.org/wiki/Tata_Communications,https://www.tatacommunications.com/investors/
+YOTTA,,Yotta Data Services,private,IN,neocloud,india-gpu-cloud,Yotta,https://yotta.com,https://yotta.com
+INFY,INFY,Infosys Limited,public,IN,software,ai-it-services,Infosys,https://en.wikipedia.org/wiki/Infosys,https://www.infosys.com/investors/
+TCS,TCS.NS,Tata Consultancy Services,public,IN,software,ai-it-services,TCS,https://en.wikipedia.org/wiki/Tata_Consultancy_Services,https://www.tcs.com/investor-relations
+WIT,WIT,Wipro Limited,public,IN,software,ai-it-services,Wipro,https://en.wikipedia.org/wiki/Wipro,https://www.wipro.com/investors/
+HCLTECH,HCLTECH.NS,HCL Technologies,public,IN,software,ai-it-services,HCL Tech,https://en.wikipedia.org/wiki/HCL_Technologies,https://www.hcltech.com/investors
+RELIANCE,RELIANCE.NS,Reliance Industries,public,IN,hyperscaler,jio-ai-cloud,Reliance|Jio,https://en.wikipedia.org/wiki/Reliance_Industries,https://www.ril.com/investors
+EQIX,EQIX,Equinix Inc.,public,US,neocloud,colocation-data-center,Equinix,https://en.wikipedia.org/wiki/Equinix,https://investor.equinix.com
+DLR,DLR,Digital Realty Trust,public,US,neocloud,data-center-reit,Digital Realty,https://en.wikipedia.org/wiki/Digital_Realty,https://investor.digitalrealty.com
+IRM,IRM,Iron Mountain,public,US,neocloud,data-center-storage,Iron Mountain,https://en.wikipedia.org/wiki/Iron_Mountain_(company),https://investors.ironmountain.com
+SBAC,SBAC,SBA Communications,public,US,neocloud,wireless-infrastructure,SBA Comm,https://en.wikipedia.org/wiki/SBA_Communications,https://investor.sbasite.com
+NXT,NXT,Nextracker Inc.,public,US,power,solar-tracker,Nextracker,https://en.wikipedia.org/wiki/Nextracker,https://investors.nextracker.com
+FSLR,FSLR,First Solar Inc.,public,US,power,solar-modules,First Solar,https://en.wikipedia.org/wiki/First_Solar,https://investor.firstsolar.com
+ENPH,ENPH,Enphase Energy,public,US,power,solar-microinverter,Enphase,https://en.wikipedia.org/wiki/Enphase_Energy,https://investor.enphase.com
+BE,BE,Bloom Energy,public,US,power,fuel-cells,Bloom Energy,https://en.wikipedia.org/wiki/Bloom_Energy,https://investor.bloomenergy.com
+PLUG,PLUG,Plug Power,public,US,power,hydrogen-fuel-cell,Plug Power,https://en.wikipedia.org/wiki/Plug_Power,https://www.ir.plugpower.com
+GENERAC,GNRC,Generac Holdings,public,US,power,backup-generators,Generac,https://en.wikipedia.org/wiki/Generac_Power_Systems,https://investors.generac.com
+CMI,CMI,Cummins Inc.,public,US,power,generator-engines,Cummins,https://en.wikipedia.org/wiki/Cummins,https://investor.cummins.com
+ATKR,ATKR,Atkore Inc.,public,US,grid,electrical-conduit,Atkore,https://en.wikipedia.org/wiki/Atkore,https://investors.atkore.com
+NVT,NVT,nVent Electric,public,US,grid,electrical-enclosures,nVent,https://en.wikipedia.org/wiki/NVent_Electric,https://investors.nvent.com
+PRYSMIAN,PRY.MI,Prysmian Group,public,IT,grid,power-cables,Prysmian,https://en.wikipedia.org/wiki/Prysmian_Group,https://www.prysmian.com/en/investors
+NKT,NKT.CO,NKT A/S,public,DK,grid,hv-power-cables,NKT,https://en.wikipedia.org/wiki/NKT_A/S,https://www.nkt.com/investors
+HAILIANG,002203.SZ,Hailiang Co Ltd,public,CN,grid,copper-products,Hailiang,https://www.hailiang.com,https://www.hailiang.com
+QCT,2382.TW,Quanta Cloud Technology,product,TW,server,hyperscale-odm,QCT|Quanta Cloud,https://www.qct.io,https://www.qct.io
+CELESTICA,CLS,Celestica Inc.,public,CA,server,ems-data-center,Celestica,https://en.wikipedia.org/wiki/Celestica,https://investor.celestica.com
+JABIL,JBL,Jabil Inc.,public,US,server,ems-data-center,Jabil,https://en.wikipedia.org/wiki/Jabil,https://investors.jabil.com
+FLEX,FLEX,Flex Ltd.,public,SG,server,ems-manufacturing,Flex|Flextronics,https://en.wikipedia.org/wiki/Flex_Ltd.,https://investors.flex.com
+PEGATRON,4938.TW,Pegatron Corporation,public,TW,server,odm-server,Pegatron,https://en.wikipedia.org/wiki/Pegatron,https://www.pegatroncorp.com/investor.php
+INVENTEC,2356.TW,Inventec Corporation,public,TW,server,odm-server,Inventec,https://en.wikipedia.org/wiki/Inventec,https://www.inventec.com/en/Investors
+HBM,,High Bandwidth Memory,sector,US,hbm,hbm-memory-stack,HBM|HBM3|HBM3e|HBM4,https://en.wikipedia.org/wiki/High_Bandwidth_Memory,https://www.jedec.org
+PCIE,,PCI Express,sector,US,networking,host-interconnect,PCIe|PCI Express,https://en.wikipedia.org/wiki/PCI_Express,https://pcisig.com
+CXL,,Compute Express Link,sector,US,networking,memory-fabric,CXL,https://en.wikipedia.org/wiki/Compute_Express_Link,https://www.computeexpresslink.org
+NVLINK,,NVIDIA NVLink,product,US,networking,gpu-interconnect,NVLink|NVSwitch,https://en.wikipedia.org/wiki/NVLink,https://www.nvidia.com
+UALINK,,UALink Consortium,sector,US,networking,open-accelerator-link,UALink,https://ualinkconsortium.org,https://ualinkconsortium.org
+UEC,,Ultra Ethernet Consortium,sector,US,networking,ai-ethernet-fabric,UEC|Ultra Ethernet,https://ultraethernet.org,https://ultraethernet.org
+LITHO,,EUV Lithography,sector,NL,semicap,extreme-ultraviolet-lithography,EUV|EUVL,https://en.wikipedia.org/wiki/Extreme_ultraviolet_lithography,https://www.asml.com
+GAAFET,,Gate-All-Around FET,sector,US,foundry,nanosheet-transistor,GAAFET|Nanosheet,https://en.wikipedia.org/wiki/Multigate_device,https://www.tsmc.com
+BACKSIDE,,Backside Power Delivery,sector,US,foundry,bspdn,Backside Power|BSPDN,https://en.wikipedia.org/wiki/Backside_power_delivery_network,https://www.intel.com

@@ -1,0 +1,2125 @@
+- id: semianalysis
+  name: SemiAnalysis
+  type: blog
+  url: https://semianalysis.com/
+  rss: https://semianalysis.com/feed/
+  paywall: partial
+  tier: 1
+  topic_tags:
+  - foundry
+  - gpu
+  - hbm
+  - hyperscaler
+  - semicap
+  - packaging
+  extraction_strategy: trafilatura
+  notes: Dylan Patel — single best independent semis source; some posts paywalled
+- id: stratechery
+  name: Stratechery
+  type: blog
+  url: https://stratechery.com/
+  rss: https://stratechery.com/feed/
+  paywall: hard
+  tier: 1
+  topic_tags:
+  - hyperscaler
+  - software
+  - geopolitics
+  - m_and_a
+  extraction_strategy: trafilatura
+  notes: Ben Thompson — strategic framing; daily updates paywalled, weekly free
+- id: the-information
+  name: The Information
+  type: news_outlet
+  url: https://www.theinformation.com/
+  rss: https://www.theinformation.com/feed
+  paywall: hard
+  tier: 1
+  topic_tags:
+  - hyperscaler
+  - gpu
+  - neocloud
+  - m_and_a
+  - capex
+  extraction_strategy: trafilatura
+  notes: Atom feed; high-signal scoops on hyperscaler/AI deals; mostly paywalled
+- id: digitimes
+  name: DigiTimes
+  type: news_outlet
+  url: https://www.digitimes.com/
+  rss: https://www.digitimes.com/rss/daily.xml
+  paywall: partial
+  tier: 1
+  topic_tags:
+  - foundry
+  - taiwan
+  - packaging
+  - semicap
+  - hbm
+  extraction_strategy: trafilatura
+  notes: Taiwan supply-chain rumors — earliest signal on TSMC/ASE moves
+- id: ee-times
+  name: EE Times
+  type: news_outlet
+  url: https://www.eetimes.com/
+  rss: https://www.eetimes.com/feed/
+  paywall: partial
+  tier: 1
+  topic_tags:
+  - semicap
+  - eda
+  - ip
+  - packaging
+  - networking
+  extraction_strategy: trafilatura
+  notes: Veteran trade pub; EDA/IP/process coverage
+- id: trendforce
+  name: TrendForce
+  type: news_outlet
+  url: https://www.trendforce.com/news/
+  rss: https://www.trendforce.com/news/feed/
+  paywall: none
+  tier: 1
+  topic_tags:
+  - memory
+  - hbm
+  - foundry
+  - korea
+  - taiwan
+  extraction_strategy: trafilatura
+  notes: Best free DRAM/HBM/NAND pricing & capacity data
+- id: counterpoint-research
+  name: Counterpoint Research
+  type: blog
+  url: https://counterpointresearch.com/
+  rss: https://counterpointresearch.com/feed/
+  paywall: partial
+  tier: 1
+  topic_tags:
+  - foundry
+  - hyperscaler
+  - china
+  - korea
+  extraction_strategy: trafilatura
+  notes: Market-share numbers; smartphone-SoC/foundry tracking
+- id: anandtech
+  name: AnandTech (archive)
+  type: blog
+  url: https://www.anandtech.com/
+  rss: https://www.anandtech.com/rss/
+  paywall: none
+  tier: 2
+  topic_tags:
+  - gpu
+  - server
+  - packaging
+  extraction_strategy: trafilatura
+  notes: Defunct since Aug-2024; archive only — keep for reference search
+- id: toms-hardware
+  name: Tom's Hardware
+  type: news_outlet
+  url: https://www.tomshardware.com/
+  rss: https://www.tomshardware.com/feeds.xml
+  paywall: none
+  tier: 1
+  topic_tags:
+  - gpu
+  - server
+  - foundry
+  - packaging
+  extraction_strategy: trafilatura
+  notes: Picks up SemiAccurate / Asianometry leads; consumer + DC coverage
+- id: servethehome
+  name: ServeTheHome
+  type: blog
+  url: https://www.servethehome.com/
+  rss: https://www.servethehome.com/feed/
+  paywall: none
+  tier: 1
+  topic_tags:
+  - server
+  - networking
+  - neocloud
+  - cooling
+  - hyperscaler
+  extraction_strategy: trafilatura
+  notes: Patrick Kennedy — DC hardware deep-dives; show-floor coverage
+- id: next-platform
+  name: The Next Platform
+  type: news_outlet
+  url: https://www.nextplatform.com/
+  rss: https://www.nextplatform.com/feed/
+  paywall: none
+  tier: 1
+  topic_tags:
+  - hyperscaler
+  - server
+  - networking
+  - gpu
+  - asic
+  extraction_strategy: trafilatura
+  notes: Timothy Prickett Morgan — HPC/AI infra, hyperscaler economics
+- id: semi-accurate
+  name: SemiAccurate
+  type: blog
+  url: https://www.semiaccurate.com/
+  rss: https://www.semiaccurate.com/feed/
+  paywall: partial
+  tier: 2
+  topic_tags:
+  - gpu
+  - foundry
+  - packaging
+  extraction_strategy: trafilatura
+  notes: Charlie Demerjian — contrarian leaks; some posts subscriber-only
+- id: chip-history
+  name: ChipsAndCheese
+  type: blog
+  url: https://chipsandcheese.com/
+  rss: https://chipsandcheese.com/feed/
+  paywall: none
+  tier: 2
+  topic_tags:
+  - gpu
+  - server
+  - packaging
+  extraction_strategy: trafilatura
+  notes: Microarchitecture deep-dives; benchmarks at low level
+- id: sec-edgar-8k
+  name: SEC EDGAR 8-K Filings
+  type: sec_filing
+  url: https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&type=8-K
+  rss: null
+  paywall: none
+  tier: 1
+  topic_tags:
+  - m_and_a
+  - capex
+  - foundry
+  - gpu
+  - hyperscaler
+  extraction_strategy: edgartools
+  notes: Pull 8-K/10-Q for AI-infra entity list via edgartools
+- id: ir-nvidia
+  name: NVIDIA Investor Relations
+  type: ir_page
+  url: https://investor.nvidia.com/
+  rss: https://nvidianews.nvidia.com/releases.xml
+  paywall: none
+  tier: 1
+  topic_tags:
+  - gpu
+  - hyperscaler
+  - networking
+  extraction_strategy: trafilatura
+  notes: Press-release Atom feed; earnings + product launches
+- id: ir-amd
+  name: AMD Investor Relations
+  type: ir_page
+  url: https://ir.amd.com/
+  rss: https://ir.amd.com/rss/news-releases.xml
+  paywall: none
+  tier: 1
+  topic_tags:
+  - gpu
+  - server
+  extraction_strategy: trafilatura
+  notes: MI3xx/MI4xx roadmap drops here first
+- id: ir-tsmc
+  name: TSMC Investor Relations
+  type: ir_page
+  url: https://investor.tsmc.com/
+  rss: null
+  paywall: none
+  tier: 1
+  topic_tags:
+  - foundry
+  - taiwan
+  - packaging
+  - capex
+  extraction_strategy: trafilatura
+  notes: Monthly revenue + quarterly capex guidance
+- id: ir-asml
+  name: ASML Investor Relations
+  type: ir_page
+  url: https://www.asml.com/en/investors
+  rss: null
+  paywall: none
+  tier: 1
+  topic_tags:
+  - semicap
+  - foundry
+  extraction_strategy: trafilatura
+  notes: EUV/High-NA bookings — leading indicator for foundry capex
+- id: ir-amat
+  name: Applied Materials IR
+  type: ir_page
+  url: https://ir.appliedmaterials.com/
+  rss: null
+  paywall: none
+  tier: 1
+  topic_tags:
+  - semicap
+  - foundry
+  - memory
+  extraction_strategy: trafilatura
+  notes: WFE bellwether
+- id: ir-lrcx
+  name: Lam Research IR
+  type: ir_page
+  url: https://investor.lamresearch.com/
+  rss: null
+  paywall: none
+  tier: 1
+  topic_tags:
+  - semicap
+  - memory
+  extraction_strategy: trafilatura
+  notes: Etch/deposition; NAND-cycle leading indicator
+- id: ir-klac
+  name: KLA IR
+  type: ir_page
+  url: https://ir.kla.com/
+  rss: null
+  paywall: none
+  tier: 1
+  topic_tags:
+  - semicap
+  extraction_strategy: trafilatura
+  notes: Process control / inspection — yield-ramp signal
+- id: ir-mu
+  name: Micron IR
+  type: ir_page
+  url: https://investors.micron.com/
+  rss: null
+  paywall: none
+  tier: 1
+  topic_tags:
+  - memory
+  - hbm
+  extraction_strategy: trafilatura
+  notes: HBM3E/HBM4 ramp commentary
+- id: ir-skhynix
+  name: SK Hynix IR
+  type: ir_page
+  url: https://www.skhynix.com/eng/ir/irNews.do
+  rss: null
+  paywall: none
+  tier: 1
+  topic_tags:
+  - memory
+  - hbm
+  - korea
+  extraction_strategy: trafilatura
+  notes: HBM market leader; quarterly capex
+- id: ir-avgo
+  name: Broadcom IR
+  type: ir_page
+  url: https://investors.broadcom.com/
+  rss: null
+  paywall: none
+  tier: 1
+  topic_tags:
+  - asic
+  - networking
+  - hyperscaler
+  extraction_strategy: trafilatura
+  notes: Custom-ASIC (Google TPU, Meta MTIA) + Tomahawk switches
+- id: ir-mrvl
+  name: Marvell IR
+  type: ir_page
+  url: https://investor.marvell.com/
+  rss: null
+  paywall: none
+  tier: 2
+  topic_tags:
+  - asic
+  - networking
+  - optical
+  extraction_strategy: trafilatura
+  notes: 'Custom ASIC #2 (AWS Trainium); optical DSPs'
+- id: ir-anet
+  name: Arista Networks IR
+  type: ir_page
+  url: https://investors.arista.com/
+  rss: null
+  paywall: none
+  tier: 2
+  topic_tags:
+  - networking
+  - hyperscaler
+  extraction_strategy: trafilatura
+  notes: AI back-end Ethernet share
+- id: ir-cohr
+  name: Coherent IR
+  type: ir_page
+  url: https://investors.coherent.com/
+  rss: null
+  paywall: none
+  tier: 2
+  topic_tags:
+  - optical
+  - networking
+  extraction_strategy: trafilatura
+  notes: Datacom transceivers / lasers
+- id: ir-lite
+  name: Lumentum IR
+  type: ir_page
+  url: https://investor.lumentum.com/
+  rss: null
+  paywall: none
+  tier: 2
+  topic_tags:
+  - optical
+  - networking
+  extraction_strategy: trafilatura
+  notes: EML lasers for 800G/1.6T
+- id: ir-smci
+  name: Super Micro IR
+  type: ir_page
+  url: https://ir.supermicro.com/
+  rss: null
+  paywall: none
+  tier: 1
+  topic_tags:
+  - server
+  - neocloud
+  - cooling
+  extraction_strategy: trafilatura
+  notes: GPU-server vendor; liquid-cooling rack pioneer
+- id: ir-dell
+  name: Dell Technologies IR
+  type: ir_page
+  url: https://investors.delltechnologies.com/
+  rss: null
+  paywall: none
+  tier: 1
+  topic_tags:
+  - server
+  - hyperscaler
+  extraction_strategy: trafilatura
+  notes: AI-server backlog disclosures
+- id: ir-microsoft
+  name: Microsoft IR
+  type: ir_page
+  url: https://www.microsoft.com/en-us/investor
+  rss: null
+  paywall: none
+  tier: 1
+  topic_tags:
+  - hyperscaler
+  - capex
+  - software
+  extraction_strategy: trafilatura
+  notes: Azure capex + Maia ASIC
+- id: ir-google
+  name: Alphabet IR
+  type: ir_page
+  url: https://abc.xyz/investor/
+  rss: null
+  paywall: none
+  tier: 1
+  topic_tags:
+  - hyperscaler
+  - asic
+  - capex
+  extraction_strategy: trafilatura
+  notes: TPU roadmap + GCP capex
+- id: ir-meta
+  name: Meta IR
+  type: ir_page
+  url: https://investor.fb.com/
+  rss: null
+  paywall: none
+  tier: 1
+  topic_tags:
+  - hyperscaler
+  - asic
+  - capex
+  extraction_strategy: trafilatura
+  notes: MTIA roadmap; capex guidance
+- id: ir-amazon
+  name: Amazon IR
+  type: ir_page
+  url: https://ir.aboutamazon.com/
+  rss: null
+  paywall: none
+  tier: 1
+  topic_tags:
+  - hyperscaler
+  - asic
+  - capex
+  extraction_strategy: trafilatura
+  notes: Trainium/Inferentia + AWS capex
+- id: ir-oracle
+  name: Oracle IR
+  type: ir_page
+  url: https://investor.oracle.com/
+  rss: null
+  paywall: none
+  tier: 1
+  topic_tags:
+  - hyperscaler
+  - neocloud
+  - capex
+  extraction_strategy: trafilatura
+  notes: OCI GPU buildout + RPO disclosures
+- id: ir-coreweave
+  name: CoreWeave IR
+  type: ir_page
+  url: https://investors.coreweave.com/
+  rss: null
+  paywall: none
+  tier: 1
+  topic_tags:
+  - neocloud
+  - gpu
+  - capex
+  extraction_strategy: trafilatura
+  notes: Largest pure-play neocloud; 8-Ks via SEC
+- id: ir-vertiv
+  name: Vertiv IR
+  type: ir_page
+  url: https://investors.vertiv.com/
+  rss: null
+  paywall: none
+  tier: 2
+  topic_tags:
+  - power
+  - cooling
+  extraction_strategy: trafilatura
+  notes: DC power + liquid-cooling backlog
+- id: ir-vistra
+  name: Vistra IR
+  type: ir_page
+  url: https://investor.vistracorp.com/
+  rss: null
+  paywall: none
+  tier: 2
+  topic_tags:
+  - power
+  - grid
+  extraction_strategy: trafilatura
+  notes: Behind-the-meter nuclear/gas for DC
+- id: ir-constellation
+  name: Constellation Energy IR
+  type: ir_page
+  url: https://investors.constellationenergy.com/
+  rss: null
+  paywall: none
+  tier: 1
+  topic_tags:
+  - power
+  - grid
+  extraction_strategy: trafilatura
+  notes: Three Mile Island restart for MSFT; nuclear PPA bellwether
+- id: ir-talen
+  name: Talen Energy IR
+  type: ir_page
+  url: https://www.talenenergy.com/investors/
+  rss: null
+  paywall: none
+  tier: 2
+  topic_tags:
+  - power
+  - grid
+  extraction_strategy: trafilatura
+  notes: AWS Susquehanna deal; nuclear-DC pioneer
+- id: ir-gevernova
+  name: GE Vernova IR
+  type: ir_page
+  url: https://www.gevernova.com/investors
+  rss: null
+  paywall: none
+  tier: 2
+  topic_tags:
+  - power
+  - grid
+  extraction_strategy: trafilatura
+  notes: Gas turbines + grid equipment lead times
+- id: ir-eaton
+  name: Eaton IR
+  type: ir_page
+  url: https://www.eaton.com/us/en-us/company/investor-relations.html
+  rss: null
+  paywall: none
+  tier: 2
+  topic_tags:
+  - power
+  - grid
+  extraction_strategy: trafilatura
+  notes: Switchgear / busways for hyperscale DCs
+- id: ir-quanta
+  name: Quanta Services IR
+  type: ir_page
+  url: https://investors.quantaservices.com/
+  rss: null
+  paywall: none
+  tier: 2
+  topic_tags:
+  - power
+  - grid
+  extraction_strategy: trafilatura
+  notes: Grid-construction backlog — DC-power constraint
+- id: ir-arm
+  name: Arm Holdings IR
+  type: ir_page
+  url: https://investors.arm.com/
+  rss: null
+  paywall: none
+  tier: 2
+  topic_tags:
+  - ip
+  - server
+  - hyperscaler
+  extraction_strategy: trafilatura
+  notes: Neoverse share in cloud CPUs
+- id: nvidia-blog
+  name: NVIDIA Blog
+  type: blog
+  url: https://blogs.nvidia.com/
+  rss: https://blogs.nvidia.com/feed/
+  paywall: none
+  tier: 1
+  topic_tags:
+  - gpu
+  - networking
+  - software
+  extraction_strategy: trafilatura
+  notes: Product launches + technical deep-dives
+- id: nvidia-developer-blog
+  name: NVIDIA Developer Blog
+  type: blog
+  url: https://developer.nvidia.com/blog/
+  rss: https://developer.nvidia.com/blog/feed
+  paywall: none
+  tier: 1
+  topic_tags:
+  - gpu
+  - software
+  extraction_strategy: trafilatura
+  notes: CUDA / TensorRT / Triton release notes
+- id: azure-blog
+  name: Microsoft Azure Blog
+  type: blog
+  url: https://azure.microsoft.com/en-us/blog/
+  rss: https://azure.microsoft.com/en-us/blog/feed/
+  paywall: none
+  tier: 1
+  topic_tags:
+  - hyperscaler
+  - software
+  - asic
+  extraction_strategy: trafilatura
+  notes: Maia/Cobalt + region buildouts
+- id: gcp-blog
+  name: Google Cloud Blog
+  type: blog
+  url: https://cloud.google.com/blog/
+  rss: https://cloudblog.withgoogle.com/rss/
+  paywall: none
+  tier: 1
+  topic_tags:
+  - hyperscaler
+  - asic
+  - software
+  extraction_strategy: trafilatura
+  notes: TPU/Trillium announcements
+- id: aws-ml-blog
+  name: AWS Machine Learning Blog
+  type: blog
+  url: https://aws.amazon.com/blogs/machine-learning/
+  rss: https://aws.amazon.com/blogs/machine-learning/feed/
+  paywall: none
+  tier: 1
+  topic_tags:
+  - hyperscaler
+  - asic
+  - software
+  extraction_strategy: trafilatura
+  notes: Trainium/Inferentia + Bedrock
+- id: aws-compute-blog
+  name: AWS Compute Blog
+  type: blog
+  url: https://aws.amazon.com/blogs/compute/
+  rss: https://aws.amazon.com/blogs/compute/feed/
+  paywall: none
+  tier: 2
+  topic_tags:
+  - hyperscaler
+  - server
+  extraction_strategy: trafilatura
+  notes: EC2 instance launches; Graviton roadmap
+- id: meta-engineering
+  name: Meta Engineering
+  type: blog
+  url: https://engineering.fb.com/
+  rss: https://engineering.fb.com/feed/
+  paywall: none
+  tier: 1
+  topic_tags:
+  - hyperscaler
+  - asic
+  - networking
+  extraction_strategy: trafilatura
+  notes: MTIA, Grand Teton, OCP contributions
+- id: apple-ml-research
+  name: Apple ML Research
+  type: blog
+  url: https://machinelearning.apple.com/
+  rss: https://machinelearning.apple.com/rss.xml
+  paywall: none
+  tier: 2
+  topic_tags:
+  - software
+  - asic
+  extraction_strategy: trafilatura
+  notes: Apple silicon ML papers; sparse but high signal
+- id: oracle-blog
+  name: Oracle Cloud Blog
+  type: blog
+  url: https://blogs.oracle.com/cloud-infrastructure/
+  rss: https://blogs.oracle.com/cloud-infrastructure/rss
+  paywall: none
+  tier: 2
+  topic_tags:
+  - hyperscaler
+  - neocloud
+  extraction_strategy: trafilatura
+  notes: OCI GPU clusters announcements
+- id: reddit-hardware
+  name: r/hardware
+  type: reddit
+  url: https://www.reddit.com/r/hardware/
+  rss: null
+  paywall: none
+  tier: 1
+  topic_tags:
+  - gpu
+  - server
+  - foundry
+  extraction_strategy: reddit_api
+  notes: Curated hardware-news sub; high SNR
+- id: reddit-semiconductors
+  name: r/semiconductors
+  type: reddit
+  url: https://www.reddit.com/r/semiconductors/
+  rss: null
+  paywall: none
+  tier: 1
+  topic_tags:
+  - foundry
+  - semicap
+  - packaging
+  extraction_strategy: reddit_api
+  notes: Industry-pro discussion; smaller but expert
+- id: reddit-amd-stock
+  name: r/AMD_Stock
+  type: reddit
+  url: https://www.reddit.com/r/AMD_Stock/
+  rss: null
+  paywall: none
+  tier: 1
+  topic_tags:
+  - gpu
+  - server
+  extraction_strategy: reddit_api
+  notes: MI300/MI350 customer wins surface here
+- id: reddit-nvda-stock
+  name: r/NVDA_Stock
+  type: reddit
+  url: https://www.reddit.com/r/NVDA_Stock/
+  rss: null
+  paywall: none
+  tier: 1
+  topic_tags:
+  - gpu
+  - hyperscaler
+  extraction_strategy: reddit_api
+  notes: Filter for analysis posts; ignore meme threads
+- id: reddit-wsb
+  name: r/wallstreetbets (filtered)
+  type: reddit
+  url: https://www.reddit.com/r/wallstreetbets/
+  rss: null
+  paywall: none
+  tier: 2
+  topic_tags:
+  - m_and_a
+  - capex
+  extraction_strategy: reddit_api
+  notes: Filter on $NVDA/$AMD/$TSM tickers + DD flair only
+- id: reddit-ml
+  name: r/MachineLearning
+  type: reddit
+  url: https://www.reddit.com/r/MachineLearning/
+  rss: null
+  paywall: none
+  tier: 1
+  topic_tags:
+  - software
+  - gpu
+  extraction_strategy: reddit_api
+  notes: Model releases; training-stack discussion
+- id: reddit-localllama
+  name: r/LocalLLaMA
+  type: reddit
+  url: https://www.reddit.com/r/LocalLLaMA/
+  rss: null
+  paywall: none
+  tier: 1
+  topic_tags:
+  - gpu
+  - software
+  extraction_strategy: reddit_api
+  notes: GPU benchmarks; quantization tricks; vLLM/llama.cpp updates
+- id: reddit-datacenter
+  name: r/datacenter
+  type: reddit
+  url: https://www.reddit.com/r/datacenter/
+  rss: null
+  paywall: none
+  tier: 2
+  topic_tags:
+  - server
+  - cooling
+  - power
+  - neocloud
+  extraction_strategy: reddit_api
+  notes: Operator-side perspective; smaller community
+- id: x-dylan522p
+  name: '@dylan522p (Dylan Patel)'
+  type: x_handle
+  url: https://x.com/dylan522p
+  rss: null
+  paywall: none
+  tier: 1
+  topic_tags:
+  - foundry
+  - gpu
+  - hyperscaler
+  - hbm
+  extraction_strategy: x_api
+  notes: SemiAnalysis founder; live takes during earnings
+- id: x-semianalysis
+  name: '@SemiAnalysis_'
+  type: x_handle
+  url: https://x.com/SemiAnalysis_
+  rss: null
+  paywall: none
+  tier: 1
+  topic_tags:
+  - foundry
+  - gpu
+  - hyperscaler
+  extraction_strategy: x_api
+  notes: SemiAnalysis house account
+- id: x-firstadopter
+  name: '@firstadopter (Dan Nystedt)'
+  type: x_handle
+  url: https://x.com/firstadopter
+  rss: null
+  paywall: none
+  tier: 1
+  topic_tags:
+  - taiwan
+  - foundry
+  - hyperscaler
+  extraction_strategy: x_api
+  notes: Taipei-based; first to break Taiwan supply-chain news
+- id: x-realwillzeng
+  name: '@realwillzeng (Will Zeng)'
+  type: x_handle
+  url: https://x.com/realwillzeng
+  rss: null
+  paywall: none
+  tier: 1
+  topic_tags:
+  - china
+  - foundry
+  - restrictions
+  extraction_strategy: x_api
+  notes: China-tech translator; SMIC/Huawei chip news
+- id: x-stockanalysisco
+  name: '@stockanalysisco'
+  type: x_handle
+  url: https://x.com/stockanalysisco
+  rss: null
+  paywall: none
+  tier: 2
+  topic_tags:
+  - m_and_a
+  - capex
+  extraction_strategy: x_api
+  notes: Earnings recaps + capex tables
+- id: x-bethkindig
+  name: '@Beth_Kindig'
+  type: x_handle
+  url: https://x.com/Beth_Kindig
+  rss: null
+  paywall: none
+  tier: 2
+  topic_tags:
+  - gpu
+  - hyperscaler
+  - capex
+  extraction_strategy: x_api
+  notes: I/O Fund — semis equity research takes
+- id: x-jonerlichman
+  name: '@JonErlichman'
+  type: x_handle
+  url: https://x.com/JonErlichman
+  rss: null
+  paywall: none
+  tier: 2
+  topic_tags:
+  - m_and_a
+  - capex
+  extraction_strategy: x_api
+  notes: Bloomberg — fast headlines on tech earnings/M&A
+- id: x-iancutress
+  name: '@IanCutress (Dr. Ian Cutress)'
+  type: x_handle
+  url: https://x.com/IanCutress
+  rss: null
+  paywall: none
+  tier: 1
+  topic_tags:
+  - gpu
+  - server
+  - packaging
+  extraction_strategy: x_api
+  notes: TechTechPotato; ex-AnandTech; conference floor reports
+- id: x-rwang07
+  name: '@rwang07'
+  type: x_handle
+  url: https://x.com/rwang07
+  rss: null
+  paywall: none
+  tier: 2
+  topic_tags:
+  - taiwan
+  - foundry
+  - packaging
+  extraction_strategy: x_api
+  notes: Retired Wang; Taiwan supply-chain leaks
+- id: yt-asianometry
+  name: Asianometry (YouTube)
+  type: youtube
+  url: https://www.youtube.com/@Asianometry
+  rss: https://www.youtube.com/feeds/videos.xml?channel_id=UC0intLFzLaudFG-xAvUEO-A
+  paywall: none
+  tier: 1
+  topic_tags:
+  - foundry
+  - semicap
+  - china
+  - taiwan
+  - geopolitics
+  extraction_strategy: youtube_transcript
+  notes: Best long-form semis history channel
+- id: yt-servethehome
+  name: ServeTheHome (YouTube)
+  type: youtube
+  url: https://www.youtube.com/@ServeTheHomeVideo
+  rss: https://www.youtube.com/feeds/videos.xml?user=ServeTheHome
+  paywall: none
+  tier: 1
+  topic_tags:
+  - server
+  - networking
+  - cooling
+  extraction_strategy: youtube_transcript
+  notes: Hardware tear-downs; show-floor coverage
+- id: yt-techtechpotato
+  name: TechTechPotato (Ian Cutress)
+  type: youtube
+  url: https://www.youtube.com/@TechTechPotato
+  rss: https://www.youtube.com/feeds/videos.xml?user=TechTechPotato
+  paywall: none
+  tier: 1
+  topic_tags:
+  - gpu
+  - server
+  - packaging
+  extraction_strategy: youtube_transcript
+  notes: Conference interviews; chip analyst takes
+- id: yt-highyield
+  name: High Yield (YouTube)
+  type: youtube
+  url: https://www.youtube.com/@HighYield
+  rss: https://www.youtube.com/feeds/videos.xml?user=HighYield
+  paywall: none
+  tier: 2
+  topic_tags:
+  - gpu
+  - foundry
+  - packaging
+  extraction_strategy: youtube_transcript
+  notes: Animated chip-architecture explainers
+- id: pod-acquired
+  name: Acquired
+  type: podcast
+  url: https://www.acquired.fm/
+  rss: https://feeds.transistor.fm/acquired
+  paywall: none
+  tier: 2
+  topic_tags:
+  - m_and_a
+  - hyperscaler
+  - foundry
+  extraction_strategy: youtube_transcript
+  notes: Filter for NVDA/TSMC/ASML episodes
+- id: pod-bg2
+  name: BG2 Pod (Bill Gurley + Brad Gerstner)
+  type: podcast
+  url: https://www.bg2pod.com/
+  rss: https://feeds.megaphone.fm/bg2pod
+  paywall: none
+  tier: 1
+  topic_tags:
+  - hyperscaler
+  - capex
+  - geopolitics
+  extraction_strategy: youtube_transcript
+  notes: Frequent NVDA/CoreWeave guest segments
+- id: pod-allin
+  name: All-In Podcast
+  type: podcast
+  url: https://www.allinpodcast.co/
+  rss: https://allinchamathjason.libsyn.com/rss
+  paywall: none
+  tier: 2
+  topic_tags:
+  - geopolitics
+  - capex
+  extraction_strategy: youtube_transcript
+  notes: Macro/AI takes; signal varies
+- id: pod-sharptech
+  name: Sharp Tech with Ben Thompson
+  type: podcast
+  url: https://sharptech.fm/
+  rss: https://sharptech.fm/feed/podcast
+  paywall: hard
+  tier: 1
+  topic_tags:
+  - hyperscaler
+  - software
+  - geopolitics
+  extraction_strategy: youtube_transcript
+  notes: Stratechery audio; mostly subscriber-only
+- id: pod-stratechery
+  name: Stratechery (audio)
+  type: podcast
+  url: https://stratechery.com/
+  rss: https://stratechery.passport.online/feed/podcast/
+  paywall: hard
+  tier: 1
+  topic_tags:
+  - hyperscaler
+  - geopolitics
+  extraction_strategy: youtube_transcript
+  notes: Daily Update audio; private feed needs token
+- id: conf-hotchips
+  name: Hot Chips Symposium
+  type: conference
+  url: https://hotchips.org/
+  rss: null
+  paywall: none
+  tier: 1
+  topic_tags:
+  - gpu
+  - asic
+  - server
+  - packaging
+  extraction_strategy: trafilatura
+  notes: Annual Aug; chip architecture disclosures
+- id: conf-gtc
+  name: NVIDIA GTC
+  type: conference
+  url: https://www.nvidia.com/gtc/
+  rss: null
+  paywall: none
+  tier: 1
+  topic_tags:
+  - gpu
+  - software
+  - networking
+  extraction_strategy: trafilatura
+  notes: Mar + Oct; Jensen keynote = product roadmap
+- id: conf-computex
+  name: Computex Taipei
+  type: conference
+  url: https://www.computextaipei.com.tw/
+  rss: null
+  paywall: none
+  tier: 1
+  topic_tags:
+  - gpu
+  - server
+  - taiwan
+  extraction_strategy: trafilatura
+  notes: Jun; Taiwan ODM/OEM news dump
+- id: conf-isscc
+  name: ISSCC
+  type: conference
+  url: https://www.isscc.org/
+  rss: null
+  paywall: none
+  tier: 1
+  topic_tags:
+  - packaging
+  - memory
+  - asic
+  extraction_strategy: trafilatura
+  notes: Feb; circuits-research disclosures
+- id: conf-ofc
+  name: OFC (Optical Fiber Comm)
+  type: conference
+  url: https://www.ofcconference.org/
+  rss: null
+  paywall: none
+  tier: 1
+  topic_tags:
+  - optical
+  - networking
+  extraction_strategy: trafilatura
+  notes: Mar; CPO + 1.6T transceiver demos
+- id: conf-sc
+  name: SC (Supercomputing)
+  type: conference
+  url: https://sc25.supercomputing.org/
+  rss: null
+  paywall: none
+  tier: 1
+  topic_tags:
+  - server
+  - networking
+  - hyperscaler
+  extraction_strategy: trafilatura
+  notes: Nov; HPC + Top500 list
+- id: conf-advancedsemi
+  name: IEEE Advanced Semiconductor Mfg Conf
+  type: conference
+  url: https://www.semi.org/en/connect/events/asmc
+  rss: null
+  paywall: none
+  tier: 2
+  topic_tags:
+  - foundry
+  - semicap
+  extraction_strategy: trafilatura
+  notes: May; fab process papers
+- id: conf-semicon-west
+  name: SEMICON West
+  type: conference
+  url: https://www.semiconwest.org/
+  rss: null
+  paywall: none
+  tier: 1
+  topic_tags:
+  - semicap
+  - foundry
+  extraction_strategy: trafilatura
+  notes: Jul; WFE industry gathering
+- id: conf-semicon-taiwan
+  name: SEMICON Taiwan
+  type: conference
+  url: https://www.semicontaiwan.org/
+  rss: null
+  paywall: none
+  tier: 1
+  topic_tags:
+  - semicap
+  - foundry
+  - taiwan
+  - packaging
+  extraction_strategy: trafilatura
+  notes: Sep; advanced packaging hub
+- id: conf-semicon-japan
+  name: SEMICON Japan
+  type: conference
+  url: https://www.semiconjapan.org/
+  rss: null
+  paywall: none
+  tier: 2
+  topic_tags:
+  - semicap
+  - japan
+  - packaging
+  extraction_strategy: trafilatura
+  notes: Dec; Japanese chemicals/equipment
+- id: conf-semicon-korea
+  name: SEMICON Korea
+  type: conference
+  url: https://www.semiconkorea.org/
+  rss: null
+  paywall: none
+  tier: 2
+  topic_tags:
+  - semicap
+  - korea
+  - memory
+  - hbm
+  extraction_strategy: trafilatura
+  notes: Feb; HBM + memory equipment
+- id: jobs-levels-fyi
+  name: Levels.fyi (semis)
+  type: jobs
+  url: https://www.levels.fyi/
+  rss: null
+  paywall: none
+  tier: 1
+  topic_tags:
+  - jobs
+  extraction_strategy: custom
+  notes: Comp-band leakage for NVDA/AVGO/AMD
+- id: jobs-linkedin-nvda
+  name: LinkedIn NVIDIA Jobs
+  type: jobs
+  url: https://www.linkedin.com/company/nvidia/jobs/
+  rss: null
+  paywall: none
+  tier: 1
+  topic_tags:
+  - jobs
+  - gpu
+  extraction_strategy: custom
+  notes: Hiring-velocity by team = roadmap signal
+- id: jobs-linkedin-tsmc
+  name: LinkedIn TSMC Jobs
+  type: jobs
+  url: https://www.linkedin.com/company/tsmc/jobs/
+  rss: null
+  paywall: none
+  tier: 2
+  topic_tags:
+  - jobs
+  - foundry
+  extraction_strategy: custom
+  notes: Az fab ramp signal
+- id: jobs-greenhouse-anthropic
+  name: Anthropic Careers (Greenhouse)
+  type: jobs
+  url: https://boards.greenhouse.io/anthropic
+  rss: null
+  paywall: none
+  tier: 2
+  topic_tags:
+  - jobs
+  - hyperscaler
+  extraction_strategy: custom
+  notes: JSON endpoint at /embed/job_board?for=anthropic
+- id: jobs-greenhouse-coreweave
+  name: CoreWeave Careers
+  type: jobs
+  url: https://www.coreweave.com/careers
+  rss: null
+  paywall: none
+  tier: 1
+  topic_tags:
+  - jobs
+  - neocloud
+  extraction_strategy: custom
+  notes: 'Site-buildout signal: DC-ops postings'
+- id: jobs-greenhouse-openai
+  name: OpenAI Careers
+  type: jobs
+  url: https://openai.com/careers/search
+  rss: null
+  paywall: none
+  tier: 2
+  topic_tags:
+  - jobs
+  - hyperscaler
+  extraction_strategy: custom
+  notes: Stargate-related infra hires
+- id: gov-bis
+  name: US BIS Export Controls
+  type: government
+  url: https://www.bis.doc.gov/
+  rss: https://www.bis.doc.gov/index.php/component/ninjarsssyndicator/?feed_id=1&format=raw
+  paywall: none
+  tier: 1
+  topic_tags:
+  - restrictions
+  - china
+  - geopolitics
+  extraction_strategy: trafilatura
+  notes: Entity List adds + AI diffusion rule updates
+- id: gov-chips-act
+  name: US CHIPS Program Office
+  type: government
+  url: https://www.nist.gov/chips
+  rss: null
+  paywall: none
+  tier: 1
+  topic_tags:
+  - foundry
+  - capex
+  - geopolitics
+  extraction_strategy: trafilatura
+  notes: CHIPS Act award notices
+- id: gov-federal-register
+  name: Federal Register (semis tag)
+  type: government
+  url: https://www.federalregister.gov/topics/commerce-trade
+  rss: https://www.federalregister.gov/api/v1/documents.rss?conditions[topics][]=commerce-trade
+  paywall: none
+  tier: 1
+  topic_tags:
+  - restrictions
+  - geopolitics
+  extraction_strategy: trafilatura
+  notes: Authoritative source for export-control rule text
+- id: gov-taiwan-moea
+  name: Taiwan MOEA
+  type: government
+  url: https://www.moea.gov.tw/MNS/english/home/English.aspx
+  rss: null
+  paywall: none
+  tier: 2
+  topic_tags:
+  - taiwan
+  - foundry
+  - geopolitics
+  extraction_strategy: trafilatura
+  notes: Investment Commission TSMC-overseas approvals
+- id: gov-japan-meti
+  name: METI Japan
+  type: government
+  url: https://www.meti.go.jp/english/
+  rss: null
+  paywall: none
+  tier: 2
+  topic_tags:
+  - japan
+  - foundry
+  - semicap
+  extraction_strategy: trafilatura
+  notes: Rapidus + JASM subsidy notices
+- id: gov-china-miit
+  name: MIIT China
+  type: government
+  url: https://www.miit.gov.cn/
+  rss: null
+  paywall: none
+  tier: 2
+  topic_tags:
+  - china
+  - foundry
+  - geopolitics
+  extraction_strategy: trafilatura
+  notes: Chinese-language; translate pipeline needed
+- id: gov-eu-chips
+  name: EU Chips Act
+  type: government
+  url: https://digital-strategy.ec.europa.eu/en/policies/european-chips-act
+  rss: null
+  paywall: none
+  tier: 2
+  topic_tags:
+  - foundry
+  - capex
+  - geopolitics
+  extraction_strategy: trafilatura
+  notes: EU subsidy approvals (TSMC Dresden, Intel Magdeburg)
+- id: assoc-semi-org
+  name: SEMI.org
+  type: industry_assoc
+  url: https://www.semi.org/en
+  rss: null
+  paywall: none
+  tier: 1
+  topic_tags:
+  - semicap
+  - foundry
+  extraction_strategy: trafilatura
+  notes: WFE billings monthly book-to-bill
+- id: assoc-sia
+  name: Semiconductor Industry Association
+  type: industry_assoc
+  url: https://www.semiconductors.org/
+  rss: null
+  paywall: none
+  tier: 1
+  topic_tags:
+  - foundry
+  - geopolitics
+  extraction_strategy: trafilatura
+  notes: Monthly WSTS billings; US policy advocacy
+- id: assoc-pcie-sig
+  name: PCI-SIG
+  type: industry_assoc
+  url: https://pcisig.com/
+  rss: null
+  paywall: none
+  tier: 2
+  topic_tags:
+  - networking
+  - server
+  extraction_strategy: trafilatura
+  notes: PCIe 7.0 spec releases
+- id: assoc-cxl
+  name: Compute Express Link Consortium
+  type: industry_assoc
+  url: https://www.computeexpresslink.org/
+  rss: null
+  paywall: none
+  tier: 2
+  topic_tags:
+  - networking
+  - memory
+  - server
+  extraction_strategy: trafilatura
+  notes: CXL 3.x adoption news
+- id: assoc-uec
+  name: Ultra Ethernet Consortium
+  type: industry_assoc
+  url: https://ultraethernet.org/
+  rss: null
+  paywall: none
+  tier: 2
+  topic_tags:
+  - networking
+  - hyperscaler
+  extraction_strategy: trafilatura
+  notes: Ethernet-for-AI alternative to InfiniBand
+- id: assoc-ualink
+  name: UALink Consortium
+  type: industry_assoc
+  url: https://ualinkconsortium.org/
+  rss: null
+  paywall: none
+  tier: 2
+  topic_tags:
+  - networking
+  - gpu
+  extraction_strategy: trafilatura
+  notes: NVLink alternative; AMD/Intel/Broadcom backed
+- id: assoc-ocp
+  name: Open Compute Project
+  type: industry_assoc
+  url: https://www.opencompute.org/
+  rss: null
+  paywall: none
+  tier: 2
+  topic_tags:
+  - server
+  - networking
+  - cooling
+  - hyperscaler
+  extraction_strategy: trafilatura
+  notes: Hyperscaler hardware-design contributions
+- id: assoc-jedec
+  name: JEDEC
+  type: industry_assoc
+  url: https://www.jedec.org/
+  rss: null
+  paywall: none
+  tier: 2
+  topic_tags:
+  - memory
+  - hbm
+  extraction_strategy: trafilatura
+  notes: HBM4 / DDR6 spec releases
+- id: gh-cutlass
+  name: NVIDIA/cutlass
+  type: github
+  url: https://github.com/NVIDIA/cutlass
+  rss: https://github.com/NVIDIA/cutlass/releases.atom
+  paywall: none
+  tier: 1
+  topic_tags:
+  - gpu
+  - software
+  extraction_strategy: rss_only
+  notes: CUDA matmul kernels; new arch support lands here
+- id: gh-tensorrt-llm
+  name: NVIDIA/TensorRT-LLM
+  type: github
+  url: https://github.com/NVIDIA/TensorRT-LLM
+  rss: https://github.com/NVIDIA/TensorRT-LLM/releases.atom
+  paywall: none
+  tier: 1
+  topic_tags:
+  - gpu
+  - software
+  extraction_strategy: rss_only
+  notes: Model-serving optimization for NV GPUs
+- id: gh-vllm
+  name: vllm-project/vllm
+  type: github
+  url: https://github.com/vllm-project/vllm
+  rss: https://github.com/vllm-project/vllm/releases.atom
+  paywall: none
+  tier: 1
+  topic_tags:
+  - gpu
+  - software
+  extraction_strategy: rss_only
+  notes: OSS LLM inference; HW support cadence = adoption
+- id: gh-llamacpp
+  name: ggerganov/llama.cpp
+  type: github
+  url: https://github.com/ggerganov/llama.cpp
+  rss: https://github.com/ggerganov/llama.cpp/releases.atom
+  paywall: none
+  tier: 1
+  topic_tags:
+  - gpu
+  - software
+  extraction_strategy: rss_only
+  notes: CPU/Apple/AMD/NV inference; quantization frontier
+- id: gh-pytorch
+  name: pytorch/pytorch
+  type: github
+  url: https://github.com/pytorch/pytorch
+  rss: https://github.com/pytorch/pytorch/releases.atom
+  paywall: none
+  tier: 1
+  topic_tags:
+  - software
+  - gpu
+  extraction_strategy: rss_only
+  notes: Backend support PRs reveal HW partnerships
+- id: gh-triton
+  name: triton-lang/triton
+  type: github
+  url: https://github.com/triton-lang/triton
+  rss: https://github.com/triton-lang/triton/releases.atom
+  paywall: none
+  tier: 2
+  topic_tags:
+  - software
+  - gpu
+  extraction_strategy: rss_only
+  notes: OpenAI Triton; AMD/Intel backend progress
+- id: gh-jax
+  name: jax-ml/jax
+  type: github
+  url: https://github.com/jax-ml/jax
+  rss: https://github.com/jax-ml/jax/releases.atom
+  paywall: none
+  tier: 2
+  topic_tags:
+  - software
+  - asic
+  extraction_strategy: rss_only
+  notes: TPU-native framework; XLA changes
+- id: gh-rocm
+  name: ROCm/ROCm
+  type: github
+  url: https://github.com/ROCm/ROCm
+  rss: https://github.com/ROCm/ROCm/releases.atom
+  paywall: none
+  tier: 2
+  topic_tags:
+  - gpu
+  - software
+  extraction_strategy: rss_only
+  notes: AMD GPU stack; MI3xx support cadence
+- id: bloomberg-tech
+  name: Bloomberg Technology
+  type: news_outlet
+  url: https://www.bloomberg.com/technology
+  rss: https://feeds.bloomberg.com/technology/news.rss
+  paywall: hard
+  tier: 2
+  topic_tags:
+  - m_and_a
+  - capex
+  - geopolitics
+  extraction_strategy: trafilatura
+  notes: Breaking on chip-deals; mostly paywalled
+- id: reuters-tech
+  name: Reuters Technology
+  type: news_outlet
+  url: https://www.reuters.com/technology/
+  rss: https://www.reutersagency.com/feed/?best-topics=tech&post_type=best
+  paywall: none
+  tier: 2
+  topic_tags:
+  - m_and_a
+  - geopolitics
+  - capex
+  extraction_strategy: trafilatura
+  notes: Asia bureau strong on TSMC/Samsung
+- id: ft-tech
+  name: FT Technology
+  type: news_outlet
+  url: https://www.ft.com/technology
+  rss: https://www.ft.com/technology?format=rss
+  paywall: hard
+  tier: 2
+  topic_tags:
+  - m_and_a
+  - geopolitics
+  extraction_strategy: trafilatura
+  notes: EU + ASML scoops
+- id: nikkei-asia
+  name: Nikkei Asia
+  type: news_outlet
+  url: https://asia.nikkei.com/
+  rss: https://asia.nikkei.com/rss/feed/nar
+  paywall: hard
+  tier: 2
+  topic_tags:
+  - japan
+  - taiwan
+  - korea
+  - foundry
+  extraction_strategy: trafilatura
+  notes: Japan/Taiwan supply-chain reporting
+- id: wsj-tech
+  name: WSJ Tech
+  type: news_outlet
+  url: https://www.wsj.com/news/technology
+  rss: https://feeds.a.dj.com/rss/RSSWSJD.xml
+  paywall: hard
+  tier: 2
+  topic_tags:
+  - m_and_a
+  - capex
+  - geopolitics
+  extraction_strategy: trafilatura
+  notes: WSJ Pro Tech for deal scoops
+- id: barrons
+  name: Barron's
+  type: news_outlet
+  url: https://www.barrons.com/
+  rss: https://feeds.a.dj.com/rss/RSSMarketsMain.xml
+  paywall: hard
+  tier: 2
+  topic_tags:
+  - capex
+  - m_and_a
+  extraction_strategy: trafilatura
+  notes: Sell-side recaps; semis weekly
+- id: cnbc-tech
+  name: CNBC Technology
+  type: news_outlet
+  url: https://www.cnbc.com/technology/
+  rss: https://www.cnbc.com/id/19854910/device/rss/rss.html
+  paywall: none
+  tier: 2
+  topic_tags:
+  - m_and_a
+  - hyperscaler
+  extraction_strategy: trafilatura
+  notes: Earnings live takes; chip-CEO interviews
+- id: theregister
+  name: The Register
+  type: news_outlet
+  url: https://www.theregister.com/
+  rss: https://www.theregister.com/headlines.atom
+  paywall: none
+  tier: 2
+  topic_tags:
+  - server
+  - networking
+  - software
+  extraction_strategy: trafilatura
+  notes: Enterprise IT; sometimes early on hyperscaler outages
+- id: hpcwire
+  name: HPCwire
+  type: news_outlet
+  url: https://www.hpcwire.com/
+  rss: https://www.hpcwire.com/feed/
+  paywall: none
+  tier: 2
+  topic_tags:
+  - server
+  - hyperscaler
+  extraction_strategy: trafilatura
+  notes: HPC/AI cluster news
+- id: datacenterdynamics
+  name: Data Center Dynamics
+  type: news_outlet
+  url: https://www.datacenterdynamics.com/
+  rss: https://www.datacenterdynamics.com/en/rss/
+  paywall: none
+  tier: 2
+  topic_tags:
+  - neocloud
+  - power
+  - cooling
+  extraction_strategy: trafilatura
+  notes: DC-construction announcements + power deals
+- id: datacenterknowledge
+  name: Data Center Knowledge
+  type: news_outlet
+  url: https://www.datacenterknowledge.com/
+  rss: https://www.datacenterknowledge.com/rss.xml
+  paywall: none
+  tier: 2
+  topic_tags:
+  - neocloud
+  - power
+  - cooling
+  extraction_strategy: trafilatura
+  notes: Operator-focused DC news
+- id: blocksandfiles
+  name: Blocks & Files
+  type: blog
+  url: https://blocksandfiles.com/
+  rss: https://blocksandfiles.com/feed/
+  paywall: none
+  tier: 2
+  topic_tags:
+  - memory
+  - server
+  - networking
+  extraction_strategy: trafilatura
+  notes: Storage/memory industry deep-dives
+- id: storagereview
+  name: StorageReview
+  type: blog
+  url: https://www.storagereview.com/
+  rss: https://www.storagereview.com/feed
+  paywall: none
+  tier: 2
+  topic_tags:
+  - memory
+  - server
+  extraction_strategy: trafilatura
+  notes: SSD/HBM benchmarks
+- id: techcrunch
+  name: TechCrunch
+  type: news_outlet
+  url: https://techcrunch.com/
+  rss: https://techcrunch.com/feed/
+  paywall: none
+  tier: 2
+  topic_tags:
+  - m_and_a
+  - software
+  extraction_strategy: trafilatura
+  notes: AI startup funding rounds
+- id: theverge-ai
+  name: The Verge — AI
+  type: news_outlet
+  url: https://www.theverge.com/ai-artificial-intelligence
+  rss: https://www.theverge.com/rss/ai-artificial-intelligence/index.xml
+  paywall: none
+  tier: 2
+  topic_tags:
+  - software
+  - hyperscaler
+  extraction_strategy: trafilatura
+  notes: AI product launches; consumer-facing
+- id: ars-technica
+  name: Ars Technica
+  type: news_outlet
+  url: https://arstechnica.com/
+  rss: https://feeds.arstechnica.com/arstechnica/index
+  paywall: none
+  tier: 2
+  topic_tags:
+  - gpu
+  - server
+  - software
+  extraction_strategy: trafilatura
+  notes: Detailed product reviews + deep enterprise pieces
+- id: economist-business
+  name: The Economist — Business
+  type: news_outlet
+  url: https://www.economist.com/business/
+  rss: https://www.economist.com/business/rss.xml
+  paywall: hard
+  tier: 2
+  topic_tags:
+  - geopolitics
+  - m_and_a
+  extraction_strategy: trafilatura
+  notes: Strategic / macro framing
+- id: rcr-wireless
+  name: RCR Wireless
+  type: news_outlet
+  url: https://www.rcrwireless.com/
+  rss: https://www.rcrwireless.com/feed
+  paywall: none
+  tier: 2
+  topic_tags:
+  - networking
+  extraction_strategy: trafilatura
+  notes: 5G/edge infra; cross-over with DC networking
+- id: lightreading
+  name: Light Reading
+  type: news_outlet
+  url: https://www.lightreading.com/
+  rss: https://www.lightreading.com/rss_simple.asp
+  paywall: none
+  tier: 2
+  topic_tags:
+  - optical
+  - networking
+  extraction_strategy: trafilatura
+  notes: Optical/transport networking
+- id: fierce-network
+  name: Fierce Network
+  type: news_outlet
+  url: https://www.fierce-network.com/
+  rss: https://www.fierce-network.com/rss.xml
+  paywall: none
+  tier: 2
+  topic_tags:
+  - networking
+  - hyperscaler
+  extraction_strategy: trafilatura
+  notes: Telco + DC interconnect
+- id: sub-fabricatedknowledge
+  name: Fabricated Knowledge (Doug O'Laughlin)
+  type: blog
+  url: https://www.fabricatedknowledge.com/
+  rss: https://www.fabricatedknowledge.com/feed
+  paywall: partial
+  tier: 3
+  topic_tags:
+  - foundry
+  - semicap
+  - m_and_a
+  extraction_strategy: trafilatura
+  notes: Sell-side-style semis equity research
+- id: sub-mulesmusings
+  name: Mule's Musings
+  type: blog
+  url: https://www.mule.gg/
+  rss: https://www.mule.gg/feed
+  paywall: partial
+  tier: 3
+  topic_tags:
+  - foundry
+  - capex
+  extraction_strategy: trafilatura
+  notes: Quant-flavored semis takes
+- id: sub-asianometry-written
+  name: Asianometry (Substack)
+  type: blog
+  url: https://asianometry.substack.com/
+  rss: https://asianometry.substack.com/feed
+  paywall: partial
+  tier: 3
+  topic_tags:
+  - foundry
+  - china
+  - taiwan
+  extraction_strategy: trafilatura
+  notes: Written companion to YT channel
+- id: sub-coreweave-insider
+  name: CoreWeave Insider
+  type: blog
+  url: https://coreweaveinsider.substack.com/
+  rss: https://coreweaveinsider.substack.com/feed
+  paywall: partial
+  tier: 3
+  topic_tags:
+  - neocloud
+  - capex
+  extraction_strategy: trafilatura
+  notes: Niche CRWV-focused tracker
+- id: sub-chiprally
+  name: Chip Capital
+  type: blog
+  url: https://chipcapital.substack.com/
+  rss: https://chipcapital.substack.com/feed
+  paywall: partial
+  tier: 3
+  topic_tags:
+  - foundry
+  - semicap
+  extraction_strategy: trafilatura
+  notes: Industry insider commentary
+- id: sub-irrational-analysis
+  name: Irrational Analysis
+  type: blog
+  url: https://irrationalanalysis.substack.com/
+  rss: https://irrationalanalysis.substack.com/feed
+  paywall: partial
+  tier: 3
+  topic_tags:
+  - gpu
+  - foundry
+  - asic
+  extraction_strategy: trafilatura
+  notes: Sharp engineering-driven semis takes
+- id: sub-jeffrey-emanuel
+  name: Pleias / Jeffrey Emanuel
+  type: blog
+  url: https://www.youtube.com/@JeffreyEmanuel
+  rss: null
+  paywall: none
+  tier: 3
+  topic_tags:
+  - gpu
+  - software
+  extraction_strategy: trafilatura
+  notes: Occasional NVDA-bear long-form pieces
+- id: substack-mosesman
+  name: Moses Sternstein
+  type: blog
+  url: https://randomwalk.substack.com/
+  rss: https://randomwalk.substack.com/feed
+  paywall: partial
+  tier: 3
+  topic_tags:
+  - capex
+  - geopolitics
+  extraction_strategy: trafilatura
+  notes: Macro + tech crossover
+- id: forum-realworldtech
+  name: RealWorldTech Forums
+  type: forum
+  url: https://www.realworldtech.com/forum/
+  rss: null
+  paywall: none
+  tier: 3
+  topic_tags:
+  - gpu
+  - server
+  - packaging
+  extraction_strategy: custom
+  notes: Where chip architects argue; David Kanter ran
+- id: forum-anandtech-forums
+  name: AnandTech Forums (CPU/GPU)
+  type: forum
+  url: https://forums.anandtech.com/
+  rss: null
+  paywall: none
+  tier: 3
+  topic_tags:
+  - gpu
+  - server
+  extraction_strategy: custom
+  notes: Long-running enthusiast / leaker forum
+- id: forum-beyond3d
+  name: Beyond3D Forums
+  type: forum
+  url: https://forum.beyond3d.com/
+  rss: null
+  paywall: none
+  tier: 3
+  topic_tags:
+  - gpu
+  extraction_strategy: custom
+  notes: GPU-architecture enthusiasts
+- id: ml-tldr-ai
+  name: TLDR AI Newsletter
+  type: mailing_list
+  url: https://tldr.tech/ai
+  rss: https://tldr.tech/api/rss/ai
+  paywall: none
+  tier: 3
+  topic_tags:
+  - software
+  - gpu
+  extraction_strategy: trafilatura
+  notes: Daily AI digest; light but broad
+- id: ml-import-ai
+  name: Import AI (Jack Clark)
+  type: mailing_list
+  url: https://importai.substack.com/
+  rss: https://importai.substack.com/feed
+  paywall: none
+  tier: 3
+  topic_tags:
+  - software
+  - geopolitics
+  extraction_strategy: trafilatura
+  notes: Anthropic policy lead; weekly
+- id: ml-the-batch
+  name: The Batch (DeepLearning.AI)
+  type: mailing_list
+  url: https://www.deeplearning.ai/the-batch/
+  rss: https://www.deeplearning.ai/the-batch/feed/
+  paywall: none
+  tier: 3
+  topic_tags:
+  - software
+  extraction_strategy: trafilatura
+  notes: Andrew Ng's weekly AI roundup
+- id: ml-chinatalk
+  name: ChinaTalk
+  type: mailing_list
+  url: https://www.chinatalk.media/
+  rss: https://www.chinatalk.media/feed
+  paywall: partial
+  tier: 3
+  topic_tags:
+  - china
+  - geopolitics
+  - restrictions
+  extraction_strategy: trafilatura
+  notes: Jordan Schneider — China tech policy
+- id: ml-stratechery-weekly
+  name: Stratechery Weekly Articles (free)
+  type: mailing_list
+  url: https://stratechery.com/category/articles/
+  rss: https://stratechery.com/category/articles/feed/
+  paywall: none
+  tier: 3
+  topic_tags:
+  - hyperscaler
+  - software
+  extraction_strategy: trafilatura
+  notes: Free weekly; no Daily Updates
+- id: ir-intel
+  name: Intel IR
+  type: ir_page
+  url: https://www.intc.com/
+  rss: null
+  paywall: none
+  tier: 2
+  topic_tags:
+  - foundry
+  - server
+  - gpu
+  extraction_strategy: trafilatura
+  notes: IFS + Gaudi + roadmap drift
+- id: ir-samsung
+  name: Samsung Electronics IR
+  type: ir_page
+  url: https://www.samsung.com/global/ir/
+  rss: null
+  paywall: none
+  tier: 2
+  topic_tags:
+  - memory
+  - hbm
+  - foundry
+  - korea
+  extraction_strategy: trafilatura
+  notes: DRAM/NAND + GAA-foundry struggles
+- id: ir-tokyoelectron
+  name: Tokyo Electron IR
+  type: ir_page
+  url: https://www.tel.com/ir/
+  rss: null
+  paywall: none
+  tier: 2
+  topic_tags:
+  - semicap
+  - japan
+  extraction_strategy: trafilatura
+  notes: Japan WFE leader; bookings
+- id: ir-disco
+  name: Disco Corporation IR
+  type: ir_page
+  url: https://www.disco.co.jp/eg/ir/
+  rss: null
+  paywall: none
+  tier: 2
+  topic_tags:
+  - semicap
+  - packaging
+  - japan
+  extraction_strategy: trafilatura
+  notes: Dicing/grinding for HBM stacking
+- id: ir-besi
+  name: BE Semiconductor IR
+  type: ir_page
+  url: https://www.besi.com/investor-relations/
+  rss: null
+  paywall: none
+  tier: 2
+  topic_tags:
+  - semicap
+  - packaging
+  extraction_strategy: trafilatura
+  notes: Hybrid bonding for 3D packaging
+- id: ir-cadence
+  name: Cadence Design IR
+  type: ir_page
+  url: https://www.cadence.com/en_US/home/company/investor-relations.html
+  rss: null
+  paywall: none
+  tier: 2
+  topic_tags:
+  - eda
+  - ip
+  extraction_strategy: trafilatura
+  notes: EDA bookings = chip-design pipeline
+- id: ir-synopsys
+  name: Synopsys IR
+  type: ir_page
+  url: https://investor.synopsys.com/
+  rss: null
+  paywall: none
+  tier: 2
+  topic_tags:
+  - eda
+  - ip
+  extraction_strategy: trafilatura
+  notes: Ansys merger + EDA leader
+- id: ir-credo
+  name: Credo Technology IR
+  type: ir_page
+  url: https://investors.credosemi.com/
+  rss: null
+  paywall: none
+  tier: 2
+  topic_tags:
+  - networking
+  - optical
+  extraction_strategy: trafilatura
+  notes: AECs for AI back-end networks
+- id: ir-astera
+  name: Astera Labs IR
+  type: ir_page
+  url: https://investors.asteralabs.com/
+  rss: null
+  paywall: none
+  tier: 2
+  topic_tags:
+  - networking
+  - server
+  extraction_strategy: trafilatura
+  notes: PCIe retimers for GPU clusters
+- id: ir-monolithic-power
+  name: Monolithic Power IR
+  type: ir_page
+  url: https://www.monolithicpower.com/en/company/investor-relations.html
+  rss: null
+  paywall: none
+  tier: 2
+  topic_tags:
+  - power
+  - server
+  extraction_strategy: trafilatura
+  notes: GPU-board VRMs; NVDA design-win share
+- id: ir-nebius
+  name: Nebius IR
+  type: ir_page
+  url: https://group.nebius.com/investor-hub
+  rss: null
+  paywall: none
+  tier: 2
+  topic_tags:
+  - neocloud
+  - gpu
+  extraction_strategy: trafilatura
+  notes: EU-listed neocloud (ex-Yandex)
+- id: ir-iren
+  name: IREN (Iris Energy) IR
+  type: ir_page
+  url: https://investors.iren.com/
+  rss: null
+  paywall: none
+  tier: 2
+  topic_tags:
+  - neocloud
+  - power
+  extraction_strategy: trafilatura
+  notes: Bitcoin-miner pivot to AI hosting
+- id: ir-applieddigital
+  name: Applied Digital IR
+  type: ir_page
+  url: https://ir.applieddigital.com/
+  rss: null
+  paywall: none
+  tier: 2
+  topic_tags:
+  - neocloud
+  - power
+  extraction_strategy: trafilatura
+  notes: ND HPC site; CRWV anchor tenant
