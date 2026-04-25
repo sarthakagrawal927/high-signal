@@ -4,12 +4,15 @@ import { signalsRoute } from "./routes/signals";
 import { entitiesRoute } from "./routes/entities";
 import { trackRecordRoute } from "./routes/track-record";
 import { digestRoute } from "./routes/digest";
+import { adminRoute } from "./routes/admin";
 
 type Env = {
   DB: D1Database;
   ENVIRONMENT: string;
+  ADMIN_TOKEN?: string;
   MODAL_TRIGGER_URL?: string;
   MODAL_TRIGGER_TOKEN?: string;
+  MODAL_SCORE_URL?: string;
 };
 
 const app = new Hono<{ Bindings: Env }>();
@@ -22,23 +25,37 @@ app.route("/signals", signalsRoute);
 app.route("/entities", entitiesRoute);
 app.route("/track-record", trackRecordRoute);
 app.route("/digest", digestRoute);
+app.route("/admin", adminRoute);
 
 export default {
   fetch: app.fetch,
-  async scheduled(_event: ScheduledEvent, env: Env, ctx: ExecutionContext) {
-    if (env.MODAL_TRIGGER_URL && env.MODAL_TRIGGER_TOKEN) {
+  async scheduled(event: ScheduledEvent, env: Env, ctx: ExecutionContext) {
+    const headers = (token: string) => ({
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    });
+    if (!env.MODAL_TRIGGER_TOKEN) {
+      console.log("[cron] MODAL_TRIGGER_TOKEN not set — skipping all dispatch");
+      return;
+    }
+    // 06:00 UTC daily — kick ingest + scoring sweep in parallel
+    if (env.MODAL_TRIGGER_URL) {
       ctx.waitUntil(
         fetch(env.MODAL_TRIGGER_URL, {
           method: "POST",
-          headers: {
-            Authorization: `Bearer ${env.MODAL_TRIGGER_TOKEN}`,
-            "Content-Type": "application/json",
-          },
+          headers: headers(env.MODAL_TRIGGER_TOKEN),
           body: JSON.stringify({ source: "all", days: 1 }),
-        }).then((r) => console.log("[cron] modal trigger status:", r.status)),
+        }).then((r) => console.log("[cron] ingest status:", r.status)),
       );
-    } else {
-      console.log("[cron] MODAL_TRIGGER_* not set — skipping ingest dispatch");
+    }
+    if (env.MODAL_SCORE_URL) {
+      ctx.waitUntil(
+        fetch(env.MODAL_SCORE_URL, {
+          method: "POST",
+          headers: headers(env.MODAL_TRIGGER_TOKEN),
+          body: JSON.stringify({ scheduled: event.cron }),
+        }).then((r) => console.log("[cron] score status:", r.status)),
+      );
     }
   },
 };

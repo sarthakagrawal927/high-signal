@@ -56,8 +56,30 @@ export interface TrackBucket {
   hitRate: number | null;
 }
 
+export interface SignalFilters {
+  type?: string;
+  direction?: Direction;
+  confidence?: Confidence;
+  entity?: string;
+  status?: "draft" | "published" | "corrected";
+}
+
+export interface Facets {
+  types: { k: string; n: number }[];
+  directions: { k: string; n: number }[];
+  confidences: { k: string; n: number }[];
+  topEntities: { k: string; n: number }[];
+}
+
+function qs(o: Record<string, string | undefined>): string {
+  const e = Object.entries(o).filter(([, v]) => v != null && v !== "");
+  return e.length ? `?${new URLSearchParams(e as [string, string][]).toString()}` : "";
+}
+
 export const api = {
-  signals: () => fetchJson<{ signals: SignalRow[] }>("/signals"),
+  signals: (f: SignalFilters = {}) =>
+    fetchJson<{ signals: SignalRow[] }>(`/signals${qs(f)}`),
+  facets: () => fetchJson<Facets>("/signals/facets"),
   signal: (slug: string) =>
     fetchJson<{
       signal: SignalRow;
