@@ -13,5 +13,5 @@ crons = ["0 6 * * *"]
 binding = "DB"
 database_name = "high-signal-db"
 # Replace after `wrangler d1 create high-signal-db`
-database_id = "REPLACE_AFTER_D1_CREATE"
+database_id = "ebeab72b-61ab-4588-936c-1da6652a2ce4"
 migrations_dir = "../../packages/db/migrations"

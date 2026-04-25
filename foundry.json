@@ -5,5 +5,8 @@
   "deploy": {
     "web": "vercel",
     "api": "cloudflare-workers"
-  }
+  },
+  "slug": "high-signal-moeiii9c",
+  "projectKey": "pk_3eb4816ef2179c25f364315aa1c3148a88e8004bfa5e5235",
+  "linked": true
 }
