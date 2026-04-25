@@ -1,0 +1,62 @@
+name: Deploy web
+
+on:
+  push:
+    branches: [main]
+    paths: ["apps/web/**", "packages/**"]
+  pull_request:
+    branches: [main]
+    paths: ["apps/web/**", "packages/**"]
+
+jobs:
+  deploy-production:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with: { version: 10 }
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm cf:build
+        working-directory: apps/web
+        env:
+          SKIP_NEXT_APP_BUILD: "false"
+      - run: pnpm exec opennextjs-cloudflare deploy
+        working-directory: apps/web
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+
+  deploy-preview:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with: { version: 10 }
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm cf:build
+        working-directory: apps/web
+      - run: pnpm exec opennextjs-cloudflare deploy --env preview
+        working-directory: apps/web
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `Preview deployed: https://high-signal-web.sarthakagrawal927.workers.dev (PR #${{ github.event.number }})`
+            })

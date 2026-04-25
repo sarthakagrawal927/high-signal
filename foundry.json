@@ -3,7 +3,7 @@
   "monorepo": true,
   "framework": "next",
   "deploy": {
-    "web": "vercel",
+    "web": "cloudflare-pages",
     "api": "cloudflare-workers"
   },
   "slug": "high-signal-moeiii9c",
