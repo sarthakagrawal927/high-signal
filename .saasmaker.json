@@ -1,0 +1,5 @@
+{
+  "project": "high-signal",
+  "feedback": { "enabled": true },
+  "analytics": { "enabled": true }
+}

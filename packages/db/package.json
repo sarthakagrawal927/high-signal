@@ -1,0 +1,22 @@
+{
+  "name": "@high-signal/db",
+  "version": "0.1.0",
+  "private": true,
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "generate": "drizzle-kit generate",
+    "migrate:local": "wrangler d1 migrations apply high-signal-db --local",
+    "migrate:remote": "wrangler d1 migrations apply high-signal-db --remote",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@high-signal/shared": "workspace:*",
+    "drizzle-orm": "^0.36.4"
+  },
+  "devDependencies": {
+    "drizzle-kit": "^0.30.1",
+    "typescript": "^6.0.3",
+    "wrangler": "^4.85.0"
+  }
+}

@@ -51,6 +51,25 @@ research/              # Domain notes, source experiments, prompt drafts, market
 - **Public hit-rate ledger from day 1** — moat that competitors can't copy without rebuilding
 - **Manual review queue** — first 4 weeks, every signal + every new graph edge gates through human review
 
+## UI direction (locked)
+**Futurist + very clean.** Visual credibility = signal credibility.
+- Dark default. Monochrome zinc base. One accent (cyan-400) only on directional signals.
+- Geist Sans + Geist Mono. Tabular numerals on every metric.
+- 1px lines, no shadows, no rounded-3xl. Whitespace generous.
+- Reference points: Linear, Vercel admin, Stripe Atlas, Bloomberg terminal, Perplexity detail views.
+- Animations only on state change (signal published, hit-rate update). No decorative motion.
+
+## saas-maker integrations
+Reuse user's `@saas-maker/*` packages instead of rebuilding:
+- `@saas-maker/ai` — AI provider in web + worker (signal generation, summarization)
+- `@saas-maker/ops` — worker observability
+- `@saas-maker/foundry-db` — D1/Drizzle helpers in worker
+- `@saas-maker/foundry-email` — weekly digest email
+- `@saas-maker/analytics-sdk` — usage events on web
+- `@saas-maker/feedback-widget` — feedback on every signal card
+- `@saas-maker/waitlist-widget` — pre-launch landing
+- `@saas-maker/{eslint,prettier,tsconfig}-config` — shared tooling
+
 ## Quality gates
 - Cite or kill — minimum 2 sources per signal
 - No retroactive edits — corrections via new commits citing the prior signal

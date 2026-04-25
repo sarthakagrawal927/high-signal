@@ -1,0 +1,4 @@
+{
+  "extends": "@saas-maker/tsconfig/base.json",
+  "include": ["src/**/*"]
+}

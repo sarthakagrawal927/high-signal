@@ -1,0 +1,17 @@
+name = "high-signal-api"
+main = "src/index.ts"
+compatibility_date = "2026-04-01"
+
+[vars]
+ENVIRONMENT = "production"
+
+[triggers]
+# Daily ingest at 06:00 UTC
+crons = ["0 6 * * *"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "high-signal-db"
+# Replace after `wrangler d1 create high-signal-db`
+database_id = "REPLACE_AFTER_D1_CREATE"
+migrations_dir = "../../packages/db/migrations"

@@ -1,0 +1,9 @@
+{
+  "name": "high-signal",
+  "monorepo": true,
+  "framework": "next",
+  "deploy": {
+    "web": "vercel",
+    "api": "cloudflare-workers"
+  }
+}

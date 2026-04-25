@@ -1,0 +1,39 @@
+id,ticker,name,type,country,sector
+NVDA,NVDA,NVIDIA Corporation,public,US,semis
+AMD,AMD,Advanced Micro Devices,public,US,semis
+AVGO,AVGO,Broadcom Inc.,public,US,semis
+TSM,TSM,Taiwan Semiconductor Manufacturing,public,TW,foundry
+ASML,ASML,ASML Holding,public,NL,semicap
+AMAT,AMAT,Applied Materials,public,US,semicap
+LRCX,LRCX,Lam Research,public,US,semicap
+KLAC,KLAC,KLA Corporation,public,US,semicap
+MU,MU,Micron Technology,public,US,memory
+SK_HYNIX,000660.KS,SK Hynix,public,KR,memory
+SAMSUNG,005930.KS,Samsung Electronics,public,KR,memory
+INTC,INTC,Intel Corporation,public,US,semis
+ARM,ARM,Arm Holdings,public,UK,semis-ip
+SMCI,SMCI,Super Micro Computer,public,US,server
+DELL,DELL,Dell Technologies,public,US,server
+HPE,HPE,Hewlett Packard Enterprise,public,US,server
+ANET,ANET,Arista Networks,public,US,networking
+CRDO,CRDO,Credo Technology,public,US,networking
+MRVL,MRVL,Marvell Technology,public,US,semis
+QCOM,QCOM,Qualcomm,public,US,semis
+MSFT,MSFT,Microsoft,public,US,hyperscaler
+GOOGL,GOOGL,Alphabet,public,US,hyperscaler
+AMZN,AMZN,Amazon,public,US,hyperscaler
+META,META,Meta Platforms,public,US,hyperscaler
+ORCL,ORCL,Oracle,public,US,hyperscaler
+CRWV,CRWV,CoreWeave,public,US,neocloud
+NBIS,NBIS,Nebius Group,public,NL,neocloud
+VST,VST,Vistra,public,US,power
+CEG,CEG,Constellation Energy,public,US,power
+TLN,TLN,Talen Energy,public,US,power
+NRG,NRG,NRG Energy,public,US,power
+GEV,GEV,GE Vernova,public,US,grid
+ETN,ETN,Eaton,public,US,grid
+PWR,PWR,Quanta Services,public,US,grid
+CRDO,CRDO,Credo Technology,public,US,networking
+COHR,COHR,Coherent Corp,public,US,optical
+LITE,LITE,Lumentum,public,US,optical
+ALAB,ALAB,Astera Labs,public,US,interconnect

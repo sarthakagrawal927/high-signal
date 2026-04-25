@@ -1,0 +1,24 @@
+{
+  "name": "high-signal",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@10.28.0",
+  "devDependencies": {
+    "@saas-maker/eslint-config": "^1.0.1",
+    "@saas-maker/prettier-config": "^1.0.0",
+    "@saas-maker/tsconfig": "^1.0.0",
+    "husky": "^9.1.7",
+    "next": "^16.2.4"
+  },
+  "scripts": {
+    "dev": "pnpm -r --parallel dev",
+    "dev:web": "pnpm --filter @high-signal/web dev",
+    "dev:api": "pnpm --filter @high-signal/api dev",
+    "build": "pnpm -r build",
+    "typecheck": "pnpm -r typecheck",
+    "test": "pnpm -r test",
+    "lint": "pnpm -r lint",
+    "prepare": "husky"
+  },
+  "prettier": "@saas-maker/prettier-config"
+}

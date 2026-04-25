@@ -1,0 +1,33 @@
+[project]
+name = "high-signal-ingest"
+version = "0.1.0"
+description = "Ingestion + entity/relation extraction + signal scoring for high-signal"
+requires-python = ">=3.11"
+dependencies = [
+  "edgartools>=2.0.0",
+  "trafilatura>=1.12.0",
+  "newspaper4k>=0.9.0",
+  "gliner>=0.2.0",
+  "networkx>=3.3",
+  "vectorbt>=0.26.0",
+  "pydantic>=2.7",
+  "httpx>=0.27",
+  "modal>=0.64.0",
+  "rich>=13.7",
+  "python-dotenv>=1.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.uv]
+dev-dependencies = [
+  "pytest>=8.2",
+  "pytest-asyncio>=0.23",
+  "ruff>=0.6",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"

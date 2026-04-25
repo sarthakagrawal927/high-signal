@@ -1,0 +1,32 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@theme {
+  --font-sans: "GeistSans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "GeistMono", ui-monospace, "SF Mono", monospace;
+  --color-bg: oklch(0.16 0 0);
+  --color-fg: oklch(0.96 0 0);
+  --color-muted: oklch(0.55 0 0);
+  --color-line: oklch(0.27 0 0);
+  --color-accent: oklch(0.78 0.18 195);
+  --color-up: oklch(0.78 0.18 145);
+  --color-down: oklch(0.7 0.21 25);
+}
+
+@layer base {
+  html,
+  body {
+    background: var(--color-bg);
+    color: var(--color-fg);
+    font-feature-settings:
+      "ss01" on,
+      "cv11" on;
+  }
+  ::selection {
+    background: var(--color-accent);
+    color: #000;
+  }
+  .nums {
+    font-variant-numeric: tabular-nums;
+  }
+}
