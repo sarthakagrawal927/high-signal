@@ -3,6 +3,7 @@ node_modules
 .turbo
 .wrangler
 .open-next
+.tmp
 dist
 out
 coverage
