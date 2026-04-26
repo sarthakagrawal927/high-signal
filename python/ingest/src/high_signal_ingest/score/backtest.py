@@ -5,7 +5,7 @@ VectorBT is heavier; for v0 we use yfinance directly and hand-roll the math.
 
 from __future__ import annotations
 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Literal
 
 Outcome = Literal["hit", "miss", "push", "pending"]
@@ -17,7 +17,7 @@ def forward_return(ticker: str, published_at: datetime, window_days: int) -> flo
         import yfinance as yf  # type: ignore
     except ImportError:
         return None
-    end = datetime.utcnow()
+    end = datetime.now(timezone.utc)
     target_end = published_at + timedelta(days=int(window_days * 1.6))  # buffer for weekends
     if target_end > end:
         return None
