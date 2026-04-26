@@ -6,15 +6,14 @@
 Full product brief: `SPEC.md`. Active build plan: `plans/0001-research-artifact-first.md`.
 
 ## Locked decisions
-- **Wedge**: AI infra / semiconductors only (public surface)
+- **Wedge**: AI infra / semiconductors only
 - **Horizon**: weekly digest + on-event signal cards
 - **Audience**: retail-prosumer + sector analyst on Twitter / Substack (no paid product Y1)
 - **Output channels**: public web page + RSS + Twitter thread per signal + weekly Substack digest
 - **Codename**: `high-signal` (rebrand TBD post-traction; collision with High Signal Labs / HQ)
-- **Multi-collection engine** (2026-04-26): the engine partitions entities by `collection`. Public surface filters to `collection = ai_infra`. A second collection `ai_dev_tools` is consumed off-public by EverythingRated. See `plans/0003-multi-collection-for-everythingrated.md`.
 
-## Downstream consumers
-- **EverythingRated** (`/Users/sarthakagrawal/Desktop/fleet/everythingrated/`) — reads `collection = ai_dev_tools` via authed HTTP (`x-er-key`). Counterpart spec at `everythingrated/plans/0002-signal-ingest.md`. Producer-side commitments in `plans/0003-multi-collection-for-everythingrated.md`. Any change to `entities.collection`, `entities.slug`, `events.{sentimentLabel,sentimentScore,intent}`, or the `/entities/:id/{signals,mentions}` routes is a breaking change for that repo.
+## Considered and deferred
+- **Multi-collection engine for EverythingRated** (2026-04-26) — design archived at `plans/0003-multi-collection-for-everythingrated.md`. Not shipped; reopening trigger is in that file. Engine remains single-collection and AI-infra-only.
 
 ## Stack
 - **Web**: Next.js 16 (App Router, Turbopack) — `apps/web`

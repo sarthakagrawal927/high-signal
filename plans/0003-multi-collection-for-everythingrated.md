@@ -1,8 +1,37 @@
 # Plan 0003 — Multi-collection support for EverythingRated
 
-**Status:** ready to schedule
+**Status:** **DEFERRED** (2026-04-26) — do not schedule. Design retained for future revisit.
 **Created:** 2026-04-26
 **Counterpart:** `/Users/sarthakagrawal/Desktop/fleet/everythingrated/plans/0002-signal-ingest.md` (the consumer-side plan; this file is the producer-side commitment)
+
+## Why deferred
+
+After committing this plan I challenged the premise with the owner. Conclusion: turning high-signal into a multi-collection engine to serve EverythingRated v0 is overconnection.
+
+- **high-signal's own positioning is "research artifact first, product later, if at all"** (see README). Adding a `collection` partition, a second seed, an authed API surface, and a downstream consumer turns it into a multi-tenant platform. That is a real complexity tax on a repo that explicitly chose to stay focused.
+- **Reuse for the consumer is shallow** — Reddit + HN + Modal cron (~2.5 days). The classifier (FinBERT) is the wrong tool for dev-tool slang, the gazetteer is different, signal cards and the hit-rate ledger don't apply. Not enough reuse to justify a permanent contract.
+- **Forever-coupling.** Every change to `entities.{collection,slug}` or `events.{sentimentLabel,sentimentScore,intent}` becomes a breaking change for an external repo. The cost is paid on every future schema decision in here.
+- **Option B is worst-of-both.** With one consumer, either no cross-repo wiring is correct (consumer rolls its own minimal poller), or Option C is correct (extract a `signal-engine` package both repos depend on). Option B was picked because Option C "needed multiple consumers to justify"; with one consumer, Option B inherits the cost without the leverage.
+
+## What stays / what reverts
+
+- **Stay:** this plan file itself, as the design archive. `agents.md` carries a one-line *Considered and deferred* pointer back here so future readers can find the analysis without polluting "Locked decisions".
+- **Reverted from `agents.md`** (initially merged 2026-04-26, reverted same-day after the overconnection re-evaluation): the *Downstream consumers* section listing EverythingRated, and the *Multi-collection engine* locked-decision bullet. The engine is single-collection and AI-infra-only; nothing was shipped.
+- **Do not implement:** the schema/seed/API/auth diffs enumerated below. None have been built. If you came here intending to ship a PR from this plan, stop and re-read the *Why deferred* section first.
+
+## Trigger to revisit
+
+Reopen this plan only when **all three** are true:
+
+1. EverythingRated has validated its rating UX with real users (≥ 50 raters across ≥ 5 items) and external sentiment becomes the next-tier blocker for the product.
+2. high-signal has shipped its own AI-infra wedge to a state the owner would call "production reliable" — i.e., daily cron has run unattended for ≥ 4 weeks, hit-rate ledger has ≥ 20 closed signals, and the public surface has external readers.
+3. A third consumer of the engine is concretely planned (not hypothetical).
+
+If 1 + 2 are true but 3 is not, EverythingRated should grow ~50 lines of standalone Reddit/HN polling and skip cross-service entirely. If all three are true, **start the revisit from Option C** (extract a `signal-engine` workspace package both repos depend on) — do not resurrect Option B by default.
+
+The design below is preserved verbatim because the schema diff, intent taxonomy, route shapes, and lint-gate idea are all reusable artifacts regardless of whether the eventual architecture is B or C.
+
+---
 
 ## Why this exists
 
