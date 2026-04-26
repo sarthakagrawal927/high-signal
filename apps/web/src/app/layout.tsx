@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { SaaSMakerFeedback } from "@/components/saasmaker-feedback";
 
 export const metadata: Metadata = {
   title: "High Signal — AI-infra signal log",
@@ -10,7 +11,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className="min-h-dvh font-sans antialiased">{children}</body>
+      <body className="min-h-dvh font-sans antialiased">
+        {children}
+        <SaaSMakerFeedback />
+      </body>
     </html>
   );
 }
