@@ -72,40 +72,62 @@ adminRoute.post("/sync", async (c) => {
   const body = (await c.req.json()) as { signals?: SignalUpsert[] };
   const sigs = body.signals ?? [];
   let upserts = 0;
+  let createdEntities = 0;
   for (const s of sigs) {
     const id = await sha16(s.slug);
-    await db(c.env.DB)
-      .insert(schema.signals)
-      .values({
-        id,
-        slug: s.slug,
-        signalType: s.signalType,
-        primaryEntityId: s.primaryEntityId,
-        direction: s.direction,
-        confidence: s.confidence,
-        predictedWindowDays: s.predictedWindowDays,
-        publishedAt: new Date(s.publishedAt),
-        evidenceUrls: s.evidenceUrls,
-        spilloverEntityIds: s.spilloverEntityIds ?? [],
-        reviewStatus: s.reviewStatus ?? "draft",
-        supersedesSignalId: s.supersedesSignalId ?? null,
-        bodyMd: s.bodyMd,
-      })
-      .onConflictDoUpdate({
-        target: schema.signals.id,
-        set: {
+
+    // Auto-upsert missing entities so the LLM picking up novel names
+    // (DEEPSEEK, ASUSTEK, etc.) doesn't kill the whole batch on FK violation.
+    const created = await ensureEntities(
+      c.env.DB,
+      [s.primaryEntityId, ...(s.spilloverEntityIds ?? [])],
+    );
+    createdEntities += created;
+
+    // Backfill signals (slug `bf-*`) skip the review queue — their forward
+    // window is already matured and we want them in /track-record immediately.
+    // Slug check wins over caller-supplied reviewStatus.
+    const reviewStatus = s.slug.startsWith("bf-")
+      ? "published"
+      : (s.reviewStatus ?? "draft");
+
+    try {
+      await db(c.env.DB)
+        .insert(schema.signals)
+        .values({
+          id,
+          slug: s.slug,
           signalType: s.signalType,
+          primaryEntityId: s.primaryEntityId,
           direction: s.direction,
           confidence: s.confidence,
           predictedWindowDays: s.predictedWindowDays,
           publishedAt: new Date(s.publishedAt),
           evidenceUrls: s.evidenceUrls,
           spilloverEntityIds: s.spilloverEntityIds ?? [],
-          reviewStatus: s.reviewStatus ?? "draft",
+          reviewStatus,
           supersedesSignalId: s.supersedesSignalId ?? null,
           bodyMd: s.bodyMd,
-        },
-      });
+        })
+        .onConflictDoUpdate({
+          target: schema.signals.slug,
+          set: {
+            signalType: s.signalType,
+            direction: s.direction,
+            confidence: s.confidence,
+            predictedWindowDays: s.predictedWindowDays,
+            publishedAt: new Date(s.publishedAt),
+            evidenceUrls: s.evidenceUrls,
+            spilloverEntityIds: s.spilloverEntityIds ?? [],
+            reviewStatus,
+            supersedesSignalId: s.supersedesSignalId ?? null,
+            bodyMd: s.bodyMd,
+          },
+        });
+    } catch (err) {
+      console.error("[admin/sync] insert failed", s.slug, String(err));
+      continue;
+    }
 
     // Replace evidence rows
     await db(c.env.DB).delete(schema.evidence).where(eq(schema.evidence.signalId, id));
@@ -123,8 +145,33 @@ adminRoute.post("/sync", async (c) => {
     }
     upserts++;
   }
-  return c.json({ upserts });
+  return c.json({ upserts, createdEntities });
 });
+
+async function ensureEntities(d1: D1Database, ids: (string | null | undefined)[]): Promise<number> {
+  const unique = Array.from(new Set(ids.filter((x): x is string => !!x)));
+  if (unique.length === 0) return 0;
+  let created = 0;
+  for (const id of unique) {
+    const r = await db(d1)
+      .insert(schema.entities)
+      .values({
+        id,
+        ticker: null,
+        name: id,
+        type: "private",
+        country: null,
+        sector: null,
+        metadata: { autoCreated: true, source: "admin/sync" },
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      })
+      .onConflictDoNothing({ target: schema.entities.id })
+      .returning({ id: schema.entities.id });
+    if (r.length > 0) created++;
+  }
+  return created;
+}
 
 adminRoute.patch("/signals/:slug", async (c) => {
   const slug = c.req.param("slug");

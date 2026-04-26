@@ -49,6 +49,21 @@ def manual_score() -> dict:
     return run()
 
 
+@app.function(image=image, timeout=86400, secrets=secrets)
+def manual_backfill(start: str, end: str, sources: str = "gdelt", chunk_days: int = 7) -> dict:
+    """Run historical replay over a date window.
+
+    Example:
+      modal run modal_app.py::manual_backfill --start 2026-03-26 --end 2026-04-26 --sources gdelt
+    """
+    from datetime import datetime, timezone
+    from high_signal_ingest.backfill import run as bf_run
+
+    s = datetime.fromisoformat(start).replace(tzinfo=timezone.utc)
+    e = datetime.fromisoformat(end).replace(tzinfo=timezone.utc)
+    return bf_run(s, e, [src.strip() for src in sources.split(",") if src.strip()], chunk_days)
+
+
 # Manual triggers (CLI):
 #   uv run modal run modal_app.py::manual_ingest --source all --days 1
 #   uv run modal run modal_app.py::manual_score

@@ -36,45 +36,49 @@ GDELT_BASE = "https://api.gdeltproject.org/api/v2/doc/doc"
 # Per-entity / per-theme single-keyword queries.
 # GDELT's OR-grouping with parens times out for big lists in our experiments;
 # single-keyword queries are reliable and cheap to fan out concurrently.
-DEFAULT_QUERIES: list[tuple[str, str]] = [
-    ("nvda", "NVIDIA"),
-    ("amd", "AMD"),
-    ("tsmc", "TSMC"),
-    ("asml", "ASML"),
-    ("intel", "Intel"),
-    ("samsung", "Samsung Electronics"),
-    ("sk_hynix", "SK Hynix"),
-    ("micron", "Micron"),
-    ("broadcom", "Broadcom"),
-    ("marvell", "Marvell Technology"),
-    ("arm", "Arm Holdings"),
-    ("qualcomm", "Qualcomm"),
-    ("amat", "Applied Materials"),
-    ("lrcx", "Lam Research"),
-    ("klac", "KLA Corporation"),
-    ("tokyo_electron", "Tokyo Electron"),
-    ("smic", "SMIC"),
-    ("rapidus", "Rapidus"),
-    ("super_micro", "Supermicro"),
-    ("anet", "Arista Networks"),
-    ("vertiv", "Vertiv"),
-    ("constellation", "Constellation Energy"),
-    ("vistra", "Vistra"),
-    ("talen", "Talen Energy"),
-    ("ge_vernova", "GE Vernova"),
-    ("eaton", "Eaton"),
-    ("coreweave", "CoreWeave"),
-    ("nebius", "Nebius"),
-    ("openai", "OpenAI"),
-    ("anthropic", "Anthropic"),
-    ("xai", "xAI"),
-    ("hbm", "HBM3e"),
-    ("euv", "EUV lithography"),
-    ("cowos", "CoWoS"),
-    ("export_control", "chip export control"),
-    ("entity_list", "entity list"),
-    ("ai_capex", "AI capex"),
-    ("stargate", "Stargate"),
+# Tuple = (query_id, query_text, primary_entity_id_or_None)
+# When entity_id is provided, every event from that query is auto-anchored to
+# the entity — bypasses gazetteer match against title-only GDELT bodies.
+DEFAULT_QUERIES: list[tuple[str, str, str | None]] = [
+    ("nvda", "NVIDIA", "NVDA"),
+    ("amd", "AMD", "AMD"),
+    ("tsmc", "TSMC", "TSM"),
+    ("asml", "ASML", "ASML"),
+    ("intel", "Intel", "INTC"),
+    ("samsung", "Samsung Electronics", "SAMSUNG"),
+    ("sk_hynix", "SK Hynix", "SK_HYNIX"),
+    ("micron", "Micron", "MU"),
+    ("broadcom", "Broadcom", "AVGO"),
+    ("marvell", "Marvell Technology", "MRVL"),
+    ("arm", "Arm Holdings", "ARM"),
+    ("qualcomm", "Qualcomm", "QCOM"),
+    ("amat", "Applied Materials", "AMAT"),
+    ("lrcx", "Lam Research", "LRCX"),
+    ("klac", "KLA Corporation", "KLAC"),
+    ("tokyo_electron", "Tokyo Electron", "TEL"),
+    ("smic", "SMIC", "SMIC"),
+    ("rapidus", "Rapidus", "RAPIDUS"),
+    ("super_micro", "Supermicro", "SMCI"),
+    ("anet", "Arista Networks", "ANET"),
+    ("vertiv", "Vertiv", "VRT"),
+    ("constellation", "Constellation Energy", "CEG"),
+    ("vistra", "Vistra", "VST"),
+    ("talen", "Talen Energy", "TLN"),
+    ("ge_vernova", "GE Vernova", "GEV"),
+    ("eaton", "Eaton", "ETN"),
+    ("coreweave", "CoreWeave", "CRWV"),
+    ("nebius", "Nebius", "NBIS"),
+    ("openai", "OpenAI", "OPENAI"),
+    ("anthropic", "Anthropic", "ANTHROPIC"),
+    ("xai", "xAI", "XAI"),
+    # Theme queries — no anchor entity; LLM/gazetteer extracts downstream.
+    ("hbm", "HBM3e", None),
+    ("euv", "EUV lithography", None),
+    ("cowos", "CoWoS", None),
+    ("export_control", "chip export control", None),
+    ("entity_list", "entity list", None),
+    ("ai_capex", "AI capex", None),
+    ("stargate", "Stargate", None),
 ]
 
 # Country codes that move AI-infra markets — matches GDELT 2-letter FIPS
@@ -97,10 +101,15 @@ def _query_sync(
     since: datetime,
     until: datetime,
     max_records: int = 250,
+    entity_id: str | None = None,
 ) -> list[Event]:
     """GDELT's async TLS handshake fails via httpx; sync works fine. We trade
     parallelism for reliability — total fan-out time is OK because each call is
-    sub-second."""
+    sub-second.
+
+    `entity_id`: when set, every event from this query is anchored to that
+    entity (bypasses gazetteer match against title-only GDELT bodies).
+    """
     params = {
         "query": query,
         "mode": "ArtList",
@@ -146,7 +155,7 @@ def _query_sync(
                 published_at=pub,
                 title=f"[{country}/{domain}] {title}" if country else title,
                 content=None,
-                primary_entity_id=None,
+                primary_entity_id=entity_id,
                 raw_hash=raw_hash,
             )
         )
@@ -156,7 +165,7 @@ def _query_sync(
 def fetch_range(
     since: datetime,
     until: datetime | None = None,
-    queries: list[tuple[str, str]] | None = None,
+    queries: list[tuple[str, str, str | None]] | None = None,
     max_records_per_query: int = 250,
 ) -> list[Event]:
     if until is None:
@@ -167,15 +176,17 @@ def fetch_range(
         follow_redirects=True,
         timeout=30.0,
     ) as client:
-        for name, q in queries or DEFAULT_QUERIES:
-            out.extend(_query_sync(client, name, q, since, until, max_records_per_query))
+        for name, q, eid in queries or DEFAULT_QUERIES:
+            out.extend(
+                _query_sync(client, name, q, since, until, max_records_per_query, entity_id=eid),
+            )
     return out
 
 
 async def fetch_range_async(
     since: datetime,
     until: datetime | None = None,
-    queries: list[tuple[str, str]] | None = None,
+    queries: list[tuple[str, str, str | None]] | None = None,
     max_records_per_query: int = 250,
 ) -> list[Event]:
     """Kept for symmetry with other adapters; runs sync work in a thread."""
@@ -184,7 +195,7 @@ async def fetch_range_async(
 
 def fetch_all(
     days: int = 1,
-    queries: list[tuple[str, str]] | None = None,
+    queries: list[tuple[str, str, str | None]] | None = None,
     max_records_per_query: int = 250,
 ) -> list[Event]:
     since = datetime.now(timezone.utc) - timedelta(days=days)

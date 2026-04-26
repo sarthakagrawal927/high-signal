@@ -42,11 +42,25 @@ Rules:
   - high: official filing/press release + corroborating coverage
 - "spillover_entity_ids" must be a subset of the provided spillover candidates
 - Window: capex 30-60d, lead-time 15-30d, design-win 60-90d, restriction 5-20d, earnings 5-15d
-- DIRECTION calibration — DO NOT default to "up". Apply this checklist:
+- DIRECTION calibration — DO NOT default to "up". This is the most important rule.
+  Before deciding direction, write out (silently) BOTH the bull case AND the bear case
+  the headline implies for the primary entity, then pick whichever is materially supported.
   - Misses, guidance cuts, layoffs, export restrictions, supply-chain hits,
-    short reports, IP losses, design losses, regulator probes → "down"
-  - Beats, raises, design wins, capex bumps, partnership ups → "up"
-  - Conflicting / data not yet directional → "neutral"
+    short reports, IP losses, design losses, regulator probes, capex CUT,
+    inventory build, ASP decline, share-loss → "down"
+  - Beats, raises, design wins, capex bumps, partnership ups, ASP up,
+    share gains, lead-time tightening on a SHIPPING product → "up"
+  - PR fluff, vague AI mentions, anniversary news, conflicting reports,
+    sector rallies without entity-specific cause → "neutral" OR publish=false
+- Negative-side examples that are EASY TO MISS (treat as "down"):
+  * "X considering layoffs" — down
+  * "Y postpones launch" — down
+  * "Customer Z shifts allocation away from W" — down for W
+  * "Supplier shutdown forces production pause" — down for affected
+  * "Z's [product] underperforms benchmarks" — down
+- Refuse-to-publish bias: if you cannot find ≥2 corroborating sources or the
+  story is generic AI-stock-rally coverage, publish=false. Better to miss
+  than to flood the feed with bullish noise.
 - Treat the supplied event timestamps as the *as-of* moment. Reason ONLY from
   facts in the provided sources or knowledge that predates the latest source.
   Do NOT use any knowledge of events that occurred after the last source date.
@@ -63,7 +77,7 @@ def _slugify(s: str) -> str:
     return s[:80] or "signal"
 
 
-PROMPT_VERSION = "v1"
+PROMPT_VERSION = "v2"
 
 
 def _ai_complete(prompt: str, content: str) -> tuple[dict | None, dict]:
@@ -74,11 +88,14 @@ def _ai_complete(prompt: str, content: str) -> tuple[dict | None, dict]:
     """
     import time
 
-    key = os.environ.get("AI_API_KEY") or os.environ.get("HF_TOKEN")
-    base = os.environ.get("AI_BASE_URL") or (
-        "https://router.huggingface.co/v1" if os.environ.get("HF_TOKEN") else None
+    # Default to user's free-ai-gateway (OpenAI-compatible router across CF
+    # Workers AI / HF Router / Groq / etc., open-auth, project-scoped quotas).
+    base = os.environ.get(
+        "AI_BASE_URL", "https://free-ai-gateway.sarthakagrawal927.workers.dev/v1"
     )
-    model = os.environ.get("AI_MODEL", "meta-llama/Llama-3.3-70B-Instruct")
+    key = os.environ.get("AI_API_KEY") or os.environ.get("HF_TOKEN") or "open"
+    model = os.environ.get("AI_MODEL", "auto")
+    project_id = os.environ.get("AI_PROJECT_ID", "high-signal")
     meta: dict = {
         "model": model,
         "prompt_version": PROMPT_VERSION,
@@ -89,8 +106,8 @@ def _ai_complete(prompt: str, content: str) -> tuple[dict | None, dict]:
         "tokens_out": None,
         "request_user": content[:8000],
     }
-    if not base or not key:
-        meta["reason"] = "no_credentials"
+    if not base:
+        meta["reason"] = "no_base_url"
         return None, meta
     started = time.monotonic()
     try:
@@ -99,6 +116,7 @@ def _ai_complete(prompt: str, content: str) -> tuple[dict | None, dict]:
             headers={"Authorization": f"Bearer {key}", "Content-Type": "application/json"},
             json={
                 "model": model,
+                "project_id": project_id,
                 "messages": [
                     {"role": "system", "content": prompt},
                     {"role": "user", "content": content},

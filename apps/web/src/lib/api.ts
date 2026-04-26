@@ -118,6 +118,10 @@ export const api = {
       signals: SignalRow[];
     }>(`/entities/${id}`),
   trackRecord: () => fetchJson<{ buckets: TrackBucket[] }>("/track-record"),
+  trackRecordCohorts: () =>
+    fetchJson<{ live: TrackBucket[]; backfill: TrackBucket[]; all: TrackBucket[] }>(
+      "/track-record/cohorts",
+    ),
   digestWeekly: () =>
     fetchJson<{ since: string; signals: SignalRow[] }>("/digest/weekly"),
 };

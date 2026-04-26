@@ -51,7 +51,7 @@ def _mark_backfill(c: SignalCandidate) -> SignalCandidate:
     return c
 
 
-def run(start: datetime, end: datetime, sources: list[str], window_chunk_days: int = 14) -> dict:
+def run(start: datetime, end: datetime, sources: list[str], window_chunk_days: int = 7) -> dict:
     """Walk the date range in `window_chunk_days` chunks, ingest each."""
     started_at = datetime.now(timezone.utc)
     fetch_run_id = f"bf-{audit.new_run_id()}"
@@ -98,6 +98,11 @@ def run(start: datetime, end: datetime, sources: list[str], window_chunk_days: i
                 print(f"[backfill] generate failed entity={entity_id}: {exc}")
                 continue
             if cand:
+                # Critical for backfill scoring: the signal's `published_at`
+                # must equal the *latest source event date*, not generation
+                # time, so its forward-return window is already matured and
+                # yfinance can compute hit/miss today.
+                cand.published_at = max(e.published_at for e in evs)
                 _mark_backfill(cand)
                 emit(cand)
                 total_drafted += 1
@@ -140,7 +145,7 @@ def main() -> None:
     p.add_argument("--start", required=True, help="ISO date, e.g. 2025-04-25")
     p.add_argument("--end", required=True, help="ISO date, e.g. 2026-04-25")
     p.add_argument("--sources", default="gdelt", help="csv: gdelt,edgar")
-    p.add_argument("--chunk-days", type=int, default=14)
+    p.add_argument("--chunk-days", type=int, default=7)
     args = p.parse_args()
 
     out = run(
