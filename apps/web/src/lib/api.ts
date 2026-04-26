@@ -61,6 +61,21 @@ export interface EntityRow {
   sector: string | null;
 }
 
+export interface MarketQuote {
+  id: string;
+  source: "polymarket" | "manifold" | "kalshi";
+  marketId: string;
+  entityId: string | null;
+  question: string;
+  outcome: "yes" | "no" | "binary";
+  prob: number;
+  volume: number | null;
+  resolved: boolean;
+  resolvedOutcome: string | null;
+  fetchedAt: string;
+  marketUrl: string;
+}
+
 export interface RelationshipRow {
   id: string;
   fromEntityId: string;
@@ -116,6 +131,7 @@ export const api = {
       entity: EntityRow;
       relationships: RelationshipRow[];
       signals: SignalRow[];
+      marketQuotes?: MarketQuote[];
     }>(`/entities/${id}`),
   trackRecord: () => fetchJson<{ buckets: TrackBucket[] }>("/track-record"),
   trackRecordCohorts: () =>

@@ -13,7 +13,7 @@ export default async function EntityPage({ params }: { params: Promise<{ id: str
   } catch {
     return notFound();
   }
-  const { entity, relationships, signals } = data;
+  const { entity, relationships, signals, marketQuotes = [] } = data;
 
   return (
     <main className="mx-auto max-w-5xl px-6 py-16">
@@ -85,6 +85,52 @@ export default async function EntityPage({ params }: { params: Promise<{ id: str
         </div>
       </section>
 
+      {marketQuotes.length > 0 && (
+        <section className="mt-12">
+          <h2 className="font-mono text-[10px] uppercase tracking-[0.2em] text-zinc-500">
+            market consensus <span className="nums">{marketQuotes.length}</span>
+            <span className="ml-2 text-zinc-700">prediction-market quotes (latest)</span>
+          </h2>
+          <ul className="mt-4 divide-y divide-zinc-900">
+            {marketQuotes.map((q) => {
+              const pct = Math.round(q.prob * 100);
+              const tone =
+                pct >= 65 ? "text-emerald-400" : pct <= 35 ? "text-rose-400" : "text-zinc-300";
+              return (
+                <li key={q.id} className="flex items-baseline gap-4 py-3">
+                  <span
+                    className={`nums w-14 shrink-0 font-mono text-lg font-medium ${tone}`}
+                  >
+                    {pct}%
+                  </span>
+                  <a
+                    href={q.marketUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="flex-1 text-sm text-zinc-200 hover:text-white"
+                  >
+                    {q.question}
+                  </a>
+                  <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-zinc-500">
+                    {q.source}
+                  </span>
+                  {q.volume != null && (
+                    <span className="nums font-mono text-[10px] text-zinc-600">
+                      ${formatVolume(q.volume)}
+                    </span>
+                  )}
+                  {q.resolved && (
+                    <span className="border border-zinc-700 px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.18em] text-zinc-400">
+                      resolved {q.resolvedOutcome ?? ""}
+                    </span>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+      )}
+
       <section className="mt-12">
         <h2 className="font-mono text-[10px] uppercase tracking-[0.2em] text-zinc-500">
           recent signals
@@ -103,4 +149,10 @@ export default async function EntityPage({ params }: { params: Promise<{ id: str
       </section>
     </main>
   );
+}
+
+function formatVolume(n: number): string {
+  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
+  if (n >= 1_000) return `${(n / 1_000).toFixed(1)}K`;
+  return n.toFixed(0);
 }
