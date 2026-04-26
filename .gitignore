@@ -23,3 +23,7 @@ coverage
 playwright-report
 test-results
 .vercel
+
+# fallow cache
+.fallow/
+cache.bin
