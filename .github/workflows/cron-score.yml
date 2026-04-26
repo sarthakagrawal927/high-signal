@@ -1,0 +1,25 @@
+name: cron-score
+
+on:
+  schedule:
+    - cron: "30 22 * * *"  # daily 22:30 UTC, after US market close
+  workflow_dispatch:
+
+jobs:
+  score:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: python/ingest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - run: uv sync
+      - name: score matured signals
+        env:
+          ADMIN_TOKEN: ${{ secrets.ADMIN_TOKEN }}
+          API_BASE: ${{ secrets.API_BASE }}
+        run: uv run python -m high_signal_ingest.score.runner

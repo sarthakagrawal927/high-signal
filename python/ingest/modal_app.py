@@ -20,19 +20,10 @@ secrets = [
 ]
 
 
-@app.function(image=image, schedule=modal.Cron("0 6 * * *"), timeout=1200, secrets=secrets)
-def daily_ingest() -> dict:
-    from high_signal_ingest.pipeline import run
-
-    return run("all", days=1)
-
-
-@app.function(image=image, schedule=modal.Cron("30 22 * * *"), timeout=900, secrets=secrets)
-def daily_score() -> dict:
-    """22:30 UTC — runs after US market close to score matured signals."""
-    from high_signal_ingest.score.runner import run
-
-    return run()
+# Daily crons migrated to GitHub Actions workflows (.github/workflows/cron-*.yml)
+# — public repo gets unlimited GH minutes, simpler secret model.
+# Modal kept here only for ad-hoc backfills via `modal run` CLI when GH Actions
+# 6h job limit is too tight.
 
 
 @app.function(image=image, timeout=600, secrets=secrets)
