@@ -122,6 +122,23 @@ export const api = {
     fetchJson<{ live: TrackBucket[]; backfill: TrackBucket[]; all: TrackBucket[] }>(
       "/track-record/cohorts",
     ),
+  sectors: (days = 60) =>
+    fetchJson<{
+      days: number;
+      sectors: Array<{
+        sector: string;
+        signalCount: number;
+        upCount: number;
+        downCount: number;
+        neutralCount: number;
+        netDirection: number;
+        topEntities: string[];
+        hits: number;
+        misses: number;
+        pushes: number;
+        hitRate: number | null;
+      }>;
+    }>(`/sectors?days=${days}`),
   digestWeekly: () =>
     fetchJson<{ since: string; signals: SignalRow[] }>("/digest/weekly"),
 };

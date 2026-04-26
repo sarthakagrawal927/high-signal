@@ -5,6 +5,7 @@ import { entitiesRoute } from "./routes/entities";
 import { trackRecordRoute } from "./routes/track-record";
 import { digestRoute } from "./routes/digest";
 import { adminRoute } from "./routes/admin";
+import { sectorsRoute } from "./routes/sectors";
 
 type Env = {
   DB: D1Database;
@@ -26,6 +27,7 @@ app.route("/entities", entitiesRoute);
 app.route("/track-record", trackRecordRoute);
 app.route("/digest", digestRoute);
 app.route("/admin", adminRoute);
+app.route("/sectors", sectorsRoute);
 
 export default {
   fetch: app.fetch,
