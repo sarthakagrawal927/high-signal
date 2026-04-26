@@ -2,6 +2,13 @@ name = "high-signal-api"
 main = "src/index.ts"
 compatibility_date = "2026-04-01"
 
+[observability]
+enabled = true
+head_sampling_rate = 0.1
+
+[limits]
+cpu_ms = 30000
+
 [vars]
 ENVIRONMENT = "production"
 
