@@ -168,6 +168,29 @@ export const llmRuns = sqliteTable(
   ],
 );
 
+export const marketQuotes = sqliteTable(
+  "market_quotes",
+  {
+    id: text("id").primaryKey(),
+    source: text("source", { enum: ["polymarket", "manifold", "kalshi"] }).notNull(),
+    marketId: text("market_id").notNull(),
+    entityId: text("entity_id").references(() => entities.id),
+    question: text("question").notNull(),
+    outcome: text("outcome", { enum: ["yes", "no", "binary"] }).notNull(),
+    prob: real("prob").notNull(),
+    volume: real("volume"),
+    resolved: integer("resolved", { mode: "boolean" }).notNull().default(false),
+    resolvedOutcome: text("resolved_outcome"),
+    fetchedAt: integer("fetched_at", { mode: "timestamp" }).notNull(),
+    marketUrl: text("market_url").notNull(),
+  },
+  (t) => [
+    index("market_quotes_entity_idx").on(t.entityId),
+    index("market_quotes_source_market_idx").on(t.source, t.marketId),
+    index("market_quotes_fetched_idx").on(t.fetchedAt),
+  ],
+);
+
 export const ingestRuns = sqliteTable(
   "ingest_runs",
   {

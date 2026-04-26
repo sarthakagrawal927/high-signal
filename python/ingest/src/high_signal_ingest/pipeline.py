@@ -11,7 +11,7 @@ from . import audit
 from .extract.entities import primary_entity
 from .graph import spillover_ids
 from .seed import load_entities
-from .sources import edgar, gdelt, github, gov, hkex, ir, news, reddit, youtube
+from .sources import edgar, gdelt, github, gov, hkex, ir, markets, news, reddit, youtube
 from .types import Event
 from .generator import generate
 from .writer import emit
@@ -26,6 +26,7 @@ Source = Literal[
     "gov",
     "gdelt",
     "hkex",
+    "markets",
     "all",
 ]
 
@@ -54,6 +55,17 @@ def fetch(source: Source, days: int) -> list[Event]:
         out.extend(gdelt.fetch_all(days=max(days, 1), max_records_per_query=100))
     if source in {"hkex", "all"}:
         out.extend(hkex.fetch_all(days=max(days, 3)))
+    if source in {"markets", "all"}:
+        market_events, market_quotes = markets.fetch_all(days=max(days, 30))
+        out.extend(market_events)
+        # Quotes are the primary output of the markets source — push directly.
+        pushed = markets.push_quotes(market_quotes)
+        if pushed:
+            import logging
+
+            logging.getLogger(__name__).info(
+                "markets: pushed %d quotes (of %d)", pushed, len(market_quotes)
+            )
     return out
 
 
@@ -188,6 +200,7 @@ def main() -> None:
             "gov",
             "gdelt",
             "hkex",
+            "markets",
             "all",
         ],
         default="all",

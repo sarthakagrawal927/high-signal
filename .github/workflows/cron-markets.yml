@@ -1,0 +1,31 @@
+name: cron-markets
+
+on:
+  schedule:
+    - cron: "0 */4 * * *"  # every 4 hours
+  workflow_dispatch:
+
+jobs:
+  markets:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: python/ingest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - run: uv sync
+      - name: poll prediction markets
+        env:
+          ADMIN_TOKEN: ${{ secrets.ADMIN_TOKEN }}
+          API_BASE: ${{ secrets.API_BASE }}
+          AI_BASE_URL: https://free-ai-gateway.sarthakagrawal927.workers.dev/v1
+          AI_API_KEY: open
+          AI_MODEL: auto
+          AI_PROJECT_ID: high-signal
+          SEC_USER_AGENT: "high-signal sarthakagrawal927@gmail.com"
+        run: |
+          uv run python -m high_signal_ingest.pipeline --source markets

@@ -36,5 +36,12 @@ entitiesRoute.get("/:id", async (c) => {
     .orderBy(desc(schema.signals.publishedAt))
     .limit(20);
 
-  return c.json({ entity, relationships: rels, signals });
+  const marketQuotes = await db(c.env.DB)
+    .select()
+    .from(schema.marketQuotes)
+    .where(eq(schema.marketQuotes.entityId, id))
+    .orderBy(desc(schema.marketQuotes.fetchedAt))
+    .limit(10);
+
+  return c.json({ entity, relationships: rels, signals, marketQuotes });
 });

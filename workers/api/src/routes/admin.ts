@@ -320,6 +320,75 @@ adminRoute.post("/ingest-runs", async (c) => {
   return c.json({ id });
 });
 
+interface QuoteInput {
+  source: "polymarket" | "manifold" | "kalshi";
+  marketId: string;
+  entityId?: string | null;
+  question: string;
+  outcome: "yes" | "no" | "binary";
+  prob: number;
+  volume?: number | null;
+  resolved?: boolean;
+  resolvedOutcome?: string | null;
+  marketUrl: string;
+  fetchedAt: string; // ISO
+}
+
+adminRoute.post("/quotes", async (c) => {
+  const body = (await c.req.json()) as { quotes?: QuoteInput[] };
+  const quotes = body.quotes ?? [];
+  if (!Array.isArray(quotes)) return c.json({ error: "bad_payload" }, 400);
+
+  let inserted = 0;
+  let skipped = 0;
+  for (const q of quotes) {
+    if (
+      !q.source ||
+      !q.marketId ||
+      !q.question ||
+      !q.outcome ||
+      typeof q.prob !== "number" ||
+      !q.marketUrl ||
+      !q.fetchedAt
+    ) {
+      skipped++;
+      continue;
+    }
+    const fetchedAt = new Date(q.fetchedAt);
+    if (Number.isNaN(fetchedAt.getTime())) {
+      skipped++;
+      continue;
+    }
+    // Idempotency: bucket fetchedAt to the hour so re-runs in the same window dedupe.
+    const hourBucket = Math.floor(fetchedAt.getTime() / 3_600_000);
+    const id = await sha16(`quote:${q.source}:${q.marketId}:${hourBucket}`);
+    try {
+      await db(c.env.DB)
+        .insert(schema.marketQuotes)
+        .values({
+          id,
+          source: q.source,
+          marketId: q.marketId,
+          entityId: q.entityId ?? null,
+          question: q.question,
+          outcome: q.outcome,
+          prob: q.prob,
+          volume: q.volume ?? null,
+          resolved: q.resolved ?? false,
+          resolvedOutcome: q.resolvedOutcome ?? null,
+          fetchedAt,
+          marketUrl: q.marketUrl,
+        })
+        .onConflictDoNothing({ target: schema.marketQuotes.id });
+      inserted++;
+    } catch (err) {
+      console.error("[admin/quotes] insert failed", q.source, q.marketId, String(err));
+      skipped++;
+    }
+  }
+  return c.json({ inserted, skipped });
+});
+
 adminRoute.get("/audit/summary", async (c) => {
   const days = Number(c.req.query("days") ?? 7);
   const since = Math.floor(Date.now() / 1000) - days * 86400;
