@@ -21,7 +21,7 @@ Full product brief: `SPEC.md`. Active build plan: `plans/0001-research-artifact-
 - **DB**: Cloudflare D1 + Drizzle — schema in `packages/db`
 - **Python ingestion + scoring**: edgartools, Trafilatura, GLiNER, GLiREL, NetworkX, FinBERT, VectorBT — runs on Modal.com — `python/ingest`
 - **Signal store**: git-versioned markdown under `signals/YYYY-MM-DD/<slug>.md` — append-only, never rewritten
-- **Auth**: NextAuth v5 (Google OAuth) — only for admin / review queue
+- **Auth**: Cloudflare Access (Google IdP via Zero Trust) — fronts `/review` and `/api/admin/*`. Server verifies the `Cf-Access-Jwt-Assertion` JWT against the team JWKS (`apps/web/src/lib/cf-access.ts`). No NextAuth, no `AUTH_SECRET`. Setup is dashboard-only; only env vars are `CF_ACCESS_AUD` + `CF_ACCESS_TEAM_DOMAIN`.
 - **Testing**: Vitest (TS), pytest (Python), Playwright (e2e)
 - **Deploy**: Vercel (web) + Cloudflare Workers (API + cron) + Modal (ingest)
 - **Package manager**: pnpm workspace + uv (Python)
