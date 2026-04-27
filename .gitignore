@@ -27,3 +27,6 @@ test-results
 # fallow cache
 .fallow/
 cache.bin
+
+# CF Pages build output
+apps/web/.cf-pages-bundle/

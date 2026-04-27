@@ -1,1 +1,0 @@
-This folder contains the built output assets for the worker "high-signal-web" generated at 2026-04-25T21:41:42.654Z.
