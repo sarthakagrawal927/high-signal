@@ -7,6 +7,7 @@ on:
   pull_request:
     branches: [main]
     paths: ["apps/web/**", "packages/**"]
+  workflow_dispatch:
 
 jobs:
   deploy-production:
