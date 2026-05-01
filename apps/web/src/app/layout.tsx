@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
+import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
 import { AnalyticsProvider } from "@/components/posthog-provider";
 import { SaaSMakerFeedback } from "@/components/saasmaker-feedback";
+import { AuthNav } from "@/components/auth/AuthNav";
 
 export const metadata: Metadata = {
   title: "High Signal — signal intelligence",
@@ -11,13 +13,16 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body className="min-h-dvh font-sans antialiased">
-        <AnalyticsProvider>
-          {children}
-          <SaaSMakerFeedback />
-        </AnalyticsProvider>
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en">
+        <body className="min-h-dvh font-sans antialiased">
+          <AnalyticsProvider>
+            <AuthNav />
+            {children}
+            <SaaSMakerFeedback />
+          </AnalyticsProvider>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

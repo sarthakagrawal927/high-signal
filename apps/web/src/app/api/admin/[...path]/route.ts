@@ -1,24 +1,20 @@
 /**
  * /api/admin/<...> — same-origin proxy to the api worker's /admin/* routes.
  *
- * Auth: Cloudflare Access JWT (via verifyAccess). Browser carries CF Access
- * cookie automatically since /api/admin/* is in the same Access app as /review.
+ * Auth: Clerk session via app proxy/middleware plus a server-side allow-list.
  *
  * The proxy injects the worker-internal ADMIN_TOKEN before forwarding to the
  * service-bound `API`. This keeps the bearer token off the browser entirely.
  */
 
-import { verifyAccess, isAllowed } from "@/lib/cf-access";
+import { requireAdmin } from "@/lib/clerk-admin";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 async function handle(req: Request, ctx: { params: Promise<{ path: string[] }> }) {
-  const claims = await verifyAccess(req);
-  if (!claims) return Response.json({ error: "unauthorized" }, { status: 401 });
-  if (!isAllowed(claims.email)) {
-    return Response.json({ error: "forbidden", email: claims.email }, { status: 403 });
-  }
+  const admin = await requireAdmin();
+  if (!admin.ok) return Response.json(admin.body, { status: admin.status });
 
   const { path } = await ctx.params;
   const u = new URL(req.url);
@@ -42,8 +38,9 @@ async function handle(req: Request, ctx: { params: Promise<{ path: string[] }> }
   if (req.headers.get("content-type")) {
     headers.set("Content-Type", req.headers.get("content-type")!);
   }
-  // Trace who acted (server adds it; browser can't fake it once CF Access is in front)
-  headers.set("X-Admin-Email", claims.email);
+  // Trace who acted. Browser cannot spoof this because this route injects it after Clerk auth.
+  headers.set("X-Admin-Email", admin.identity.email);
+  headers.set("X-Clerk-User-Id", admin.identity.userId);
 
   const body = ["GET", "HEAD"].includes(req.method) ? undefined : await req.arrayBuffer();
   const r = await api.fetch(`https://api${targetPath}`, {

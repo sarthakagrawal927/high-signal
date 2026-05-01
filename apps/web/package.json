@@ -16,6 +16,7 @@
     "lint": "echo 'lint: skipped (eslint-config-next compat broken with ESLint 10)'"
   },
   "dependencies": {
+    "@clerk/nextjs": "^7.2.9",
     "@high-signal/shared": "workspace:*",
     "@saas-maker/ai": "^0.1.0",
     "@saas-maker/analytics-sdk": "^0.2.1",
