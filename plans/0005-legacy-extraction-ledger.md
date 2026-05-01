@@ -15,6 +15,10 @@ Extracted:
   `analyzeMentionVisibility`.
 - Brand config, prompt, check, and result contracts mapped into
   `@high-signal/shared` as High Signal product contracts.
+- Prompt, config, check, result, schedule, and badge-enabled persistence mapped
+  into High Signal D1 tables.
+- Product dashboard read route added at `/products/dashboard` so the web app can
+  render persisted migration objects behind the High Signal boundary.
 - First authenticated dashboard destination surface added at `/dashboard` for
   brand checks and tracked communities.
 - Reddit public search semantics, moved into the High Signal API community
@@ -23,7 +27,7 @@ Extracted:
   `/mentions` surface.
 
 Still useful as source material:
-- Prompt/config/report schema.
+- Prompt/config/check CRUD flows and report generation routes.
 - Badge widget and public trust surface.
 - Geo, directory, HN, Product Hunt, and AXP monitors.
 - Existing research docs on AI visibility and monitoring competitors.
@@ -49,10 +53,12 @@ Extracted:
   `/communities`.
 - Tracked community contract moved into `@high-signal/shared` and represented
   on `/dashboard`.
+- Tracked community and digest snapshot persistence moved into High Signal D1
+  tables and exposed through `/products/dashboard`.
 
 Still useful as source material:
-- Tracked subreddit workflow.
-- Research prompt storage.
+- Tracked subreddit create/update workflow.
+- Research prompt execution flow.
 - Discover and subreddit archive pages.
 
 Rejected for direct copy:

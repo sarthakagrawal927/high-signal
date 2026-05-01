@@ -41,6 +41,12 @@ export interface MentionCheck {
   completedAt: string | null;
 }
 
+export interface MentionDashboardSnapshot {
+  configs: MentionBrandConfig[];
+  prompts: MentionPrompt[];
+  recentChecks: MentionCheck[];
+}
+
 export type RedditPeriod = "day" | "week" | "month";
 export type CommunitySourceId = readonly [postId: string, commentId?: string];
 
@@ -78,6 +84,15 @@ export interface CommunityDigestSnapshot {
   promptUsed: string;
   sourceCount: number;
   createdAt: string;
+}
+
+export interface ProductDashboardSnapshot {
+  ownerId: string;
+  mentions: MentionDashboardSnapshot;
+  communities: {
+    tracked: TrackedCommunity[];
+    latestDigests: CommunityDigestSnapshot[];
+  };
 }
 
 export function normalizeCommunitySourceId(value: unknown): CommunitySourceId | undefined {

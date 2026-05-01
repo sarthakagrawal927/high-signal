@@ -6,6 +6,8 @@ import {
   Panel,
   SectionHeader,
 } from "@/components/system/HighSignalUI";
+import { api, type ProductDashboardSnapshot } from "@/lib/api";
+import { auth } from "@clerk/nextjs/server";
 import type { MentionBrandConfig, TrackedCommunity } from "@high-signal/shared";
 
 export const metadata = { title: "Dashboard — High Signal" };
@@ -48,7 +50,38 @@ const trackedCommunities: TrackedCommunity[] = [
   },
 ];
 
-export default function DashboardPage() {
+function fallbackDashboard(ownerId: string): ProductDashboardSnapshot {
+  return {
+    ownerId,
+    mentions: {
+      configs: [brandConfig],
+      prompts: [],
+      recentChecks: [],
+    },
+    communities: {
+      tracked: trackedCommunities,
+      latestDigests: [],
+    },
+  };
+}
+
+export default async function DashboardPage() {
+  const { userId, orgId } = await auth();
+  const ownerId = orgId ?? userId ?? "workspace_default";
+  let dashboard = fallbackDashboard(ownerId);
+  try {
+    dashboard = await api.productDashboard(ownerId);
+  } catch {
+    /* Local fallback keeps the dashboard useful before product tables are seeded. */
+  }
+
+  const activeBrand = dashboard.mentions.configs[0] ?? brandConfig;
+  const communities = dashboard.communities.tracked.length
+    ? dashboard.communities.tracked
+    : trackedCommunities;
+  const promptCount = dashboard.mentions.prompts.length;
+  const latestCheck = dashboard.mentions.recentChecks[0];
+
   return (
     <PageShell>
       <BackLink />
@@ -59,21 +92,40 @@ export default function DashboardPage() {
 
       <MetricGrid
         items={[
-          { label: "brand", value: brandConfig.brandName },
-          { label: "platforms", value: brandConfig.platforms.length.toString() },
-          { label: "communities", value: trackedCommunities.length.toString() },
-          { label: "markets", value: "live" },
+          { label: "brand", value: activeBrand.brandName },
+          { label: "platforms", value: activeBrand.platforms.length.toString() },
+          { label: "prompts", value: promptCount.toString() },
+          { label: "communities", value: communities.length.toString() },
         ]}
       />
 
       <section className="mt-10 grid gap-8 md:grid-cols-2">
-        <Panel eyebrow="mention intelligence" title={brandConfig.brandName}>
+        <Panel eyebrow="mention intelligence" title={activeBrand.brandName}>
           <p className="mt-3 text-sm leading-6 text-[var(--color-muted)]">
             Track AI visibility, citations, competitor mentions, and prompt-level response quality
-            for {brandConfig.brandUrl}.
+            for {activeBrand.brandUrl ?? activeBrand.brandName}.
           </p>
+          {latestCheck ? (
+            <MetricGrid
+              items={[
+                { label: "status", value: latestCheck.status },
+                {
+                  label: "queries",
+                  value: `${latestCheck.completedQueries}/${latestCheck.totalQueries}`,
+                },
+                {
+                  label: "mention rate",
+                  value:
+                    latestCheck.brandMentionRate == null
+                      ? "unknown"
+                      : `${Math.round(latestCheck.brandMentionRate * 100)}%`,
+                },
+                { label: "completed", value: latestCheck.completedAt?.slice(0, 10) ?? "pending" },
+              ]}
+            />
+          ) : null}
           <div className="mt-5 flex flex-wrap gap-2">
-            {brandConfig.competitors.map((competitor) => (
+            {activeBrand.competitors.map((competitor) => (
               <span
                 key={competitor.name}
                 className="border border-[var(--color-line)] px-2 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-[var(--color-muted)]"
@@ -86,7 +138,7 @@ export default function DashboardPage() {
 
         <Panel eyebrow="community intelligence" title="Tracked subreddits">
           <div className="mt-5 divide-y divide-[var(--color-line)] border-y border-[var(--color-line)]">
-            {trackedCommunities.map((community) => (
+            {communities.map((community) => (
               <a
                 key={community.id}
                 href={`/communities?subreddit=${encodeURIComponent(community.subreddit)}`}

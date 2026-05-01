@@ -212,3 +212,159 @@ export const ingestRuns = sqliteTable(
     index("ingest_runs_started_idx").on(t.startedAt),
   ],
 );
+
+export const mentionBrandConfigs = sqliteTable(
+  "mention_brand_configs",
+  {
+    id: text("id").primaryKey(),
+    ownerId: text("owner_id").notNull(),
+    brandName: text("brand_name").notNull(),
+    brandAliases: text("brand_aliases", { mode: "json" }).notNull().default("[]"),
+    brandUrl: text("brand_url"),
+    competitors: text("competitors", { mode: "json" }).notNull().default("[]"),
+    platforms: text("platforms", { mode: "json" }).notNull().default("[]"),
+    aiEndpointUrl: text("ai_endpoint_url"),
+    aiModel: text("ai_model"),
+    checkSchedule: text("check_schedule", { enum: ["daily", "weekly"] }),
+    lastScheduledCheck: integer("last_scheduled_check", { mode: "timestamp" }),
+    badgeEnabled: integer("badge_enabled", { mode: "boolean" }).notNull().default(false),
+    createdAt: integer("created_at", { mode: "timestamp" })
+      .notNull()
+      .$defaultFn(() => new Date()),
+    updatedAt: integer("updated_at", { mode: "timestamp" })
+      .notNull()
+      .$defaultFn(() => new Date()),
+  },
+  (t) => [
+    index("mention_brand_configs_owner_idx").on(t.ownerId),
+    uniqueIndex("mention_brand_configs_owner_brand_idx").on(t.ownerId, t.brandName),
+  ],
+);
+
+export const mentionPrompts = sqliteTable(
+  "mention_prompts",
+  {
+    id: text("id").primaryKey(),
+    configId: text("config_id")
+      .notNull()
+      .references(() => mentionBrandConfigs.id),
+    ownerId: text("owner_id").notNull(),
+    promptText: text("prompt_text").notNull(),
+    category: text("category"),
+    createdAt: integer("created_at", { mode: "timestamp" })
+      .notNull()
+      .$defaultFn(() => new Date()),
+  },
+  (t) => [
+    index("mention_prompts_config_idx").on(t.configId),
+    index("mention_prompts_owner_idx").on(t.ownerId),
+  ],
+);
+
+export const mentionChecks = sqliteTable(
+  "mention_checks",
+  {
+    id: text("id").primaryKey(),
+    configId: text("config_id")
+      .notNull()
+      .references(() => mentionBrandConfigs.id),
+    ownerId: text("owner_id").notNull(),
+    status: text("status", { enum: ["running", "completed", "failed"] })
+      .notNull()
+      .default("running"),
+    totalQueries: integer("total_queries").notNull().default(0),
+    completedQueries: integer("completed_queries").notNull().default(0),
+    brandMentionRate: real("brand_mention_rate"),
+    summary: text("summary"),
+    createdAt: integer("created_at", { mode: "timestamp" })
+      .notNull()
+      .$defaultFn(() => new Date()),
+    completedAt: integer("completed_at", { mode: "timestamp" }),
+  },
+  (t) => [
+    index("mention_checks_config_idx").on(t.configId),
+    index("mention_checks_owner_created_idx").on(t.ownerId, t.createdAt),
+  ],
+);
+
+export const mentionResults = sqliteTable(
+  "mention_results",
+  {
+    id: text("id").primaryKey(),
+    checkId: text("check_id")
+      .notNull()
+      .references(() => mentionChecks.id),
+    configId: text("config_id")
+      .notNull()
+      .references(() => mentionBrandConfigs.id),
+    ownerId: text("owner_id").notNull(),
+    promptId: text("prompt_id").notNull(),
+    platform: text("platform").notNull(),
+    model: text("model").notNull(),
+    responseText: text("response_text").notNull(),
+    brandMentioned: integer("brand_mentioned", { mode: "boolean" }).notNull().default(false),
+    brandSentiment: text("brand_sentiment"),
+    brandPosition: integer("brand_position"),
+    competitorsMentioned: text("competitors_mentioned", { mode: "json" }).notNull().default("[]"),
+    citations: text("citations", { mode: "json" }).notNull().default("[]"),
+    brandCited: integer("brand_cited", { mode: "boolean" }).notNull().default(false),
+    latencyMs: integer("latency_ms"),
+    createdAt: integer("created_at", { mode: "timestamp" })
+      .notNull()
+      .$defaultFn(() => new Date()),
+  },
+  (t) => [
+    index("mention_results_check_idx").on(t.checkId),
+    index("mention_results_config_idx").on(t.configId),
+  ],
+);
+
+export const trackedCommunities = sqliteTable(
+  "tracked_communities",
+  {
+    id: text("id").primaryKey(),
+    ownerId: text("owner_id").notNull(),
+    subreddit: text("subreddit").notNull(),
+    prompt: text("prompt"),
+    period: text("period", { enum: ["day", "week", "month"] }).notNull().default("week"),
+    isPublic: integer("is_public", { mode: "boolean" }).notNull().default(false),
+    createdAt: integer("created_at", { mode: "timestamp" })
+      .notNull()
+      .$defaultFn(() => new Date()),
+    updatedAt: integer("updated_at", { mode: "timestamp" })
+      .notNull()
+      .$defaultFn(() => new Date()),
+  },
+  (t) => [
+    index("tracked_communities_owner_idx").on(t.ownerId),
+    uniqueIndex("tracked_communities_owner_subreddit_period_idx").on(
+      t.ownerId,
+      t.subreddit,
+      t.period,
+    ),
+  ],
+);
+
+export const communityDigestSnapshots = sqliteTable(
+  "community_digest_snapshots",
+  {
+    id: text("id").primaryKey(),
+    trackedCommunityId: text("tracked_community_id").references(() => trackedCommunities.id),
+    ownerId: text("owner_id").notNull(),
+    subreddit: text("subreddit").notNull(),
+    period: text("period", { enum: ["day", "week", "month"] }).notNull(),
+    snapshotDate: integer("snapshot_date", { mode: "timestamp" }).notNull(),
+    summaryText: text("summary_text").notNull(),
+    summary: text("summary", { mode: "json" }),
+    promptUsed: text("prompt_used").notNull(),
+    sourceCount: integer("source_count").notNull().default(0),
+    createdAt: integer("created_at", { mode: "timestamp" })
+      .notNull()
+      .$defaultFn(() => new Date()),
+  },
+  (t) => [
+    index("community_digest_snapshots_track_idx").on(t.trackedCommunityId),
+    index("community_digest_snapshots_owner_idx").on(t.ownerId),
+    index("community_digest_snapshots_subreddit_period_idx").on(t.subreddit, t.period),
+  ],
+);

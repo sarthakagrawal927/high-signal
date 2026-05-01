@@ -1,4 +1,8 @@
 // Default to deployed prod API. Override at build time with NEXT_PUBLIC_API_BASE for local dev.
+import type { ProductDashboardSnapshot } from "@high-signal/shared";
+
+export type { ProductDashboardSnapshot } from "@high-signal/shared";
+
 const API_BASE =
   process.env["NEXT_PUBLIC_API_BASE"] ?? "https://high-signal-api.sarthakagrawal927.workers.dev";
 
@@ -195,5 +199,9 @@ export const api = {
   redditMentions: (query: string, limit = 10) =>
     fetchJson<{ mentions: RedditMention[]; total: number }>(
       `/communities/reddit-mentions?${new URLSearchParams({ q: query, limit: String(limit) })}`,
+    ),
+  productDashboard: (ownerId: string) =>
+    fetchJson<ProductDashboardSnapshot>(
+      `/products/dashboard?${new URLSearchParams({ owner: ownerId })}`,
     ),
 };

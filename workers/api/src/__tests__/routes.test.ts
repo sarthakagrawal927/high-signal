@@ -48,4 +48,11 @@ describe("worker routes", () => {
     expect(j.community.name).toBe("LocalLLaMA");
     expect(j.community.subscribers).toBe(1234);
   });
+
+  it("/products/dashboard validates owner boundary", async () => {
+    const res = await fetcher.fetch(new Request("http://t/products/dashboard"), testEnv);
+    expect(res.status).toBe(400);
+    const j = (await res.json()) as { error: string };
+    expect(j.error).toBe("missing_owner");
+  });
 });
