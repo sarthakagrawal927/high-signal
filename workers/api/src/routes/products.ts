@@ -1,6 +1,10 @@
 import { Hono } from "hono";
 import { and, desc, eq } from "drizzle-orm";
 import { db, schema } from "../db";
+import { BADGE_WIDGET_JS } from "../lib/badge-widget";
+import { generateCommunityDigest } from "../lib/community-research";
+import { searchExternalMentions } from "../lib/external-monitors";
+import { runMentionCheck } from "../lib/mention-execution";
 import { normalizeCommunitySummary } from "@high-signal/shared";
 import type {
   AIPlatform,
@@ -14,7 +18,13 @@ import type {
   TrackedCommunity,
 } from "@high-signal/shared";
 
-type Env = { DB: D1Database };
+type Env = {
+  DB: D1Database;
+  HIGH_SIGNAL_AI_ENDPOINT_URL?: string;
+  HIGH_SIGNAL_AI_API_KEY?: string;
+  HIGH_SIGNAL_AI_MODEL?: string;
+  OPENAI_API_KEY?: string;
+};
 type NewConfigBody = Partial<{
   brandName: string;
   brandAliases: string[];
@@ -110,7 +120,7 @@ productsRoute.post("/mentions/configs", async (c) => {
   const ownerId = requireOwner(c);
   if (!ownerId) return c.json({ error: "missing_owner" }, 400);
 
-  const body = (await c.req.json()) as NewConfigBody;
+  const body = await safeJson<NewConfigBody>(c.req);
   const parsed = parseBrandConfigInput(ownerId, body);
   if ("error" in parsed) return c.json({ error: parsed.error }, 400);
 
@@ -129,7 +139,7 @@ productsRoute.patch("/mentions/configs/:id", async (c) => {
   const existing = await getOwnedConfig(c.env.DB, ownerId, c.req.param("id"));
   if (!existing) return c.json({ error: "not_found" }, 404);
 
-  const body = (await c.req.json()) as NewConfigBody;
+  const body = await safeJson<NewConfigBody>(c.req);
   const parsed = parseBrandConfigInput(ownerId, body, existing);
   if ("error" in parsed) return c.json({ error: parsed.error }, 400);
 
@@ -183,7 +193,7 @@ productsRoute.post("/mentions/configs/:id/prompts", async (c) => {
   const config = await getOwnedConfig(c.env.DB, ownerId, c.req.param("id"));
   if (!config) return c.json({ error: "not_found" }, 404);
 
-  const body = (await c.req.json()) as NewPromptBody;
+  const body = await safeJson<NewPromptBody>(c.req);
   const promptText = body.promptText?.trim();
   if (!promptText) return c.json({ error: "missing_prompt_text" }, 400);
 
@@ -245,7 +255,8 @@ productsRoute.post("/mentions/configs/:id/checks", async (c) => {
     .where(eq(schema.mentionPrompts.configId, config.id));
   if (prompts.length === 0) return c.json({ error: "missing_prompts" }, 400);
 
-  const [row] = await db(c.env.DB)
+  const database = db(c.env.DB);
+  const [row] = await database
     .insert(schema.mentionChecks)
     .values({
       id: crypto.randomUUID(),
@@ -258,7 +269,31 @@ productsRoute.post("/mentions/configs/:id/checks", async (c) => {
     })
     .returning();
 
+  c.executionCtx.waitUntil(
+    runMentionCheck({
+      database,
+      env: c.env,
+      config,
+      prompts,
+      checkId: row.id,
+    }).catch((error) => console.error("High Signal mention check failed:", error)),
+  );
+
   return c.json({ check: toMentionCheck(row) }, 201);
+});
+
+productsRoute.get("/mentions/configs/:id/monitors", async (c) => {
+  const ownerId = requireOwner(c);
+  if (!ownerId) return c.json({ error: "missing_owner" }, 400);
+  const config = await getOwnedConfig(c.env.DB, ownerId, c.req.param("id"));
+  if (!config) return c.json({ error: "not_found" }, 404);
+
+  const results = await searchExternalMentions({
+    brandName: config.brandName,
+    aliases: stringArray(config.brandAliases),
+    days: clampedLimit(c.req.query("days"), 30, 365),
+  });
+  return c.json(results);
 });
 
 productsRoute.get("/mentions/configs/:id/report", async (c) => {
@@ -287,6 +322,16 @@ productsRoute.get("/mentions/configs/:id/report", async (c) => {
         latestMentionRate: checks[0]?.brandMentionRate ?? null,
       },
       recentChecks: checks.map(toMentionCheck),
+    },
+  });
+});
+
+productsRoute.get("/badge/widget.js", () => {
+  return new Response(BADGE_WIDGET_JS, {
+    headers: {
+      "Content-Type": "application/javascript; charset=utf-8",
+      "Cache-Control": "public, max-age=86400, s-maxage=86400",
+      "Access-Control-Allow-Origin": "*",
     },
   });
 });
@@ -332,7 +377,7 @@ productsRoute.get("/communities/tracked", async (c) => {
 productsRoute.post("/communities/tracked", async (c) => {
   const ownerId = requireOwner(c);
   if (!ownerId) return c.json({ error: "missing_owner" }, 400);
-  const body = (await c.req.json()) as NewCommunityBody;
+  const body = await safeJson<NewCommunityBody>(c.req);
   const parsed = parseTrackedCommunityInput(ownerId, body);
   if ("error" in parsed) return c.json({ error: parsed.error }, 400);
 
@@ -346,7 +391,7 @@ productsRoute.patch("/communities/tracked/:id", async (c) => {
   const existing = await getOwnedCommunity(c.env.DB, ownerId, c.req.param("id"));
   if (!existing) return c.json({ error: "not_found" }, 404);
 
-  const body = (await c.req.json()) as NewCommunityBody;
+  const body = await safeJson<NewCommunityBody>(c.req);
   const parsed = parseTrackedCommunityInput(ownerId, body, existing);
   if ("error" in parsed) return c.json({ error: parsed.error }, 400);
 
@@ -378,9 +423,16 @@ productsRoute.post("/communities/tracked/:id/digests", async (c) => {
   const tracked = await getOwnedCommunity(c.env.DB, ownerId, c.req.param("id"));
   if (!tracked) return c.json({ error: "not_found" }, 404);
 
-  const body = (await c.req.json()) as NewDigestBody;
+  const body = await safeJson<NewDigestBody>(c.req);
   const summaryText = body.summaryText?.trim();
-  if (!summaryText) return c.json({ error: "missing_summary_text" }, 400);
+  if (!summaryText) {
+    const row = await generateCommunityDigest({
+      database: db(c.env.DB),
+      env: c.env,
+      tracked,
+    });
+    return c.json({ digest: toCommunityDigestSnapshot(row) }, 201);
+  }
   const promptUsed = body.promptUsed?.trim() || tracked.prompt || "";
   if (!promptUsed) return c.json({ error: "missing_prompt_used" }, 400);
 
@@ -576,6 +628,12 @@ async function getOwnedCommunity(d1: D1Database, ownerId: string, id: string) {
 
 function requireOwner(c: { req: { query(name: string): string | undefined; header(name: string): string | undefined } }) {
   return c.req.query("owner")?.trim() || c.req.header("x-high-signal-owner")?.trim() || "";
+}
+
+async function safeJson<T extends object>(request: { text(): Promise<string> }): Promise<T> {
+  const raw = await request.text();
+  if (!raw.trim()) return {} as T;
+  return JSON.parse(raw) as T;
 }
 
 function parseBrandConfigInput(

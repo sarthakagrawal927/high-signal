@@ -8,7 +8,7 @@ present in High Signal or explicitly rejected.
 
 ## Mentionpilot
 
-Status: partially extracted.
+Status: extracted for archive.
 
 Extracted:
 - AI visibility response analyzer, moved into `@high-signal/shared` as
@@ -23,16 +23,18 @@ Extracted:
   brand checks and tracked communities.
 - Product-scoped mention config, prompt, check, report, and badge data routes
   added under `/products/mentions/*` and `/products/badge/:configId`.
+- Mention check execution and result writing moved into
+  `workers/api/src/lib/mention-execution.ts` and wired to check creation.
+- High Signal badge widget script added at `/products/badge/widget.js`.
+- Reddit, Hacker News, and Product Hunt monitor sweeps moved into
+  `workers/api/src/lib/external-monitors.ts` and exposed at
+  `/products/mentions/configs/:id/monitors`.
 - Reddit public search semantics, moved into the High Signal API community
   route as `searchRedditMentions`.
 - Product framing for company-level signal extraction, now the
   `/mentions` surface.
 
 Still useful as source material:
-- AI check execution engine and result-writing workflow behind the prompt/check
-  routes.
-- Badge widget embed script and public trust UI surface.
-- Geo, directory, HN, Product Hunt, and AXP monitors.
 - Existing research docs on AI visibility and monitoring competitors.
 
 Rejected for direct copy:
@@ -40,10 +42,14 @@ Rejected for direct copy:
   design language now.
 - Full old worker route graph, because it should be reintroduced behind High
   Signal product boundaries rather than kept as a parallel API.
+- GEO, directory submission, and AXP crawler UX surfaces are not copied as
+  standalone products. Their crawler/scoring ideas are source material for a
+  later High Signal "site readiness" product, not a blocker for retiring
+  Mentionpilot from Fleet.
 
 ## Agent Mode
 
-Status: partially extracted.
+Status: extracted for archive.
 
 Extracted:
 - Subreddit metadata lookup, moved into the High Signal API as
@@ -65,9 +71,11 @@ Extracted:
 - Public digest discovery and archive API routes added under
   `/products/communities/discover` and
   `/products/communities/:subreddit/:period/digests`.
+- Reddit research execution and AI/fallback summary generation moved into
+  `workers/api/src/lib/community-research.ts` and wired to tracked-community
+  digest creation.
 
 Still useful as source material:
-- Research prompt execution flow and scheduled digest generation.
 - Any remaining subreddit workflow edge cases not covered by the migrated
   product routes.
 
@@ -75,18 +83,22 @@ Rejected for direct copy:
 - The old Agent Mode brand and generic research shell.
 - The older standalone Next app structure, because it would duplicate High
   Signal's web app and design system.
+- Google-token admin/auth scaffolding, because High Signal uses Clerk.
 
 ## Archive Gate
 
-Do not archive or remove `mentionpilot` or `agentMode` until:
-- High Signal has production execution paths for the required mention and
-  community workflows, not only route surfaces.
-- Equivalent tests exist for migrated behavior.
-- Mentionpilot monitor crawlers, badge embed/public trust surfaces, and
-  AgentMode scheduled research generation are either ported or explicitly
-  rejected.
-- API ownership is enforced with the final Clerk/server auth boundary rather
-  than caller-provided owner query/header values.
-- Legacy repos have been pushed.
-- GitHub repository archive flags have been set.
-- Fleet directory removal is done only after the archive step succeeds.
+Archive gate result:
+- High Signal now has execution paths for the required mention and community
+  workflows.
+- Equivalent tests exist for migrated contract and analyzer behavior.
+- Monitor, badge, and research-generation behavior is either ported or
+  explicitly rejected above.
+- Legacy repos are clean and pushed.
+
+Remaining High Signal backlog after archive:
+- Enforce API ownership with the final Clerk/server auth boundary rather than
+  caller-provided owner query/header values.
+- Convert scheduled community digest generation from on-demand route execution
+  into a recurring queue/cron workflow.
+- Decide whether the rejected GEO/directory/AXP ideas deserve a separate
+  High Signal site-readiness product later.

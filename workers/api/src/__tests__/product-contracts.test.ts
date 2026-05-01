@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { normalizeCommunitySummary, redditSourceLink } from "@high-signal/shared";
+import { analyzeMentionResponse } from "../lib/mention-execution";
 import { productDashboardSnapshot } from "../routes/products";
 
 describe("product workflow contracts", () => {
@@ -102,5 +103,29 @@ describe("product workflow contracts", () => {
     expect(dashboard.mentions.recentChecks[0]?.status).toBe("completed");
     expect(dashboard.communities.tracked[0]?.subreddit).toBe("LocalLLaMA");
     expect(dashboard.communities.latestDigests[0]?.summary?.keyTrend?.title).toBe("Provenance");
+  });
+
+  it("preserves Mentionpilot brand visibility analysis semantics", () => {
+    const result = analyzeMentionResponse({
+      text: [
+        "1. Competitor Cloud is reliable.",
+        "2. High Signal is a recommended monitoring product.",
+        "Read more at https://highsignal.test/case-study.",
+      ].join("\n"),
+      brandName: "High Signal",
+      brandAliases: ["HighSignal"],
+      brandUrl: "https://highsignal.test",
+      competitors: [{ name: "Competitor Cloud" }],
+    });
+
+    expect(result.brandMentioned).toBe(true);
+    expect(result.brandSentiment).toBe("positive");
+    expect(result.brandPosition).toBe(2);
+    expect(result.brandCited).toBe(true);
+    expect(result.competitorsMentioned[0]).toMatchObject({
+      name: "Competitor Cloud",
+      mentioned: true,
+      position: 1,
+    });
   });
 });
