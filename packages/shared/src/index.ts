@@ -26,3 +26,5 @@ export interface SignalCard {
   spilloverEntityIds: string[];
   bodyMd: string;
 }
+
+export * from "./mention-intelligence";

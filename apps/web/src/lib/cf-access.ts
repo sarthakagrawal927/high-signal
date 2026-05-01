@@ -35,8 +35,8 @@ function getJwks(teamDomain: string) {
 }
 
 export async function verifyAccess(req: Request): Promise<AccessClaims | null> {
-  const teamDomain = process.env.CF_ACCESS_TEAM_DOMAIN;
-  const aud = process.env.CF_ACCESS_AUD;
+  const teamDomain = process.env["CF_ACCESS_TEAM_DOMAIN"];
+  const aud = process.env["CF_ACCESS_AUD"];
   if (!teamDomain || !aud) return null; // not configured — caller decides
 
   const token =
@@ -49,10 +49,10 @@ export async function verifyAccess(req: Request): Promise<AccessClaims | null> {
       audience: aud,
       issuer: `https://${teamDomain}`,
     });
-    if (typeof payload.email !== "string" || typeof payload.sub !== "string") {
+    if (typeof payload["email"] !== "string" || typeof payload["sub"] !== "string") {
       return null;
     }
-    return { email: payload.email, sub: payload.sub };
+    return { email: payload["email"], sub: payload["sub"] };
   } catch {
     return null;
   }
@@ -70,7 +70,7 @@ function parseCookie(s: string): Record<string, string> {
   return out;
 }
 
-const ALLOWED_EMAILS = (process.env.ADMIN_ALLOWED_EMAILS ?? "")
+const ALLOWED_EMAILS = (process.env["ADMIN_ALLOWED_EMAILS"] ?? "")
   .split(",")
   .map((s) => s.trim().toLowerCase())
   .filter(Boolean);

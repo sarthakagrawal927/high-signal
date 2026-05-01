@@ -1,19 +1,24 @@
 # agents.md — high-signal
 
 ## Purpose
-**Public, evidence-backed, versioned signal log for AI infra / semiconductors.** Every signal cites sources, predicts direction with a confidence band, and is auto-scored for forward returns on a public hit-rate ledger. Research artifact first — product later, if at all.
+**High Signal is the umbrella product for extracting actionable signals from noisy public and semi-public information streams.** The current AI-infra / semiconductors signal log remains the first Market Intelligence collection, but it is no longer the whole product direction.
 
-Full product brief: `SPEC.md`. Active build plan: `plans/0001-research-artifact-first.md`.
+Full product brief: `SPEC.md`. Active top-level build plan: `plans/0004-platform-consolidation.md`. Market artifact plan: `plans/0001-research-artifact-first.md`.
 
 ## Locked decisions
-- **Wedge**: AI infra / semiconductors only
-- **Horizon**: weekly digest + on-event signal cards
-- **Audience**: retail-prosumer + sector analyst on Twitter / Substack (no paid product Y1)
-- **Output channels**: public web page + RSS + Twitter thread per signal + weekly Substack digest
+- **Umbrella brand**: High Signal
+- **Sub-products**: Mention Intelligence, Community Intelligence, Market Intelligence
+- **Migration sources**: Mention Intelligence from `/Users/sarthakagrawal/Desktop/Fleet/mentionpilot`; Community Intelligence from `/Users/sarthakagrawal/Desktop/Fleet/agentMode`
+- **First Market Intelligence wedge**: AI infra / semiconductors
+- **Market horizon**: weekly digest + on-event signal cards
+- **Market output channels**: public web page + RSS + Twitter thread per signal + weekly Substack digest
 - **Codename**: `high-signal` (rebrand TBD post-traction; collision with High Signal Labs / HQ)
 
 ## Considered and deferred
 - **Multi-collection engine for EverythingRated** (2026-04-26) — design archived at `plans/0003-multi-collection-for-everythingrated.md`. Not shipped; reopening trigger is in that file. Engine remains single-collection and AI-infra-only.
+
+## Consolidation rule
+Do not delete or archive `mentionpilot` or `agentMode` until the relevant features have been migrated into this repo and verified. Treat those repos as read-only migration sources. Do not copy entire directories wholesale; port the useful domain behavior into High Signal's app shell, schema, API, and ingest boundaries.
 
 ## Stack
 - **Web**: Next.js 16 (App Router, Turbopack) — `apps/web`
@@ -29,10 +34,11 @@ Full product brief: `SPEC.md`. Active build plan: `plans/0001-research-artifact-
 ## Planned repo structure
 ```
 apps/
-  web/                 # Next.js — signal feed, entity pages, hit-rate ledger, digest archive
+  web/                 # Next.js — High Signal app shell, sub-products, signal feed, review queue
 packages/
   db/                  # Drizzle schema (entities, events, signals, evidence, relationships, score_runs)
   shared/              # Types shared by web + workers
+  signal-engine/       # Add only when at least two sub-products share real extraction/scoring logic
 workers/
   api/                 # Hono — REST/RPC for web app + cron triggering Modal jobs
 python/

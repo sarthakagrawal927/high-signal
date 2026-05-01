@@ -29,5 +29,10 @@
     "ingest:preflight": "cd python/ingest && uv run python -m high_signal_ingest.preflight",
     "prepare": "husky"
   },
+  "pnpm": {
+    "overrides": {
+      "@cloudflare/workers-types": "4.20260425.1"
+    }
+  },
   "prettier": "@saas-maker/prettier-config"
 }

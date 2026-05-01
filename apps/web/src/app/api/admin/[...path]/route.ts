@@ -25,8 +25,11 @@ async function handle(req: Request, ctx: { params: Promise<{ path: string[] }> }
   const targetPath = `/admin/${path.join("/")}${u.search}`;
 
   const mod = await import("@opennextjs/cloudflare");
-  const cfctx = (mod as { getCloudflareContext?: () => { env?: Record<string, unknown> } })
-    .getCloudflareContext?.();
+  const cfctx = (
+    mod as unknown as {
+      getCloudflareContext?: (...args: unknown[]) => { env?: Record<string, unknown> };
+    }
+  ).getCloudflareContext?.();
   const api = cfctx?.env?.["API"] as { fetch?: typeof fetch } | undefined;
   const token = (cfctx?.env?.["ADMIN_TOKEN"] as string | undefined) ?? "";
 

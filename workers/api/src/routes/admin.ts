@@ -180,8 +180,8 @@ adminRoute.patch("/signals/:slug", async (c) => {
     supersedesSignalId?: string | null;
   };
   const updates: Record<string, unknown> = {};
-  if (body.reviewStatus) updates.reviewStatus = body.reviewStatus;
-  if ("supersedesSignalId" in body) updates.supersedesSignalId = body.supersedesSignalId;
+  if (body.reviewStatus) updates["reviewStatus"] = body.reviewStatus;
+  if ("supersedesSignalId" in body) updates["supersedesSignalId"] = body.supersedesSignalId;
   if (Object.keys(updates).length === 0) {
     return c.json({ error: "no_updates" }, 400);
   }

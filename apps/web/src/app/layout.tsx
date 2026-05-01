@@ -4,9 +4,9 @@ import { AnalyticsProvider } from "@/components/posthog-provider";
 import { SaaSMakerFeedback } from "@/components/saasmaker-feedback";
 
 export const metadata: Metadata = {
-  title: "High Signal — AI-infra signal log",
+  title: "High Signal — signal intelligence",
   description:
-    "Public, evidence-backed, versioned signal log for AI infra and semiconductors. Every signal is auto-scored on a public hit-rate ledger.",
+    "Signal intelligence for mentions, communities, and markets. Extract what matters from noisy public information streams.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

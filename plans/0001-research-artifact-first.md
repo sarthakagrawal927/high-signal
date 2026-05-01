@@ -1,6 +1,6 @@
 # Plan 0001 — Research-Artifact-First
 
-Status: active
+Status: superseded as top-level direction by `plans/0004-platform-consolidation.md`; still active as the first Market Intelligence collection plan
 Created: 2026-04-25
 Supersedes: `archive/0001-2026-04-25-saas-bootstrap.md` (SaaS-bootstrap framing — replaced after deciding to optimize for compounding research value over revenue)
 

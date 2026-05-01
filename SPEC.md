@@ -1,6 +1,8 @@
 # High Signal
 
-Research brief updated: 2026-04-05
+Research brief updated: 2026-05-01
+
+Current top-level direction: High Signal is the umbrella product for signal extraction. The prior AI-infra / semiconductors wedge remains the first **Market Intelligence** collection, not the whole product. See `plans/0004-platform-consolidation.md`.
 
 Signal intelligence for companies and sectors, driven by news, filings, docs, and related-entity shifts.
 
@@ -22,9 +24,12 @@ It is:
 
 ## Product Shape
 
-Track important changes around companies and sectors, then surface evidence-backed directional signals.
+Track important changes around companies, communities, and sectors, then surface evidence-backed directional signals.
 
 The system should ingest:
+- AI assistant responses
+- brand/company mentions
+- subreddit and forum discussion
 - news
 - earnings / filings
 - company docs and announcements
@@ -40,6 +45,8 @@ Then it should build relationships across:
 - products, launches, and features
 
 And output:
+- company visibility and share-of-voice signals
+- community pain, demand, and narrative signals
 - directional scenarios
 - sector pressure changes
 - related-company impact maps
@@ -57,6 +64,7 @@ And output:
 ## Core Output Objects
 
 - `Signal card`: what changed, why it matters, affected entities, confidence, sources
+- `Collection`: a tracked company, community set, market wedge, competitor set, or custom watchlist
 - `Entity page`: company, peer set, supplier/customer links, recent signals, score history
 - `Impact chain`: event -> direct impact -> second-order impact -> watchlist updates
 - `Scenario view`: base case, upside case, downside case, evidence for each
@@ -64,12 +72,16 @@ And output:
 
 ## Best First Wedge
 
-Start with one specific domain only, for example:
+The first Market Intelligence wedge starts with one specific domain:
 - AI infra / semiconductors
+
+Future collections can include:
 - Indian public markets
 - enterprise SaaS categories
+- a company/brand watchlist
+- a subreddit/community watchlist
 
-One market, one forecast horizon, one buyer.
+One collection, one signal contract, one user workflow at a time.
 
 ## Best First Buyer
 
@@ -83,9 +95,11 @@ The first buyer should care about:
 - understanding spillover effects
 - having evidence, not just a score
 
-## MVP
+## MVP Direction
 
-- one market or wedge only
+- one app shell under the High Signal brand
+- three product areas: Mention Intelligence, Community Intelligence, Market Intelligence
+- one migrated workflow at a time
 - one forecast horizon only
 - company + sector watchlists
 - entity graph showing related names

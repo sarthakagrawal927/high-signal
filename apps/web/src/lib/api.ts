@@ -1,6 +1,6 @@
 // Default to deployed prod API. Override at build time with NEXT_PUBLIC_API_BASE for local dev.
 const API_BASE =
-  process.env.NEXT_PUBLIC_API_BASE ?? "https://high-signal-api.sarthakagrawal927.workers.dev";
+  process.env["NEXT_PUBLIC_API_BASE"] ?? "https://high-signal-api.sarthakagrawal927.workers.dev";
 
 // Service binding when running inside the high-signal-web Worker (avoids CF
 // "fetch loop" guard that blocks workers.dev → workers.dev fetches in the same
@@ -9,8 +9,11 @@ async function getBinding(): Promise<{ fetch: typeof fetch } | null> {
   if (typeof process === "undefined") return null;
   try {
     const mod = await import("@opennextjs/cloudflare");
-    const ctx = (mod as { getCloudflareContext?: () => { env?: Record<string, unknown> } })
-      .getCloudflareContext?.();
+    const ctx = (
+      mod as unknown as {
+        getCloudflareContext?: (...args: unknown[]) => { env?: Record<string, unknown> };
+      }
+    ).getCloudflareContext?.();
     const api = ctx?.env?.["API"];
     if (api && typeof (api as { fetch?: unknown }).fetch === "function") {
       return api as { fetch: typeof fetch };
@@ -85,6 +88,32 @@ export interface RelationshipRow {
   verified: boolean;
 }
 
+export interface RedditCommunity {
+  name: string;
+  title: string;
+  description: string;
+  subscribers: number;
+  activeUsers: number | null;
+  createdAt: string;
+  nsfw: boolean;
+  url: string;
+}
+
+export interface RedditMention {
+  id: string;
+  title: string | null;
+  selftext: string | null;
+  author: string;
+  subreddit: string;
+  score: number;
+  comments: number;
+  url: string;
+  permalink: string;
+  type: "post" | "comment";
+  body: string | null;
+  createdAt: string;
+}
+
 export interface TrackBucket {
   signalType: string;
   hit: number;
@@ -110,8 +139,10 @@ export interface Facets {
   topEntities: { k: string; n: number }[];
 }
 
-function qs(o: Record<string, string | undefined>): string {
-  const e = Object.entries(o).filter(([, v]) => v != null && v !== "");
+function qs(o: SignalFilters): string {
+  const e = Object.entries(o)
+    .filter(([, v]) => v != null && v !== "")
+    .map(([k, v]) => [k, String(v)] as [string, string]);
   return e.length ? `?${new URLSearchParams(e as [string, string][]).toString()}` : "";
 }
 
@@ -157,4 +188,12 @@ export const api = {
     }>(`/sectors?days=${days}`),
   digestWeekly: () =>
     fetchJson<{ since: string; signals: SignalRow[] }>("/digest/weekly"),
+  redditCommunity: (subreddit: string) =>
+    fetchJson<{ community: RedditCommunity }>(
+      `/communities/reddit/${encodeURIComponent(subreddit)}`,
+    ),
+  redditMentions: (query: string, limit = 10) =>
+    fetchJson<{ mentions: RedditMention[]; total: number }>(
+      `/communities/reddit-mentions?${new URLSearchParams({ q: query, limit: String(limit) })}`,
+    ),
 };

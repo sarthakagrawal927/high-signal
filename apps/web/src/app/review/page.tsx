@@ -6,7 +6,7 @@ import { DirectionPill } from "@/components/atoms/DirectionPill";
 import { ConfidenceBadge } from "@/components/atoms/ConfidenceBadge";
 
 const API_BASE =
-  process.env.NEXT_PUBLIC_API_BASE ?? "https://high-signal-api.sarthakagrawal927.workers.dev";
+  process.env["NEXT_PUBLIC_API_BASE"] ?? "https://high-signal-api.sarthakagrawal927.workers.dev";
 
 type Status = "draft" | "published" | "corrected";
 

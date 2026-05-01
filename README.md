@@ -1,24 +1,30 @@
 # High Signal
 
-Public, evidence-backed, versioned signal log for **AI infra / semiconductors**. Every signal cites sources, predicts direction with a confidence band, gets auto-scored on a public hit-rate ledger.
+High Signal extracts actionable signals from noisy public and semi-public information streams, then explains why they matter and what should happen next.
 
-Research artifact first. Product later, if at all. The honesty is the moat.
+The product now has three intended sub-products:
 
-## What it does
+- **Mention Intelligence** — company, brand, competitor, and AI-visibility signals. Migration source: `/Users/sarthakagrawal/Desktop/Fleet/mentionpilot`.
+- **Community Intelligence** — subreddit/community demand, pain, narrative, and trend signals. Migration source: `/Users/sarthakagrawal/Desktop/Fleet/agentMode`.
+- **Market Intelligence** — evidence-backed company, sector, and market signals with entity graphs and hit-rate tracking. This repo's current AI-infra / semiconductors artifact becomes the first market collection.
+
+Active consolidation plan: `plans/0004-platform-consolidation.md`.
+
+## What it does today
 - Ingests SEC 8-Ks, IR pages, top semis news, Reddit, GitHub releases, hiring signals
 - Extracts events + entities + relationships
 - Predicts direction + 2nd-order spillover via supplier/customer/peer graph
 - Publishes signal cards + weekly digest
 - Auto-backtests every signal — public hit-rate ledger updated continuously
 
-## Why this wedge
+## Why the first market wedge still matters
 - Small entity graph (~150 names) — tractable solo
 - News-dense, retail-attentive, spillover-dominant alpha pattern (TSMC capex → ASML → HBM → cloud capex → power names)
 - Existing incumbents (AlphaSense, Brightwave, Daloopa) own enterprise research workflows; nobody ships a directed spillover graph + public hit-rate
 - Source layer is fully covered by OSS — no licensed feeds required for v0
 
 ## Status
-Scaffolded. Worker API + Next.js web + Python ingest + 274 entities + 175 relationships + 31 signal types + 168 sources all committed. Awaiting first ingest cycle.
+Scaffolded as the Market Intelligence artifact. Worker API + Next.js web + Python ingest + 274 entities + 175 relationships + 31 signal types + 168 sources all committed. Awaiting consolidation work for Mention Intelligence and Community Intelligence.
 
 ## Architecture
 ```
@@ -64,6 +70,7 @@ pnpm signals:sync:local
 
 ## Quick links
 - Spec: `SPEC.md`
+- Consolidation plan: `plans/0004-platform-consolidation.md`
 - Plan: `plans/0001-research-artifact-first.md`
 - Research: `research/market-and-oss.md`
 - Stack + conventions: `agents.md`

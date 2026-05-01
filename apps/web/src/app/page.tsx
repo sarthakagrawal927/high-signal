@@ -1,62 +1,48 @@
+import { HeroHeader, PageShell, ProductAreaGrid, RouteList } from "@/components/system/HighSignalUI";
+
 export default function HomePage() {
   return (
-    <main className="mx-auto max-w-4xl px-6 py-24">
-      <header className="border-b border-[var(--color-line)] pb-8">
-        <div className="flex items-baseline gap-3 font-mono text-xs uppercase tracking-[0.2em] text-[var(--color-muted)]">
-          <span className="size-1.5 rounded-full bg-[var(--color-accent)]" />
-          <span>v0 / pre-launch / ai-infra</span>
-        </div>
-        <h1 className="mt-4 text-5xl font-medium tracking-tight">High Signal</h1>
-        <p className="mt-4 max-w-2xl text-[var(--color-muted)]">
-          Public, evidence-backed, versioned signal log for AI infra and semiconductors. Every
-          signal cites sources, predicts direction with a confidence band, and is auto-scored on a
-          public hit-rate ledger.
-        </p>
-      </header>
+    <PageShell>
+      <HeroHeader eyebrow="v0 / pre-launch / signal intelligence" title="High Signal">
+        Extract actionable signals from noisy public and semi-public information streams. Mentions,
+        communities, and markets share one evidence-first signal layer.
+      </HeroHeader>
 
-      <section className="mt-12 grid grid-cols-2 gap-px border border-[var(--color-line)] bg-[var(--color-line)] sm:grid-cols-4">
-        {[
-          ["Signals", "0", "shipped"],
-          ["Hit rate", "—", "60d window"],
-          ["Entities", "37", "tracked"],
-          ["Sources", "0", "ingested"],
-        ].map(([k, v, sub]) => (
-          <div key={k} className="bg-[var(--color-bg)] p-5">
-            <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-[var(--color-muted)]">
-              {k}
-            </div>
-            <div className="nums mt-3 text-2xl font-medium">{v}</div>
-            <div className="mt-1 font-mono text-[10px] text-[var(--color-muted)]">{sub}</div>
-          </div>
-        ))}
-      </section>
+      <ProductAreaGrid
+        items={[
+          {
+            href: "/mentions",
+            title: "Mention Intelligence",
+            kicker: "company",
+            body: "Brand, competitor, AI visibility, citation, and share-of-voice signals.",
+          },
+          {
+            href: "/communities",
+            title: "Community Intelligence",
+            kicker: "subreddit",
+            body: "Community pain, demand, narrative, and product-opportunity signals.",
+          },
+          {
+            href: "/markets",
+            title: "Market Intelligence",
+            kicker: "entity graph",
+            body: "Evidence-backed company and sector signals with confidence and hit-rate tracking.",
+          },
+        ]}
+      />
 
-      <nav className="mt-12 flex flex-col divide-y divide-[var(--color-line)] border-y border-[var(--color-line)] font-mono text-sm">
-        {[
-          ["/signals", "signal feed", "events → primary entity → spillover"],
-          ["/track-record", "track record", "hit-rate by signal type, public + versioned"],
-          ["/entities", "entities", "ai-infra graph + relationship map"],
-          ["/digest", "weekly digest", "subscribe via rss or substack"],
-        ].map(([href, title, sub]) => (
-          <a
-            key={href}
-            href={href}
-            className="group flex items-center justify-between py-4 transition-colors hover:bg-white/[0.02]"
-          >
-            <span className="flex items-baseline gap-4">
-              <span className="text-[var(--color-muted)] group-hover:text-[var(--color-accent)]">
-                {href}
-              </span>
-              <span className="text-[var(--color-fg)]">{title}</span>
-            </span>
-            <span className="text-[var(--color-muted)]">{sub}</span>
-          </a>
-        ))}
-      </nav>
+      <RouteList
+        items={[
+          { href: "/signals", title: "signal feed", sub: "unified stream" },
+          { href: "/review", title: "review queue", sub: "human approval" },
+          { href: "/track-record", title: "track record", sub: "market signals" },
+          { href: "/digest", title: "weekly digest", sub: "rss + email-ready" },
+        ]}
+      />
 
       <footer className="mt-16 font-mono text-[11px] uppercase tracking-[0.18em] text-[var(--color-muted)]">
-        evidence-first / append-only / hit-rate from day one
+        evidence-first / source-linked / action-oriented
       </footer>
-    </main>
+    </PageShell>
   );
 }
