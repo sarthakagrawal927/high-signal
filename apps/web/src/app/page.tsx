@@ -34,6 +34,7 @@ export default function HomePage() {
       <RouteList
         items={[
           { href: "/signals", title: "signal feed", sub: "unified stream" },
+          { href: "/dashboard", title: "signal dashboard", sub: "premium workspace" },
           { href: "/review", title: "review queue", sub: "human approval" },
           { href: "/track-record", title: "track record", sub: "market signals" },
           { href: "/digest", title: "weekly digest", sub: "rss + email-ready" },

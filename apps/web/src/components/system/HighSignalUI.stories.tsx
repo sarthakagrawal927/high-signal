@@ -1,8 +1,13 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
 import {
   BackLink,
+  CommandButton,
+  FeedList,
+  Field,
   HeroHeader,
+  MetricGrid,
   PageShell,
+  Panel,
   ProductAreaGrid,
   RouteList,
   SectionHeader,
@@ -79,6 +84,93 @@ export const SubProductPage: Story = {
           { label: "First migration", value: "tracked subreddits", sub: "source-linked summaries" },
         ]}
       />
+    </PageShell>
+  ),
+};
+
+export const WorkSurface: Story = {
+  render: () => (
+    <PageShell>
+      <BackLink />
+      <SectionHeader eyebrow="company signal layer" title="Mention Intelligence">
+        Compact operational surface for premium product workflows.
+      </SectionHeader>
+      <section className="mt-10 grid gap-8 md:grid-cols-[0.9fr_1.1fr]">
+        <Panel eyebrow="visibility analyzer">
+          <form>
+            <Field label="Brand" name="brand" defaultValue="High Signal" />
+            <Field label="Brand URL" name="url" defaultValue="https://highsignalsuite.com" />
+            <Field
+              label="Model response"
+              name="text"
+              defaultValue="1. High Signal is a reliable system for extracting market and community signals."
+              multiline
+            />
+            <CommandButton>analyze</CommandButton>
+          </form>
+        </Panel>
+        <Panel eyebrow="analysis result">
+          <MetricGrid
+            items={[
+              { label: "mentioned", value: "yes" },
+              { label: "sentiment", value: "positive" },
+              { label: "position", value: "1" },
+              { label: "cited", value: "yes" },
+            ]}
+          />
+        </Panel>
+      </section>
+      <FeedList
+        eyebrow="source-linked feed"
+        empty="No sources found."
+        items={[
+          {
+            href: "https://reddit.com",
+            kicker: "r/LocalLLaMA / post / score 128",
+            title: "Teams are looking for better AI visibility monitoring",
+            body: "Discussion indicates demand for source-linked recommendations rather than dashboards.",
+          },
+        ]}
+      />
+    </PageShell>
+  ),
+};
+
+export const DashboardSurface: Story = {
+  render: () => (
+    <PageShell>
+      <BackLink />
+      <SectionHeader eyebrow="premium command surface" title="Signal Dashboard">
+        Unified workspace for company, community, and market signal workflows.
+      </SectionHeader>
+      <MetricGrid
+        items={[
+          { label: "brand", value: "High Signal" },
+          { label: "platforms", value: "3" },
+          { label: "communities", value: "2" },
+          { label: "markets", value: "live" },
+        ]}
+      />
+      <section className="mt-10 grid gap-8 md:grid-cols-2">
+        <Panel eyebrow="mention intelligence" title="High Signal">
+          <p className="mt-3 text-sm leading-6 text-[var(--color-muted)]">
+            Track AI visibility, citations, competitor mentions, and prompt-level response quality.
+          </p>
+        </Panel>
+        <Panel eyebrow="community intelligence" title="Tracked subreddits">
+          <a
+            className="mt-5 block border-y border-[var(--color-line)] py-4 hover:text-[var(--color-accent)]"
+            href="/communities?subreddit=LocalLLaMA"
+          >
+            <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-[var(--color-muted)]">
+              r/LocalLLaMA / week
+            </div>
+            <p className="mt-2 text-sm leading-6 text-[var(--color-muted)]">
+              Source-linked digest workflow from Agent Mode.
+            </p>
+          </a>
+        </Panel>
+      </section>
     </PageShell>
   ),
 };

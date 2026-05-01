@@ -13,6 +13,10 @@ Status: partially extracted.
 Extracted:
 - AI visibility response analyzer, moved into `@high-signal/shared` as
   `analyzeMentionVisibility`.
+- Brand config, prompt, check, and result contracts mapped into
+  `@high-signal/shared` as High Signal product contracts.
+- First authenticated dashboard destination surface added at `/dashboard` for
+  brand checks and tracked communities.
 - Reddit public search semantics, moved into the High Signal API community
   route as `searchRedditMentions`.
 - Product framing for company-level signal extraction, now the
@@ -40,9 +44,13 @@ Extracted:
 - Community Intelligence product framing, now the `/communities` surface.
 - Source-linked Reddit mention path, combined with Mentionpilot's Reddit search
   implementation.
+- Source-linked summary contract (`keyTrend`, `notableDiscussions`,
+  `keyAction`, and `sourceId`) moved into `@high-signal/shared` and surfaced on
+  `/communities`.
+- Tracked community contract moved into `@high-signal/shared` and represented
+  on `/dashboard`.
 
 Still useful as source material:
-- Structured digest parsing and source-id linking.
 - Tracked subreddit workflow.
 - Research prompt storage.
 - Discover and subreddit archive pages.

@@ -1,4 +1,13 @@
-import { BackLink, PageShell, SectionHeader, StatGrid } from "@/components/system/HighSignalUI";
+import {
+  BackLink,
+  CommandButton,
+  Field,
+  MetricGrid,
+  PageShell,
+  Panel,
+  SectionHeader,
+  StatGrid,
+} from "@/components/system/HighSignalUI";
 import { analyzeMentionVisibility } from "@high-signal/shared";
 
 export const metadata = { title: "Mention Intelligence — High Signal" };
@@ -39,65 +48,24 @@ export default async function MentionsPage({
       />
 
       <section className="mt-10 grid gap-8 md:grid-cols-[0.9fr_1.1fr]">
-        <form className="border border-[var(--color-line)] p-5">
-          <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-[var(--color-accent)]">
-            visibility analyzer
-          </div>
-          <label className="mt-5 block text-sm text-[var(--color-muted)]" htmlFor="brand">
-            Brand
-          </label>
-          <input
-            id="brand"
-            name="brand"
-            defaultValue={brandName}
-            className="mt-2 w-full border border-[var(--color-line)] bg-transparent px-3 py-2 text-sm outline-none focus:border-[var(--color-accent)]"
-          />
-          <label className="mt-5 block text-sm text-[var(--color-muted)]" htmlFor="url">
-            Brand URL
-          </label>
-          <input
-            id="url"
-            name="url"
-            defaultValue={brandUrl}
-            className="mt-2 w-full border border-[var(--color-line)] bg-transparent px-3 py-2 text-sm outline-none focus:border-[var(--color-accent)]"
-          />
-          <label className="mt-5 block text-sm text-[var(--color-muted)]" htmlFor="text">
-            Model response
-          </label>
-          <textarea
-            id="text"
-            name="text"
-            defaultValue={text}
-            rows={8}
-            className="mt-2 w-full resize-none border border-[var(--color-line)] bg-transparent px-3 py-2 text-sm leading-6 outline-none focus:border-[var(--color-accent)]"
-          />
-          <button
-            className="mt-5 w-full border border-[var(--color-line)] px-4 py-2 font-mono text-xs uppercase tracking-[0.18em] text-[var(--color-fg)] hover:border-[var(--color-accent)] hover:text-[var(--color-accent)]"
-            type="submit"
-          >
-            analyze
-          </button>
-        </form>
+        <Panel eyebrow="visibility analyzer">
+          <form>
+            <Field label="Brand" name="brand" defaultValue={brandName} />
+            <Field label="Brand URL" name="url" defaultValue={brandUrl} />
+            <Field label="Model response" name="text" defaultValue={text} multiline />
+            <CommandButton>analyze</CommandButton>
+          </form>
+        </Panel>
 
-        <div className="border border-[var(--color-line)] p-5">
-          <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-[var(--color-accent)]">
-            extracted mentionpilot logic
-          </div>
-          <div className="mt-6 grid grid-cols-2 gap-px bg-[var(--color-line)] text-sm">
-            {[
+        <Panel eyebrow="extracted mentionpilot logic">
+          <MetricGrid
+            items={[
               ["mentioned", analysis.brandMentioned ? "yes" : "no"],
               ["sentiment", analysis.brandSentiment ?? "none"],
               ["position", analysis.brandPosition?.toString() ?? "none"],
               ["brand cited", analysis.brandCited ? "yes" : "no"],
-            ].map(([label, value]) => (
-              <div key={label} className="bg-[var(--color-bg)] p-4">
-                <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-[var(--color-muted)]">
-                  {label}
-                </div>
-                <div className="mt-3 text-xl">{value}</div>
-              </div>
-            ))}
-          </div>
+            ].map(([label, value]) => ({ label, value }))}
+          />
           <div className="mt-6 border-t border-[var(--color-line)] pt-5">
             <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-[var(--color-muted)]">
               competitors
@@ -111,7 +79,7 @@ export default async function MentionsPage({
               ))}
             </div>
           </div>
-        </div>
+        </Panel>
       </section>
     </PageShell>
   );

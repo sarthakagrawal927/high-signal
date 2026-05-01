@@ -19,6 +19,18 @@ export interface NavItem {
   sub: string;
 }
 
+export interface MetricItem {
+  label: string;
+  value: string;
+}
+
+export interface FeedItem {
+  href: string;
+  kicker: string;
+  title: string;
+  body?: string | null;
+}
+
 export function PageShell({
   max = "max-w-5xl",
   children,
@@ -142,5 +154,118 @@ export function RouteList({ items }: { items: NavItem[] }) {
         </a>
       ))}
     </nav>
+  );
+}
+
+export function Panel({
+  eyebrow,
+  title,
+  children,
+}: {
+  eyebrow: string;
+  title?: ReactNode;
+  children: ReactNode;
+}) {
+  return (
+    <section className="border border-[var(--color-line)] p-5">
+      <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-[var(--color-accent)]">
+        {eyebrow}
+      </div>
+      {title ? <div className="mt-5 text-2xl font-medium tracking-tight">{title}</div> : null}
+      {children}
+    </section>
+  );
+}
+
+export function Field({
+  label,
+  name,
+  defaultValue,
+  multiline = false,
+}: {
+  label: string;
+  name: string;
+  defaultValue: string;
+  multiline?: boolean;
+}) {
+  const id = name;
+  return (
+    <label className="mt-5 block text-sm text-[var(--color-muted)]" htmlFor={id}>
+      {label}
+      {multiline ? (
+        <textarea
+          id={id}
+          name={name}
+          defaultValue={defaultValue}
+          rows={8}
+          className="mt-2 block w-full resize-none border border-[var(--color-line)] bg-transparent px-3 py-2 text-sm leading-6 text-[var(--color-fg)] outline-none focus:border-[var(--color-accent)]"
+        />
+      ) : (
+        <input
+          id={id}
+          name={name}
+          defaultValue={defaultValue}
+          className="mt-2 block w-full border border-[var(--color-line)] bg-transparent px-3 py-2 text-sm text-[var(--color-fg)] outline-none focus:border-[var(--color-accent)]"
+        />
+      )}
+    </label>
+  );
+}
+
+export function CommandButton({ children }: { children: ReactNode }) {
+  return (
+    <button
+      className="mt-5 w-full border border-[var(--color-line)] px-4 py-2 font-mono text-xs uppercase tracking-[0.18em] text-[var(--color-fg)] hover:border-[var(--color-accent)] hover:text-[var(--color-accent)]"
+      type="submit"
+    >
+      {children}
+    </button>
+  );
+}
+
+export function MetricGrid({ items }: { items: MetricItem[] }) {
+  return (
+    <div className="mt-6 grid grid-cols-2 gap-px bg-[var(--color-line)] text-sm md:grid-cols-4">
+      {items.map((item) => (
+        <div key={item.label} className="bg-[var(--color-bg)] p-4">
+          <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-[var(--color-muted)]">
+            {item.label}
+          </div>
+          <div className="mt-3 text-xl">{item.value}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+export function FeedList({
+  eyebrow,
+  empty,
+  items,
+}: {
+  eyebrow: string;
+  empty: string;
+  items: FeedItem[];
+}) {
+  return (
+    <section className="mt-10 border-y border-[var(--color-line)]">
+      <div className="py-4 font-mono text-[10px] uppercase tracking-[0.18em] text-[var(--color-accent)]">
+        {eyebrow}
+      </div>
+      <div className="divide-y divide-[var(--color-line)]">
+        {items.map((item) => (
+          <a key={item.href} href={item.href} className="block py-5 hover:text-[var(--color-accent)]">
+            <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-[var(--color-muted)]">
+              {item.kicker}
+            </div>
+            <div className="mt-2 text-lg">{item.title}</div>
+            {item.body ? (
+              <p className="mt-2 text-sm leading-6 text-[var(--color-muted)]">{item.body}</p>
+            ) : null}
+          </a>
+        ))}
+        {items.length === 0 ? <p className="py-5 text-sm text-[var(--color-muted)]">{empty}</p> : null}
+      </div>
+    </section>
   );
 }
