@@ -6,8 +6,8 @@
   "types": "src/index.ts",
   "scripts": {
     "generate": "drizzle-kit generate",
-    "migrate:local": "wrangler d1 migrations apply high-signal-db --local",
-    "migrate:remote": "wrangler d1 migrations apply high-signal-db --remote",
+    "migrate:local": "wrangler d1 migrations apply high-signal-db --local --config ../../workers/api/wrangler.toml",
+    "migrate:remote": "wrangler d1 migrations apply high-signal-db --remote --config ../../workers/api/wrangler.toml",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
