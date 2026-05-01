@@ -21,14 +21,17 @@ Extracted:
   render persisted migration objects behind the High Signal boundary.
 - First authenticated dashboard destination surface added at `/dashboard` for
   brand checks and tracked communities.
+- Product-scoped mention config, prompt, check, report, and badge data routes
+  added under `/products/mentions/*` and `/products/badge/:configId`.
 - Reddit public search semantics, moved into the High Signal API community
   route as `searchRedditMentions`.
 - Product framing for company-level signal extraction, now the
   `/mentions` surface.
 
 Still useful as source material:
-- Prompt/config/check CRUD flows and report generation routes.
-- Badge widget and public trust surface.
+- AI check execution engine and result-writing workflow behind the prompt/check
+  routes.
+- Badge widget embed script and public trust UI surface.
 - Geo, directory, HN, Product Hunt, and AXP monitors.
 - Existing research docs on AI visibility and monitoring competitors.
 
@@ -55,11 +58,18 @@ Extracted:
   on `/dashboard`.
 - Tracked community and digest snapshot persistence moved into High Signal D1
   tables and exposed through `/products/dashboard`.
+- Product-scoped tracked community and digest write routes added under
+  `/products/communities/tracked/*`.
+- Discover and subreddit archive pages ported into High Signal at `/discover`
+  and `/communities/[subreddit]/[period]`.
+- Public digest discovery and archive API routes added under
+  `/products/communities/discover` and
+  `/products/communities/:subreddit/:period/digests`.
 
 Still useful as source material:
-- Tracked subreddit create/update workflow.
-- Research prompt execution flow.
-- Discover and subreddit archive pages.
+- Research prompt execution flow and scheduled digest generation.
+- Any remaining subreddit workflow edge cases not covered by the migrated
+  product routes.
 
 Rejected for direct copy:
 - The old Agent Mode brand and generic research shell.
@@ -69,9 +79,14 @@ Rejected for direct copy:
 ## Archive Gate
 
 Do not archive or remove `mentionpilot` or `agentMode` until:
-- High Signal has production routes for the required mention and community
-  workflows.
+- High Signal has production execution paths for the required mention and
+  community workflows, not only route surfaces.
 - Equivalent tests exist for migrated behavior.
+- Mentionpilot monitor crawlers, badge embed/public trust surfaces, and
+  AgentMode scheduled research generation are either ported or explicitly
+  rejected.
+- API ownership is enforced with the final Clerk/server auth boundary rather
+  than caller-provided owner query/header values.
 - Legacy repos have been pushed.
 - GitHub repository archive flags have been set.
 - Fleet directory removal is done only after the archive step succeeds.

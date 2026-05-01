@@ -1,7 +1,7 @@
 // Default to deployed prod API. Override at build time with NEXT_PUBLIC_API_BASE for local dev.
-import type { ProductDashboardSnapshot } from "@high-signal/shared";
+import type { CommunityDigestSnapshot, ProductDashboardSnapshot } from "@high-signal/shared";
 
-export type { ProductDashboardSnapshot } from "@high-signal/shared";
+export type { CommunityDigestSnapshot, ProductDashboardSnapshot } from "@high-signal/shared";
 
 const API_BASE =
   process.env["NEXT_PUBLIC_API_BASE"] ?? "https://high-signal-api.sarthakagrawal927.workers.dev";
@@ -203,5 +203,13 @@ export const api = {
   productDashboard: (ownerId: string) =>
     fetchJson<ProductDashboardSnapshot>(
       `/products/dashboard?${new URLSearchParams({ owner: ownerId })}`,
+    ),
+  productCommunityDiscover: (period: "day" | "week" | "month" = "week") =>
+    fetchJson<{ items: CommunityDigestSnapshot[] }>(
+      `/products/communities/discover?${new URLSearchParams({ period })}`,
+    ),
+  productCommunityDigests: (subreddit: string, period: "day" | "week" | "month" = "week") =>
+    fetchJson<{ digests: CommunityDigestSnapshot[] }>(
+      `/products/communities/${encodeURIComponent(subreddit)}/${period}/digests`,
     ),
 };

@@ -1,10 +1,12 @@
 import { Hono } from "hono";
-import { desc, eq } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
 import { db, schema } from "../db";
 import { normalizeCommunitySummary } from "@high-signal/shared";
 import type {
   AIPlatform,
+  CompetitorProfile,
   CommunityDigestSnapshot,
+  CommunitySummary,
   MentionBrandConfig,
   MentionCheck,
   MentionPrompt,
@@ -13,6 +15,31 @@ import type {
 } from "@high-signal/shared";
 
 type Env = { DB: D1Database };
+type NewConfigBody = Partial<{
+  brandName: string;
+  brandAliases: string[];
+  brandUrl: string | null;
+  competitors: CompetitorProfile[];
+  platforms: AIPlatform[];
+  aiEndpointUrl: string | null;
+  aiModel: string | null;
+  checkSchedule: "daily" | "weekly" | null;
+  badgeEnabled: boolean;
+}>;
+type NewPromptBody = Partial<{ promptText: string; category: string | null }>;
+type NewCommunityBody = Partial<{
+  subreddit: string;
+  prompt: string | null;
+  period: "day" | "week" | "month";
+  isPublic: boolean;
+}>;
+type NewDigestBody = Partial<{
+  summaryText: string;
+  summary: CommunitySummary | null;
+  promptUsed: string;
+  sourceCount: number;
+  snapshotDate: string;
+}>;
 
 export const productsRoute = new Hono<{ Bindings: Env }>();
 
@@ -64,6 +91,365 @@ productsRoute.get("/dashboard", async (c) => {
       latestDigests,
     }),
   );
+});
+
+productsRoute.get("/mentions/configs", async (c) => {
+  const ownerId = requireOwner(c);
+  if (!ownerId) return c.json({ error: "missing_owner" }, 400);
+
+  const rows = await db(c.env.DB)
+    .select()
+    .from(schema.mentionBrandConfigs)
+    .where(eq(schema.mentionBrandConfigs.ownerId, ownerId))
+    .orderBy(desc(schema.mentionBrandConfigs.updatedAt));
+
+  return c.json({ configs: rows.map(toMentionBrandConfig) });
+});
+
+productsRoute.post("/mentions/configs", async (c) => {
+  const ownerId = requireOwner(c);
+  if (!ownerId) return c.json({ error: "missing_owner" }, 400);
+
+  const body = (await c.req.json()) as NewConfigBody;
+  const parsed = parseBrandConfigInput(ownerId, body);
+  if ("error" in parsed) return c.json({ error: parsed.error }, 400);
+
+  const [row] = await db(c.env.DB)
+    .insert(schema.mentionBrandConfigs)
+    .values(parsed.values)
+    .returning();
+
+  return c.json({ config: toMentionBrandConfig(row) }, 201);
+});
+
+productsRoute.patch("/mentions/configs/:id", async (c) => {
+  const ownerId = requireOwner(c);
+  if (!ownerId) return c.json({ error: "missing_owner" }, 400);
+
+  const existing = await getOwnedConfig(c.env.DB, ownerId, c.req.param("id"));
+  if (!existing) return c.json({ error: "not_found" }, 404);
+
+  const body = (await c.req.json()) as NewConfigBody;
+  const parsed = parseBrandConfigInput(ownerId, body, existing);
+  if ("error" in parsed) return c.json({ error: parsed.error }, 400);
+
+  const [row] = await db(c.env.DB)
+    .update(schema.mentionBrandConfigs)
+    .set({ ...parsed.values, id: existing.id, ownerId, updatedAt: new Date() })
+    .where(eq(schema.mentionBrandConfigs.id, existing.id))
+    .returning();
+
+  return c.json({ config: toMentionBrandConfig(row) });
+});
+
+productsRoute.delete("/mentions/configs/:id", async (c) => {
+  const ownerId = requireOwner(c);
+  if (!ownerId) return c.json({ error: "missing_owner" }, 400);
+  const existing = await getOwnedConfig(c.env.DB, ownerId, c.req.param("id"));
+  if (!existing) return c.json({ error: "not_found" }, 404);
+
+  const database = db(c.env.DB);
+  await database
+    .delete(schema.mentionResults)
+    .where(eq(schema.mentionResults.configId, existing.id));
+  await database.delete(schema.mentionChecks).where(eq(schema.mentionChecks.configId, existing.id));
+  await database
+    .delete(schema.mentionPrompts)
+    .where(eq(schema.mentionPrompts.configId, existing.id));
+  await database
+    .delete(schema.mentionBrandConfigs)
+    .where(eq(schema.mentionBrandConfigs.id, existing.id));
+  return c.json({ ok: true });
+});
+
+productsRoute.get("/mentions/configs/:id/prompts", async (c) => {
+  const ownerId = requireOwner(c);
+  if (!ownerId) return c.json({ error: "missing_owner" }, 400);
+  const config = await getOwnedConfig(c.env.DB, ownerId, c.req.param("id"));
+  if (!config) return c.json({ error: "not_found" }, 404);
+
+  const rows = await db(c.env.DB)
+    .select()
+    .from(schema.mentionPrompts)
+    .where(eq(schema.mentionPrompts.configId, config.id))
+    .orderBy(desc(schema.mentionPrompts.createdAt));
+
+  return c.json({ prompts: rows.map(toMentionPrompt) });
+});
+
+productsRoute.post("/mentions/configs/:id/prompts", async (c) => {
+  const ownerId = requireOwner(c);
+  if (!ownerId) return c.json({ error: "missing_owner" }, 400);
+  const config = await getOwnedConfig(c.env.DB, ownerId, c.req.param("id"));
+  if (!config) return c.json({ error: "not_found" }, 404);
+
+  const body = (await c.req.json()) as NewPromptBody;
+  const promptText = body.promptText?.trim();
+  if (!promptText) return c.json({ error: "missing_prompt_text" }, 400);
+
+  const [row] = await db(c.env.DB)
+    .insert(schema.mentionPrompts)
+    .values({
+      id: crypto.randomUUID(),
+      configId: config.id,
+      ownerId,
+      promptText,
+      category: body.category?.trim() || null,
+      createdAt: new Date(),
+    })
+    .returning();
+
+  return c.json({ prompt: toMentionPrompt(row) }, 201);
+});
+
+productsRoute.delete("/mentions/prompts/:id", async (c) => {
+  const ownerId = requireOwner(c);
+  if (!ownerId) return c.json({ error: "missing_owner" }, 400);
+
+  const [prompt] = await db(c.env.DB)
+    .select()
+    .from(schema.mentionPrompts)
+    .where(and(eq(schema.mentionPrompts.ownerId, ownerId), eq(schema.mentionPrompts.id, c.req.param("id"))))
+    .limit(1);
+  if (!prompt) return c.json({ error: "not_found" }, 404);
+
+  await db(c.env.DB).delete(schema.mentionPrompts).where(eq(schema.mentionPrompts.id, prompt.id));
+  return c.json({ ok: true });
+});
+
+productsRoute.get("/mentions/configs/:id/checks", async (c) => {
+  const ownerId = requireOwner(c);
+  if (!ownerId) return c.json({ error: "missing_owner" }, 400);
+  const config = await getOwnedConfig(c.env.DB, ownerId, c.req.param("id"));
+  if (!config) return c.json({ error: "not_found" }, 404);
+
+  const rows = await db(c.env.DB)
+    .select()
+    .from(schema.mentionChecks)
+    .where(eq(schema.mentionChecks.configId, config.id))
+    .orderBy(desc(schema.mentionChecks.createdAt))
+    .limit(25);
+
+  return c.json({ checks: rows.map(toMentionCheck) });
+});
+
+productsRoute.post("/mentions/configs/:id/checks", async (c) => {
+  const ownerId = requireOwner(c);
+  if (!ownerId) return c.json({ error: "missing_owner" }, 400);
+  const config = await getOwnedConfig(c.env.DB, ownerId, c.req.param("id"));
+  if (!config) return c.json({ error: "not_found" }, 404);
+
+  const prompts = await db(c.env.DB)
+    .select()
+    .from(schema.mentionPrompts)
+    .where(eq(schema.mentionPrompts.configId, config.id));
+  if (prompts.length === 0) return c.json({ error: "missing_prompts" }, 400);
+
+  const [row] = await db(c.env.DB)
+    .insert(schema.mentionChecks)
+    .values({
+      id: crypto.randomUUID(),
+      configId: config.id,
+      ownerId,
+      status: "running",
+      totalQueries: prompts.length,
+      completedQueries: 0,
+      createdAt: new Date(),
+    })
+    .returning();
+
+  return c.json({ check: toMentionCheck(row) }, 201);
+});
+
+productsRoute.get("/mentions/configs/:id/report", async (c) => {
+  const ownerId = requireOwner(c);
+  if (!ownerId) return c.json({ error: "missing_owner" }, 400);
+  const config = await getOwnedConfig(c.env.DB, ownerId, c.req.param("id"));
+  if (!config) return c.json({ error: "not_found" }, 404);
+
+  const [prompts, checks] = await Promise.all([
+    db(c.env.DB).select().from(schema.mentionPrompts).where(eq(schema.mentionPrompts.configId, config.id)),
+    db(c.env.DB)
+      .select()
+      .from(schema.mentionChecks)
+      .where(eq(schema.mentionChecks.configId, config.id))
+      .orderBy(desc(schema.mentionChecks.createdAt))
+      .limit(5),
+  ]);
+
+  return c.json({
+    report: {
+      generatedAt: new Date().toISOString(),
+      brand: toMentionBrandConfig(config),
+      summary: {
+        totalPrompts: prompts.length,
+        totalChecks: checks.length,
+        latestMentionRate: checks[0]?.brandMentionRate ?? null,
+      },
+      recentChecks: checks.map(toMentionCheck),
+    },
+  });
+});
+
+productsRoute.get("/badge/:configId", async (c) => {
+  const config = await getConfig(c.env.DB, c.req.param("configId"));
+  if (!config) return c.json({ error: "not_found" }, 404);
+  if (!config.badgeEnabled) return c.json({ error: "badge_disabled" }, 403);
+
+  const [latestCheck] = await db(c.env.DB)
+    .select()
+    .from(schema.mentionChecks)
+    .where(and(eq(schema.mentionChecks.configId, config.id), eq(schema.mentionChecks.status, "completed")))
+    .orderBy(desc(schema.mentionChecks.createdAt))
+    .limit(1);
+  if (!latestCheck) return c.json({ error: "no_completed_checks" }, 404);
+
+  const results = await db(c.env.DB)
+    .select()
+    .from(schema.mentionResults)
+    .where(eq(schema.mentionResults.checkId, latestCheck.id));
+  if (results.length === 0) return c.json({ error: "no_results" }, 404);
+
+  const badge = visibilityBadge(toMentionBrandConfig(config), toMentionCheck(latestCheck), results);
+  return c.json(badge, 200, {
+    "Cache-Control": "public, max-age=3600, s-maxage=3600",
+    "Access-Control-Allow-Origin": "*",
+  });
+});
+
+productsRoute.get("/communities/tracked", async (c) => {
+  const ownerId = requireOwner(c);
+  if (!ownerId) return c.json({ error: "missing_owner" }, 400);
+  const rows = await db(c.env.DB)
+    .select()
+    .from(schema.trackedCommunities)
+    .where(eq(schema.trackedCommunities.ownerId, ownerId))
+    .orderBy(desc(schema.trackedCommunities.updatedAt));
+
+  return c.json({ communities: rows.map(toTrackedCommunity) });
+});
+
+productsRoute.post("/communities/tracked", async (c) => {
+  const ownerId = requireOwner(c);
+  if (!ownerId) return c.json({ error: "missing_owner" }, 400);
+  const body = (await c.req.json()) as NewCommunityBody;
+  const parsed = parseTrackedCommunityInput(ownerId, body);
+  if ("error" in parsed) return c.json({ error: parsed.error }, 400);
+
+  const [row] = await db(c.env.DB).insert(schema.trackedCommunities).values(parsed.values).returning();
+  return c.json({ community: toTrackedCommunity(row) }, 201);
+});
+
+productsRoute.patch("/communities/tracked/:id", async (c) => {
+  const ownerId = requireOwner(c);
+  if (!ownerId) return c.json({ error: "missing_owner" }, 400);
+  const existing = await getOwnedCommunity(c.env.DB, ownerId, c.req.param("id"));
+  if (!existing) return c.json({ error: "not_found" }, 404);
+
+  const body = (await c.req.json()) as NewCommunityBody;
+  const parsed = parseTrackedCommunityInput(ownerId, body, existing);
+  if ("error" in parsed) return c.json({ error: parsed.error }, 400);
+
+  const [row] = await db(c.env.DB)
+    .update(schema.trackedCommunities)
+    .set({ ...parsed.values, id: existing.id, ownerId, updatedAt: new Date() })
+    .where(eq(schema.trackedCommunities.id, existing.id))
+    .returning();
+  return c.json({ community: toTrackedCommunity(row) });
+});
+
+productsRoute.delete("/communities/tracked/:id", async (c) => {
+  const ownerId = requireOwner(c);
+  if (!ownerId) return c.json({ error: "missing_owner" }, 400);
+  const existing = await getOwnedCommunity(c.env.DB, ownerId, c.req.param("id"));
+  if (!existing) return c.json({ error: "not_found" }, 404);
+
+  const database = db(c.env.DB);
+  await database
+    .delete(schema.communityDigestSnapshots)
+    .where(eq(schema.communityDigestSnapshots.trackedCommunityId, existing.id));
+  await database.delete(schema.trackedCommunities).where(eq(schema.trackedCommunities.id, existing.id));
+  return c.json({ ok: true });
+});
+
+productsRoute.post("/communities/tracked/:id/digests", async (c) => {
+  const ownerId = requireOwner(c);
+  if (!ownerId) return c.json({ error: "missing_owner" }, 400);
+  const tracked = await getOwnedCommunity(c.env.DB, ownerId, c.req.param("id"));
+  if (!tracked) return c.json({ error: "not_found" }, 404);
+
+  const body = (await c.req.json()) as NewDigestBody;
+  const summaryText = body.summaryText?.trim();
+  if (!summaryText) return c.json({ error: "missing_summary_text" }, 400);
+  const promptUsed = body.promptUsed?.trim() || tracked.prompt || "";
+  if (!promptUsed) return c.json({ error: "missing_prompt_used" }, 400);
+
+  const [row] = await db(c.env.DB)
+    .insert(schema.communityDigestSnapshots)
+    .values({
+      id: crypto.randomUUID(),
+      trackedCommunityId: tracked.id,
+      ownerId,
+      subreddit: tracked.subreddit,
+      period: tracked.period,
+      snapshotDate: body.snapshotDate ? new Date(body.snapshotDate) : new Date(),
+      summaryText,
+      summary: body.summary ?? null,
+      promptUsed,
+      sourceCount: Math.max(0, Math.floor(body.sourceCount ?? 0)),
+      createdAt: new Date(),
+    })
+    .returning();
+
+  return c.json({ digest: toCommunityDigestSnapshot(row) }, 201);
+});
+
+productsRoute.get("/communities/:subreddit/:period/digests", async (c) => {
+  const subreddit = c.req.param("subreddit");
+  const period = c.req.param("period");
+  if (!isRedditPeriod(period)) return c.json({ error: "invalid_period" }, 400);
+
+  const rows = await db(c.env.DB)
+    .select({ digest: schema.communityDigestSnapshots })
+    .from(schema.communityDigestSnapshots)
+    .innerJoin(
+      schema.trackedCommunities,
+      eq(schema.communityDigestSnapshots.trackedCommunityId, schema.trackedCommunities.id),
+    )
+    .where(
+      and(
+        eq(schema.trackedCommunities.isPublic, true),
+        eq(schema.communityDigestSnapshots.subreddit, subreddit),
+        eq(schema.communityDigestSnapshots.period, period),
+      ),
+    )
+    .orderBy(desc(schema.communityDigestSnapshots.snapshotDate))
+    .limit(clampedLimit(c.req.query("limit"), 12, 50));
+
+  return c.json({ digests: rows.map((row) => toCommunityDigestSnapshot(row.digest)) });
+});
+
+productsRoute.get("/communities/discover", async (c) => {
+  const period = c.req.query("period") ?? "week";
+  if (!isRedditPeriod(period)) return c.json({ error: "invalid_period" }, 400);
+
+  const rows = await db(c.env.DB)
+    .select({ digest: schema.communityDigestSnapshots })
+    .from(schema.communityDigestSnapshots)
+    .innerJoin(
+      schema.trackedCommunities,
+      eq(schema.communityDigestSnapshots.trackedCommunityId, schema.trackedCommunities.id),
+    )
+    .where(
+      and(
+        eq(schema.trackedCommunities.isPublic, true),
+        eq(schema.communityDigestSnapshots.period, period),
+      ),
+    )
+    .orderBy(desc(schema.communityDigestSnapshots.snapshotDate))
+    .limit(clampedLimit(c.req.query("limit"), 25, 100));
+
+  return c.json({ items: rows.map((row) => toCommunityDigestSnapshot(row.digest)) });
 });
 
 export function productDashboardSnapshot(input: {
@@ -161,16 +547,159 @@ function toCommunityDigestSnapshot(
   };
 }
 
+async function getConfig(d1: D1Database, id: string) {
+  const [row] = await db(d1)
+    .select()
+    .from(schema.mentionBrandConfigs)
+    .where(eq(schema.mentionBrandConfigs.id, id))
+    .limit(1);
+  return row ?? null;
+}
+
+async function getOwnedConfig(d1: D1Database, ownerId: string, id: string) {
+  const [row] = await db(d1)
+    .select()
+    .from(schema.mentionBrandConfigs)
+    .where(and(eq(schema.mentionBrandConfigs.ownerId, ownerId), eq(schema.mentionBrandConfigs.id, id)))
+    .limit(1);
+  return row ?? null;
+}
+
+async function getOwnedCommunity(d1: D1Database, ownerId: string, id: string) {
+  const [row] = await db(d1)
+    .select()
+    .from(schema.trackedCommunities)
+    .where(and(eq(schema.trackedCommunities.ownerId, ownerId), eq(schema.trackedCommunities.id, id)))
+    .limit(1);
+  return row ?? null;
+}
+
+function requireOwner(c: { req: { query(name: string): string | undefined; header(name: string): string | undefined } }) {
+  return c.req.query("owner")?.trim() || c.req.header("x-high-signal-owner")?.trim() || "";
+}
+
+function parseBrandConfigInput(
+  ownerId: string,
+  body: NewConfigBody,
+  existing?: typeof schema.mentionBrandConfigs.$inferSelect,
+):
+  | { values: typeof schema.mentionBrandConfigs.$inferInsert }
+  | { error: string } {
+  const brandName = body.brandName?.trim() || existing?.brandName || "";
+  if (!brandName) return { error: "missing_brand_name" };
+  const competitors = body.competitors ?? objectArray<CompetitorProfile>(existing?.competitors);
+  if (competitors.length > 8) return { error: "too_many_competitors" };
+  const platforms = body.platforms ?? stringArray(existing?.platforms).filter(isAIPlatform);
+  if (platforms.length === 0 || !platforms.every(isAIPlatform)) return { error: "invalid_platforms" };
+  const schedule = body.checkSchedule === undefined ? existing?.checkSchedule : body.checkSchedule;
+  if (schedule != null && !["daily", "weekly"].includes(schedule)) return { error: "invalid_schedule" };
+
+  return {
+    values: {
+      id: existing?.id ?? crypto.randomUUID(),
+      ownerId,
+      brandName,
+      brandAliases: body.brandAliases ?? stringArray(existing?.brandAliases),
+      brandUrl: body.brandUrl === undefined ? (existing?.brandUrl ?? null) : body.brandUrl,
+      competitors,
+      platforms,
+      aiEndpointUrl:
+        body.aiEndpointUrl === undefined ? (existing?.aiEndpointUrl ?? null) : body.aiEndpointUrl,
+      aiModel: body.aiModel === undefined ? (existing?.aiModel ?? null) : body.aiModel,
+      checkSchedule: schedule ?? null,
+      lastScheduledCheck: existing?.lastScheduledCheck ?? null,
+      badgeEnabled: body.badgeEnabled ?? existing?.badgeEnabled ?? false,
+      createdAt: existing?.createdAt ?? new Date(),
+      updatedAt: new Date(),
+    },
+  };
+}
+
+function parseTrackedCommunityInput(
+  ownerId: string,
+  body: NewCommunityBody,
+  existing?: typeof schema.trackedCommunities.$inferSelect,
+):
+  | { values: typeof schema.trackedCommunities.$inferInsert }
+  | { error: string } {
+  const subreddit = (body.subreddit ?? existing?.subreddit ?? "").replace(/^r\//i, "").trim();
+  if (!subreddit) return { error: "missing_subreddit" };
+  const period = body.period ?? existing?.period ?? "week";
+  if (!isRedditPeriod(period)) return { error: "invalid_period" };
+  return {
+    values: {
+      id: existing?.id ?? crypto.randomUUID(),
+      ownerId,
+      subreddit,
+      prompt: body.prompt === undefined ? (existing?.prompt ?? null) : body.prompt,
+      period,
+      isPublic: body.isPublic ?? existing?.isPublic ?? false,
+      createdAt: existing?.createdAt ?? new Date(),
+      updatedAt: new Date(),
+    },
+  };
+}
+
+function visibilityBadge(
+  config: MentionBrandConfig,
+  check: MentionCheck,
+  results: Array<typeof schema.mentionResults.$inferSelect>,
+) {
+  const total = Math.max(results.length, 1);
+  const mentionedResults = results.filter((result) => result.brandMentioned);
+  const mentionRate = check.brandMentionRate ?? mentionedResults.length / total;
+  const mentionScore = Math.round(mentionRate * 30);
+  const positiveCount = mentionedResults.filter((result) => result.brandSentiment === "positive").length;
+  const sentimentScore = mentionedResults.length
+    ? Math.round((positiveCount / mentionedResults.length) * 20)
+    : 0;
+  const positioned = mentionedResults.filter((result) => result.brandPosition && result.brandPosition > 0);
+  const positionScore = positioned.length
+    ? Math.round(Math.max(0, 20 - ((positioned.reduce((sum, result) => sum + (result.brandPosition ?? 0), 0) / positioned.length) - 1) * 4))
+    : 0;
+  const citationScore = Math.round((results.filter((result) => result.brandCited).length / total) * 15);
+  const platforms = new Set(results.map((result) => result.platform));
+  const mentionedPlatforms = new Set(mentionedResults.map((result) => result.platform));
+  const reachScore = platforms.size ? Math.round((mentionedPlatforms.size / platforms.size) * 15) : 0;
+  const score = mentionScore + sentimentScore + positionScore + citationScore + reachScore;
+
+  return {
+    configId: config.id,
+    brandName: config.brandName,
+    score,
+    grade: score >= 80 ? "A" : score >= 65 ? "B" : score >= 50 ? "C" : score >= 35 ? "D" : "F",
+    platformsChecked: platforms.size,
+    platformsMentioned: mentionedPlatforms.size,
+    mentionRate: Math.round(mentionRate * 100) / 100,
+    platformDetails: Array.from(platforms).map((platform) => ({
+      platform,
+      mentioned: mentionedPlatforms.has(platform),
+    })),
+    lastChecked: check.completedAt ?? check.createdAt,
+    cachedAt: new Date().toISOString(),
+  };
+}
+
 function stringArray(value: unknown): string[] {
   if (Array.isArray(value)) return value.filter((item): item is string => typeof item === "string");
   return [];
 }
 
-function objectArray<T extends Record<string, unknown>>(value: unknown): T[] {
+function objectArray<T extends object>(value: unknown): T[] {
   if (!Array.isArray(value)) return [];
   return value.filter((item): item is T => Boolean(item) && typeof item === "object");
 }
 
 function isAIPlatform(value: string): value is AIPlatform {
   return ["openai", "anthropic", "google", "perplexity", "custom"].includes(value);
+}
+
+function isRedditPeriod(value: string): value is "day" | "week" | "month" {
+  return ["day", "week", "month"].includes(value);
+}
+
+function clampedLimit(value: string | undefined, fallback: number, max: number) {
+  const parsed = Number(value ?? fallback);
+  if (!Number.isFinite(parsed)) return fallback;
+  return Math.max(1, Math.min(Math.floor(parsed), max));
 }
