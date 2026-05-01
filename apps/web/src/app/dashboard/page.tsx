@@ -7,7 +7,7 @@ import {
   SectionHeader,
 } from "@/components/system/HighSignalUI";
 import { api, type ProductDashboardSnapshot } from "@/lib/api";
-import { auth } from "@clerk/nextjs/server";
+import { requireSignedIn } from "@/lib/require-auth";
 import type { MentionBrandConfig, TrackedCommunity } from "@high-signal/shared";
 
 export const metadata = { title: "Dashboard — High Signal" };
@@ -66,8 +66,8 @@ function fallbackDashboard(ownerId: string): ProductDashboardSnapshot {
 }
 
 export default async function DashboardPage() {
-  const { userId, orgId } = await auth();
-  const ownerId = orgId ?? userId ?? "workspace_default";
+  const { userId, orgId } = await requireSignedIn();
+  const ownerId = orgId ?? userId;
   let dashboard = fallbackDashboard(ownerId);
   try {
     dashboard = await api.productDashboard(ownerId);

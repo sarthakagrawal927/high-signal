@@ -1,7 +1,7 @@
 /**
  * /api/admin/<...> — same-origin proxy to the api worker's /admin/* routes.
  *
- * Auth: Clerk session via app proxy/middleware plus a server-side allow-list.
+ * Auth: Clerk session plus a server-side allow-list.
  *
  * The proxy injects the worker-internal ADMIN_TOKEN before forwarding to the
  * service-bound `API`. This keeps the bearer token off the browser entirely.
@@ -13,7 +13,7 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 async function handle(req: Request, ctx: { params: Promise<{ path: string[] }> }) {
-  const admin = await requireAdmin();
+  const admin = await requireAdmin(req);
   if (!admin.ok) return Response.json(admin.body, { status: admin.status });
 
   const { path } = await ctx.params;

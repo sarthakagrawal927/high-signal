@@ -15,6 +15,7 @@ import {
   normalizeCommunitySummary,
   redditSourceLink,
 } from "@high-signal/shared";
+import { requireSignedIn } from "@/lib/require-auth";
 
 export const metadata = { title: "Community Intelligence — High Signal" };
 
@@ -54,6 +55,7 @@ export default async function CommunitiesPage({
 }: {
   searchParams?: Promise<{ subreddit?: string; q?: string }>;
 }) {
+  await requireSignedIn();
   const params = (await searchParams) ?? {};
   const subreddit = (params.subreddit ?? "LocalLLaMA").replace(/^r\//i, "").trim();
   const query = (params.q ?? "AI agents").trim();

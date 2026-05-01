@@ -1,4 +1,5 @@
 import { api } from "@/lib/api";
+import { requireSignedIn } from "@/lib/require-auth";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Sectors — High Signal" };
@@ -8,6 +9,7 @@ interface Props {
 }
 
 export default async function SectorsPage({ searchParams }: Props) {
+  await requireSignedIn();
   const sp = await searchParams;
   const days = Math.min(Math.max(Number(sp.days ?? 60), 7), 365);
 

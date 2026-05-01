@@ -7,6 +7,7 @@ import {
   SectionHeader,
 } from "@/components/system/HighSignalUI";
 import { api, type CommunityDigestSnapshot } from "@/lib/api";
+import { requireSignedIn } from "@/lib/require-auth";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Discover — High Signal" };
@@ -41,6 +42,7 @@ export default async function DiscoverPage({
 }: {
   searchParams?: Promise<{ period?: "day" | "week" | "month" }>;
 }) {
+  await requireSignedIn();
   const params = (await searchParams) ?? {};
   const period = params.period ?? "week";
   let digests = fallbackDigests;

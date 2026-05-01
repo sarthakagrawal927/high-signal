@@ -1,4 +1,5 @@
 import { api, type TrackBucket } from "@/lib/api";
+import { requireSignedIn } from "@/lib/require-auth";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Track record — High Signal" };
@@ -10,6 +11,7 @@ interface Cohorts {
 }
 
 export default async function TrackRecordPage() {
+  await requireSignedIn();
   let cohorts: Cohorts = { live: [], backfill: [], all: [] };
   try {
     cohorts = await api.trackRecordCohorts();

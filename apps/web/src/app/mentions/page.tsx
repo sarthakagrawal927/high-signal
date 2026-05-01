@@ -9,6 +9,7 @@ import {
   StatGrid,
 } from "@/components/system/HighSignalUI";
 import { analyzeMentionVisibility } from "@high-signal/shared";
+import { requireSignedIn } from "@/lib/require-auth";
 
 export const metadata = { title: "Mention Intelligence — High Signal" };
 
@@ -20,6 +21,7 @@ export default async function MentionsPage({
 }: {
   searchParams?: Promise<{ brand?: string; url?: string; text?: string }>;
 }) {
+  await requireSignedIn();
   const params = (await searchParams) ?? {};
   const brandName = (params.brand ?? "High Signal").trim();
   const brandUrl = (params.url ?? "https://highsignal.ai").trim();

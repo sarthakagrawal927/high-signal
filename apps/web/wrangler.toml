@@ -21,6 +21,7 @@ simple = { limit = 100, period = 60 }
 NODE_ENV = "production"
 NEXT_PUBLIC_SAASMAKER_API_KEY = "pk_3eb4816ef2179c25f364315aa1c3148a88e8004bfa5e5235"
 NEXT_PUBLIC_API_BASE = "https://high-signal-api.sarthakagrawal927.workers.dev"
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY = "pk_test_ZmFpci1ob3JuZXQtMjcuY2xlcmsuYWNjb3VudHMuZGV2JA"
 # CF Access — set per app from Zero Trust dashboard:
 #   AUD: copy from Application → Overview
 #   TEAM_DOMAIN: <your-team>.cloudflareaccess.com

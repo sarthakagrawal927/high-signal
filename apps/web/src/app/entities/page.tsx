@@ -1,9 +1,11 @@
 import { api, type EntityRow } from "@/lib/api";
+import { requireSignedIn } from "@/lib/require-auth";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Entities — High Signal" };
 
 export default async function EntitiesPage() {
+  await requireSignedIn();
   let entities: EntityRow[] = [];
   try {
     const r = await api.entities();

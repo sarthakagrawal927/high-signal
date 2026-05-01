@@ -1,10 +1,12 @@
 import { api, type SignalRow } from "@/lib/api";
 import { SignalCard } from "@/components/molecules/SignalCard";
+import { requireSignedIn } from "@/lib/require-auth";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Weekly digest — High Signal" };
 
 export default async function DigestPage() {
+  await requireSignedIn();
   let signals: SignalRow[] = [];
   let since = "";
   try {

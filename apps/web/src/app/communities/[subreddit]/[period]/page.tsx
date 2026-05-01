@@ -7,6 +7,7 @@ import {
   SectionHeader,
 } from "@/components/system/HighSignalUI";
 import { api, type CommunityDigestSnapshot } from "@/lib/api";
+import { requireSignedIn } from "@/lib/require-auth";
 import { redditSourceLink } from "@high-signal/shared";
 
 export const dynamic = "force-dynamic";
@@ -27,6 +28,7 @@ export default async function CommunityArchivePage({
 }: {
   params: Promise<{ subreddit: string; period: string }>;
 }) {
+  await requireSignedIn();
   const { subreddit, period: rawPeriod } = await params;
   const period = periods.includes(rawPeriod as (typeof periods)[number])
     ? (rawPeriod as "day" | "week" | "month")

@@ -1,8 +1,10 @@
 import { BackLink, PageShell, RouteList, SectionHeader } from "@/components/system/HighSignalUI";
+import { requireSignedIn } from "@/lib/require-auth";
 
 export const metadata = { title: "Market Intelligence — High Signal" };
 
-export default function MarketsPage() {
+export default async function MarketsPage() {
+  await requireSignedIn();
   return (
     <PageShell>
       <BackLink />

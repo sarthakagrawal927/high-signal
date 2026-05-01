@@ -1,4 +1,5 @@
 import { api, type Direction, type Confidence, type SignalRow } from "@/lib/api";
+import { requireSignedIn } from "@/lib/require-auth";
 import { SignalCard } from "@/components/molecules/SignalCard";
 import { FilterBar, type Facets } from "@/components/molecules/FilterBar";
 
@@ -17,6 +18,7 @@ export default async function SignalsPage({
 }: {
   searchParams: Promise<SP>;
 }) {
+  await requireSignedIn();
   const sp = await searchParams;
   let signals: SignalRow[] = [];
   let facets: Facets = { types: [], directions: [], confidences: [], topEntities: [] };
