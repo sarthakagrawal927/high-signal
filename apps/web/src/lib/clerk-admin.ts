@@ -1,4 +1,4 @@
-import { auth, currentUser } from "@clerk/nextjs/server";
+import { auth, clerkClient } from "@clerk/nextjs/server";
 
 const ALLOWED_EMAILS = (process.env["ADMIN_ALLOWED_EMAILS"] ?? "")
   .split(",")
@@ -17,7 +17,8 @@ export async function requireAdmin(): Promise<
   const { userId } = await auth();
   if (!userId) return { ok: false, status: 401, body: { error: "unauthorized" } };
 
-  const user = await currentUser();
+  const client = await clerkClient();
+  const user = await client.users.getUser(userId);
   const email = user?.primaryEmailAddress?.emailAddress?.toLowerCase();
   if (!email) return { ok: false, status: 403, body: { error: "missing_email" } };
 

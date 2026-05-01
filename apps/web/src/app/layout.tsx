@@ -13,16 +13,16 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <ClerkProvider>
-      <html lang="en">
-        <body className="min-h-dvh font-sans antialiased">
+    <html lang="en">
+      <body className="min-h-dvh font-sans antialiased">
+        <ClerkProvider>
           <AnalyticsProvider>
             <AuthNav />
             {children}
             <SaaSMakerFeedback />
           </AnalyticsProvider>
-        </body>
-      </html>
-    </ClerkProvider>
+        </ClerkProvider>
+      </body>
+    </html>
   );
 }
