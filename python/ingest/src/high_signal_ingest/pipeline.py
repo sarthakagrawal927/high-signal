@@ -165,27 +165,6 @@ def run(source: Source, days: int) -> dict:
     }
 
 
-# Kept for backwards-compat; new run() inlines the same loop with audit hooks.
-def cluster_and_generate(events: list[Event]) -> list[str]:
-    by_entity: dict[str, list[Event]] = defaultdict(list)
-    for ev in events:
-        eid = ev.primary_entity_id
-        if not eid:
-            text = f"{ev.title or ''}\n{(ev.content or '')[:4000]}"
-            eid = primary_entity(text)
-        if eid:
-            by_entity[eid].append(ev)
-    written: list[str] = []
-    for entity_id, evs in by_entity.items():
-        distinct_urls = {e.source_url for e in evs if e.source_url}
-        if len(distinct_urls) < 2:
-            continue
-        cand = generate(entity_id, evs, _spillover_candidates(entity_id))
-        if cand:
-            written.append(emit(cand))
-    return written
-
-
 def main() -> None:
     p = argparse.ArgumentParser()
     p.add_argument(

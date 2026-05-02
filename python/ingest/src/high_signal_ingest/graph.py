@@ -13,7 +13,6 @@ from typing import Iterable
 import networkx as nx
 
 from .seed import load_relationships
-from .types import Relationship
 
 
 # Directional intent — when an edge fires, which direction does the spillover usually run?

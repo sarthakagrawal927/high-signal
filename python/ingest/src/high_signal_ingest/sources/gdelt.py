@@ -19,8 +19,6 @@ import asyncio
 import hashlib
 import logging
 from datetime import datetime, timedelta, timezone
-from typing import Iterator
-from urllib.parse import urlencode
 
 import httpx
 
