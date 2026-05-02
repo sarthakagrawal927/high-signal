@@ -20,3 +20,5 @@ jobs:
         with:
           apiToken: ${{ secrets.CF_API_TOKEN }}
           workingDirectory: workers/api
+      - name: Smoke production API
+        run: curl --fail --silent --show-error --location --max-time 30 https://high-signal-api.sarthakagrawal927.workers.dev/health >/dev/null
