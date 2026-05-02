@@ -41,16 +41,20 @@ def test_generator_rejects_unknown_signal_type(monkeypatch) -> None:
     monkeypatch.setattr(
         generator,
         "_ai_complete",
-        lambda *_args, **_kwargs: {
-            "publish": True,
-            "signal_type": "capex_change",
-            "direction": "up",
-            "confidence": "medium",
-            "predicted_window_days": 20,
-            "spillover_entity_ids": [],
-            "headline": "NVIDIA capex signal",
-            "body_md": "Body",
-        },
+        lambda *_args, **_kwargs: (
+            {
+                "publish": True,
+                "signal_type": "capex_change",
+                "direction": "up",
+                "confidence": "medium",
+                "predicted_window_days": 20,
+                "spillover_entity_ids": [],
+                "headline": "NVIDIA capex signal",
+                "body_md": "Body",
+            },
+            {"model": "test", "prompt_version": "0", "reason": None, "raw_response": None,
+             "latency_ms": 0, "tokens_in": 0, "tokens_out": 0},
+        ),
     )
 
     assert generator.generate("NVDA", [_event("https://example.com/a")], []) is None

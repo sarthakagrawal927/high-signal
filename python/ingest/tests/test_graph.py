@@ -26,12 +26,12 @@ def test_spillover_ranked_descending() -> None:
 
 
 def test_spillover_filter_by_type() -> None:
-    out_supplier = spillover("NVDA", hops=1, types={"supplier"}, limit=20)
-    out_peer = spillover("NVDA", hops=1, types={"peer"}, limit=20)
-    # supplier-only and peer-only should produce different sets in general
+    # TSM has supplier out-edges (→ NVDA, AMD, ...) and competitor out-edges (→ SMIC)
+    out_supplier = spillover("TSM", hops=1, types={"supplier"}, limit=20)
+    out_competitor = spillover("TSM", hops=1, types={"competitor"}, limit=20)
     s_ids = {x[0] for x in out_supplier}
-    p_ids = {x[0] for x in out_peer}
-    assert s_ids != p_ids
+    c_ids = {x[0] for x in out_competitor}
+    assert s_ids != c_ids
 
 
 def test_unknown_entity_returns_empty() -> None:

@@ -149,10 +149,10 @@ NVDA,ORCL,partner,0.7,https://investor.oracle.com,Joint AI cloud and supercomput
 INTC,ARM,competitor,0.6,https://www.intc.com,x86 vs ARM datacenter ISA rivalry
 TSM,SMIC,competitor,0.5,https://www.tsmc.com/english,Foundry competitor (China; export-restricted)
 ASML,SMIC,supplier,0.3,https://www.asml.com/en/investors,DUV-only supplier post EUV export ban
-ASE,TSM,partner,0.7,https://ir.aseglobal.com,OSAT advanced packaging partner (CoWoS overflow)
+ASEH,TSM,partner,0.7,https://ir.aseglobal.com,OSAT advanced packaging partner (CoWoS overflow)
 AMKR,TSM,partner,0.6,https://ir.amkor.com,Arizona advanced packaging partner
-ASE,AMKR,competitor,0.9,https://ir.aseglobal.com,Top-2 OSAT global competitors
-ASE,JCET,competitor,0.7,https://ir.aseglobal.com,Global OSAT peers
+ASEH,AMKR,competitor,0.9,https://ir.aseglobal.com,Top-2 OSAT global competitors
+ASEH,JCET,competitor,0.7,https://ir.aseglobal.com,Global OSAT peers
 CDNS,ARM,partner,0.6,https://www.cadence.com/en_US/home/company/newsroom.html,EDA tooling and IP integration with ARM
 SNPS,ARM,partner,0.6,https://news.synopsys.com,EDA tooling and IP integration with ARM
 CDNS,TSM,partner,0.7,https://www.cadence.com/en_US/home/company/newsroom.html,Reference flows for TSMC nodes (N3/N2)
